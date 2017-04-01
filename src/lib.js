@@ -2,17 +2,17 @@ var Promise = require('bluebird');
 var _ = require('lodash');
 var helpers = require('./helpers');
 
-module.exports.search = function(items, options) {
+//module.exports.search = function(items, options) {
+module.exports.search = function(items, input, configuration) {
 
-  options = options || {};
-  //options.aggregations = options.aggregations || {};
+  input = input || {};
 
-  items = module.exports.items_by_aggregations(items, options.aggregations);
+  items = module.exports.items_by_aggregations(items, input.aggregations);
 
-  var per_page = options.per_page || 12;
-  var page = options.page || 1;
+  var per_page = input.per_page || 12;
+  var page = input.page || 1;
 
-  var aggregations = module.exports.aggregations(items, options.aggregations);
+  var aggregations = module.exports.aggregations(items, input.aggregations);
 
   return {
     pagination: {
@@ -40,51 +40,19 @@ module.exports.aggregations = function(items, aggregations) {
       buckets: module.exports.buckets(items, key, val, aggregations).slice(0, 10)
     }
   })
-  return {
-    tags: {
-      buckets: module.exports.buckets(items, 'tags')
-    },
-    actors:  {
-      buckets: module.exports.buckets(items, 'actors')
-    }
-  }
 }
 
 
 module.exports.aggregateable_item = function(item, aggregations) {
 
-    return _.every(_.keys(aggregations), (key) => {
-      return helpers.includes(item[key], aggregations[key].filters);
-    });
-
-  return _.mapValues((aggregations), (val, key) => {
-    let other_aggregations = _.clone(aggregations);
-    delete other_aggregations[key];
-    let other_aggregations_keys = _.keys(other_aggregations);
-
-
-    return _.every(_.keys(aggregations), (key) => {
-      return helpers.includes(item[key], aggregations[key].filters);
-    });
-
-
-    if (_.every(other_aggregations_keys, (key) => {
-      return helpers.includes(item[key], aggregations[key].filters);
-    }) === true) {
-      if (helpers.includes(item[key], aggregations[key].filters)) {
-        return item[key];
-      } else {
-        return [];
-      }
-      //return item[key];
-      //return helpers.intersection(item[key], aggregations[key].filters);
-    } else {
-      return [];
-    }
+  return _.every(_.keys(aggregations), (key) => {
+    return helpers.includes(item[key], aggregations[key].filters);
   });
 }
 
-
+/*
+ * fields count for one item based on aggregation options
+ */
 module.exports.bucket = function(item, aggregations) {
 
   return _.mapValues((aggregations), (val, key) => {
@@ -100,8 +68,6 @@ module.exports.bucket = function(item, aggregations) {
       } else {
         return [];
       }
-      //return item[key];
-      //return helpers.intersection(item[key], aggregations[key].filters);
     } else {
       return [];
     }
@@ -112,7 +78,6 @@ module.exports.buckets = function(items, field, agg, aggregations) {
 
   var buckets = _.transform(items, function(result, item) {
 
-    //console.log(module.exports.bucket(item, aggregations));
     item = module.exports.bucket(item, aggregations)
     var keys = item[field];
 
@@ -149,33 +114,3 @@ module.exports.buckets = function(items, field, agg, aggregations) {
 
   return buckets;
 }
-
-/*module.exports.search = function(items, options) {
-  return new Promise(function (resolve, reject) {
-    return resolve({
-      data: {
-        items: items,
-        aggregations: {
-          tags: {
-            doc_count: 10,
-            buckets: [{
-              key: "love",
-              doc_count: 332
-            },
-            {
-              key: "humor",
-              doc_count: 272
-            },
-            {
-              key: "inspirational",
-              doc_count: 262
-            }],
-          }
-        }
-      }
-
-    })
-  });
-}
-
-*/

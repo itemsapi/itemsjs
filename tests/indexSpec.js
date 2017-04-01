@@ -3,7 +3,6 @@
 var should = require('should');
 var expect = require('expect');
 var assert = require('assert');
-var service = require('./../src/lib');
 
 describe('aggregations', function() {
 
@@ -21,26 +20,27 @@ describe('aggregations', function() {
     actors: ['e']
   }]
 
+  var itemsjs = require('./../src/index')(items);
 
   it('makes search', function test(done) {
-    var result = service.search(items);
+    var result = itemsjs.search();
     assert.equal(result.data.items.length, 3);
     done();
   });
 
   it('makes search with pagination', function test(done) {
-    var result = service.search(items, {
+    var result = itemsjs.search({
       per_page: 1
     });
     assert.equal(result.data.items.length, 1);
 
-    var result = service.search(items, {
+    var result = itemsjs.search({
       per_page: 1,
       page: 4
     });
     assert.equal(result.data.items.length, 0);
 
-    var result = service.search(items, {
+    var result = itemsjs.search({
       per_page: 1,
       page: 3
     });
@@ -48,20 +48,30 @@ describe('aggregations', function() {
     done();
   });
 
-
-  it('makes search with aggregations', function test(done) {
-
-    var result = service.search(items, {
-      aggregations: {
-        tags: {
-          filters: ['e', 'f'],
-        }
+  it('makes search with aggregation filters', function test(done) {
+    var result = itemsjs.search({
+      filters: {
+        tags: ['e', 'f']
       }
     });
     assert.equal(result.data.items.length, 1);
+
+    var result = itemsjs.search({
+      filters: {
+        tags: ['e', 'f'],
+        actors: ['a', 'b']
+      }
+    });
+    assert.equal(result.data.items.length, 1);
+
+    var result = itemsjs.search({
+      filters: {
+        tags: ['e', 'f'],
+        actors: ['a', 'd']
+      }
+    });
+    assert.equal(result.data.items.length, 0);
     done();
-
   });
-
 
 });
