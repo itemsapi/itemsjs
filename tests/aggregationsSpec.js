@@ -1,0 +1,168 @@
+'use strict';
+
+var should = require('should');
+var expect = require('expect');
+var assert = require('assert');
+var service = require('./../src/lib');
+
+describe('aggregations', function() {
+
+  var items = [{
+    name: 'movie1',
+    tags: ['a', 'b', 'c', 'd'],
+    actors: ['a', 'b']
+  }, {
+    name: 'movie2',
+    tags: ['a', 'e', 'f'],
+    actors: ['a', 'b']
+  }, {
+    name: 'movie3',
+    tags: ['a', 'c'],
+    actors: ['e']
+  }]
+
+  console.log(JSON.stringify(items));
+
+  it('returns buckets', function test(done) {
+    // should be search here
+    var result = service.aggregations(items, {
+      tags: {
+        //values: ['Berlin'],
+        //conjuction: true,
+        //type: 'terms',
+        //size: 10
+      },
+    })
+    //console.log(JSON.stringify(result, null, 2));
+    assert.equal(result.tags.buckets.length, 6);
+    assert.equal(result.tags.buckets[0].key, 'a');
+    assert.equal(result.tags.buckets[1].key, 'c');
+
+
+    done();
+  });
+
+  it('returns buckets for two fields (tags, actors)', function test(done) {
+    var result = service.aggregations(items, {
+      tags: {
+      }, actors: {
+      },
+    })
+
+    assert.equal(result.tags.buckets.length, 6);
+    assert.equal(result.tags.buckets[0].key, 'a');
+    assert.equal(result.tags.buckets[1].key, 'c');
+    assert.equal(result.actors.buckets.length, 3);
+
+    done();
+  });
+
+  it('should do nothing with not existent field', function test(done) {
+    var result = service.aggregations(items, {
+      tags: {
+      },
+    })
+
+    assert.equal(result.tags.buckets.length, 6);
+    //assert.equal(result.param.buckets.length, 0);
+
+    done();
+  });
+
+  it('returns buckets tag field with filtering', function test(done) {
+    var result = service.aggregations(items, {
+      tags: {
+        filters: 'c'
+      }
+    })
+
+    assert.equal(result.tags.buckets.length, 4);
+
+    done();
+  });
+
+  it('returns buckets tag field with array filtering', function test(done) {
+    var result = service.aggregations(items, {
+      tags: {
+        filters: ['c']
+      }
+    })
+
+    assert.equal(result.tags.buckets.length, 4);
+
+    done();
+  });
+
+  it('returns buckets tag field with multi array filtering', function test(done) {
+    var result = service.aggregations(items, {
+      tags: {
+        filters: ['e', 'f']
+      }
+    })
+
+    assert.equal(result.tags.buckets.length, 3);
+
+    done();
+  });
+
+  it.skip('returns buckets tag field with multi array filtering', function test(done) {
+    var result = service.aggregations(items, {
+      tags: {
+        filters: ['e', 'f'],
+        conjunction: false
+      }
+    })
+
+    assert.equal(result.tags.buckets.length, 3);
+
+    done();
+  });
+
+  it('returns aggregations with cross multi array filtering', function test(done) {
+    var result = service.aggregations(items, {
+      tags: {
+        filters: ['e', 'f']
+      },
+      actors: {
+      }
+    })
+
+    assert.equal(result.tags.buckets.length, 3);
+    assert.equal(result.actors.buckets.length, 2);
+
+    done();
+  });
+
+  it('returns aggregations with cross multi array filtering', function test(done) {
+    var result = service.aggregations(items, {
+      tags: {
+        filters: ['e', 'f']
+      },
+      actors: {
+        filters: ['a']
+      }
+    })
+
+    assert.equal(result.tags.buckets.length, 3);
+    assert.equal(result.actors.buckets.length, 2);
+
+    done();
+  });
+
+  it('returns aggregations with cross multi array filtering', function test(done) {
+    var result = service.aggregations(items, {
+      tags: {
+        filters: ['e', 'f']
+      },
+      actors: {
+        filters: ['z']
+      }
+    })
+
+    assert.equal(result.tags.buckets.length, 0);
+    assert.equal(result.actors.buckets.length, 0);
+
+    done();
+  });
+
+});
