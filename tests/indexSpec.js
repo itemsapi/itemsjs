@@ -4,7 +4,7 @@ var should = require('should');
 var expect = require('expect');
 var assert = require('assert');
 
-describe('aggregations', function() {
+describe('itemjs general tests', function() {
 
   var items = [{
     name: 'movie1',
