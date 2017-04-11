@@ -44,3 +44,7 @@ var result = itemsjs.search({
 })
 console.log(JSON.stringify(result, null, 2));
 ```
+
+## Credit
+
+- https://github.com/olivernn/lunr.js for providing full text search.

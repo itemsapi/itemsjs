@@ -19,7 +19,6 @@ describe('fulltext', function() {
   it('check includes', function test(done) {
 
     var fulltext = new Fulltext(items);
-    console.log();
     assert.equal(fulltext.search('club').length, 1);
     assert.equal(fulltext.search('gump').length, 1);
     assert.equal(fulltext.search('gump')[0].name, 'Forrest Gump');

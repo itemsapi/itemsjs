@@ -8,12 +8,6 @@ module.exports.search = function(items, input, configuration) {
 
   input = input || {};
 
-  // responsible for full text search over the items
-  //items = module.exports.full_text_search(items, input, configuration);
-  // it should be run once on initialization then it is 2x faster
-  //var fulltext = new Fulltext(items);
-  //items = fulltext.search(input.query);
-
   // resonsible to search over the items by aggregation values
   items = module.exports.items_by_aggregations(items, input.aggregations);
 
@@ -46,7 +40,8 @@ module.exports.aggregations = function(items, aggregations) {
   return _.mapValues((aggregations), (val, key) => {
     return {
       name: key,
-      buckets: module.exports.buckets(items, key, val, aggregations).slice(0, 10)
+      title: val.title || key.charAt(0).toUpperCase() + key.slice(1),
+      buckets: module.exports.buckets(items, key, val, aggregations).slice(0, val.size || 10)
     }
   })
 }

@@ -49,6 +49,14 @@ describe('itemjs general tests', function() {
   });
 
   it('makes search with aggregation filters', function test(done) {
+
+    var itemsjs = require('./../src/index')(items, {
+      aggregations: {
+        tags: {},
+        actors: {}
+      }
+    });
+
     var result = itemsjs.search({
       filters: {
         tags: ['e', 'f']
@@ -71,7 +79,28 @@ describe('itemjs general tests', function() {
       }
     });
     assert.equal(result.data.items.length, 0);
+
+    var result = itemsjs.search();
+    assert.equal(result.data.items.length, 3);
     done();
   });
+
+  it('makes aggregations when configuration supplied', function test(done) {
+    var itemsjs = require('./../src/index')(items, {
+      aggregations: {
+        tags: {
+          type: 'terms',
+          size: 10,
+          title: 'Tags'
+        }
+      }
+    });
+    var result = itemsjs.search({});
+    assert.equal(result.data.items.length, 3);
+    assert.equal(result.data.aggregations.tags.name, 'tags');
+    assert.equal(result.data.aggregations.tags.buckets.length, 6);
+    done();
+  });
+
 
 });

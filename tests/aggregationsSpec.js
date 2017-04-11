@@ -105,15 +105,17 @@ describe('aggregations', function() {
     done();
   });
 
-  it.skip('returns buckets tag field with multi array filtering', function test(done) {
+  it('returns buckets tag field with multi array filtering', function test(done) {
     var result = service.aggregations(items, {
       tags: {
         filters: ['e', 'f'],
+        title: 'Tags',
         conjunction: false
       }
     })
 
     assert.equal(result.tags.buckets.length, 3);
+    assert.equal(result.tags.title, 'Tags');
 
     done();
   });
@@ -124,11 +126,13 @@ describe('aggregations', function() {
         filters: ['e', 'f']
       },
       actors: {
+        title: 'Actors',
       }
     })
 
     assert.equal(result.tags.buckets.length, 3);
     assert.equal(result.actors.buckets.length, 2);
+    assert.equal(result.actors.title, 'Actors');
 
     done();
   });
