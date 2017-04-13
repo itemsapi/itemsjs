@@ -8,12 +8,13 @@ module.exports.search = function(items, input, configuration) {
 
   input = input || {};
 
-  // resonsible to search over the items by aggregation values
+  // responsible to filters items by aggregation values
   items = module.exports.items_by_aggregations(items, input.aggregations);
 
   var per_page = input.per_page || 12;
   var page = input.page || 1;
 
+  // calculate aggregations based on items and input
   var aggregations = module.exports.aggregations(items, input.aggregations);
 
   return {
@@ -60,15 +61,15 @@ module.exports.aggregateable_item = function(item, aggregations) {
 module.exports.bucket = function(item, aggregations) {
 
   return _.mapValues((aggregations), (val, key) => {
-    let other_aggregations = _.clone(aggregations);
-    delete other_aggregations[key];
-    let other_aggregations_keys = _.keys(other_aggregations);
+    let clone_aggregations = _.clone(aggregations);
+    delete clone_aggregations[key];
+    let clone_aggregations_keys = _.keys(clone_aggregations);
 
-    if (_.every(other_aggregations_keys, (key) => {
+    if (_.every(clone_aggregations_keys, (key) => {
       return helpers.includes(item[key], aggregations[key].filters);
     }) === true) {
       if (helpers.includes(item[key], aggregations[key].filters)) {
-        return item[key];
+        return item[key] ? _.flatten([item[key]]) : [];
       } else {
         return [];
       }

@@ -102,5 +102,60 @@ describe('itemjs general tests', function() {
     done();
   });
 
+  it('makes aggregations for non array (string) fields', function test(done) {
+    var items = [{
+      name: 'movie1',
+      tags: 'a',
+    }, {
+      name: 'movie2',
+      tags: 'a',
+    }, {
+      name: 'movie3',
+      tags: 'a',
+    }];
+
+    var itemsjs = require('./../src/index')(items, {
+      aggregations: {
+        tags: {
+          type: 'terms',
+          size: 10,
+          title: 'Tags'
+        }
+      }
+    });
+    var result = itemsjs.search({});
+    assert.equal(result.data.items.length, 3);
+    assert.equal(result.data.aggregations.tags.name, 'tags');
+    assert.equal(result.data.aggregations.tags.buckets.length, 1);
+    assert.equal(result.data.aggregations.tags.buckets[0].doc_count, 3);
+    done();
+  });
+
+  it('makes aggregations for undefined field', function test(done) {
+    var items = [{
+      name: 'movie1',
+    }, {
+      name: 'movie2',
+    }, {
+      name: 'movie3',
+    }];
+
+    var itemsjs = require('./../src/index')(items, {
+      aggregations: {
+        tags: {
+          type: 'terms',
+          size: 10,
+          title: 'Tags'
+        }
+      }
+    });
+    var result = itemsjs.search({});
+    assert.equal(result.data.items.length, 3);
+    assert.equal(result.data.aggregations.tags.name, 'tags');
+    assert.equal(result.data.aggregations.tags.buckets.length, 0);
+    //assert.equal(result.data.aggregations.tags.buckets[0].doc_count, 3);
+    done();
+  });
+
 
 });

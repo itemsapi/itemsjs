@@ -98,4 +98,45 @@ describe('bucket', function() {
     done();
   });
 
+  it('returns aggregated fields for one item with non array field', function test(done) {
+    var result = service.bucket({
+      name: 'movie1',
+      tags: ['a', 'b', 'c', 'd'],
+      genre: 'drama',
+      actors: ['a', 'b']
+    }, {
+      genre: {
+        filters: ['drama']
+      },
+      tags: {},
+      actors: {}
+    });
+
+    assert.equal(result.tags.length, 4);
+    // string was converted to array
+    assert.equal(result.genre.length, 1);
+    assert.equal(result.actors.length, 2);
+
+    done();
+  });
+
+  it('returns aggregated fields for one item with undefined field', function test(done) {
+    var result = service.bucket({
+      name: 'movie1',
+      genre: ['drama'],
+      actors: ['a', 'b']
+    }, {
+      genre: {},
+      tags: {},
+      actors: {}
+    });
+
+    assert.equal(result.tags.length, 0);
+    // string was converted to array
+    assert.equal(result.genre.length, 1);
+    assert.equal(result.actors.length, 2);
+
+    done();
+  });
+
 });
