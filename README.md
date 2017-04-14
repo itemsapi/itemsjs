@@ -30,20 +30,42 @@ npm install itemsjs
 wget https://raw.githubusercontent.com/itemsapi/itemsapi-example-data/master/items/movies-processed.json -O data.json
 ```
 
+Create `search.js`:
 
 ```js
 var data = require('./data.json');
 
-var itemsjs = require('itemsjs')(data);
-// making search..
+var itemsjs = require('itemsjs')(data, {
+  aggregations: {
+    tags: {
+      title: 'Tags',
+      size: 10
+    },
+    actors: {
+      title: 'Actors',
+      size: 10
+    },
+    genres: {
+      title: 'Genres',
+      size: 10
+    }
+  }
+});
+
 var result = itemsjs.search({
   per_page: 1,
   filters: {
-    tags: ['dramat']
+    tags: ['1980s']
   }
 })
 console.log(JSON.stringify(result, null, 2));
 ```
+
+```bash
+node search.js
+```
+
+
 
 ## Credit
 
