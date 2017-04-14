@@ -69,4 +69,4 @@ node search.js
 
 ## Credit
 
-- https://github.com/olivernn/lunr.js for providing full text search.
+- [Lunr.js](https://github.com/olivernn/lunr.js) for providing full text search.
