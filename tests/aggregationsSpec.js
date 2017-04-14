@@ -127,12 +127,14 @@ describe('aggregations', function() {
       },
       actors: {
         title: 'Actors',
+        //position: 10
       }
     })
 
     assert.equal(result.tags.buckets.length, 3);
     assert.equal(result.actors.buckets.length, 2);
     assert.equal(result.actors.title, 'Actors');
+    //assert.equal(result.actors.position, 10);
 
     done();
   });

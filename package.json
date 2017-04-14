@@ -1,6 +1,6 @@
 {
   "name": "itemsjs",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Created to perform fast search on small json dataset (up to 1000 elements).",
   "main": "src/index.js",
   "scripts": {

@@ -38,10 +38,13 @@ module.exports.items_by_aggregations = function(items, aggregations) {
 
 module.exports.aggregations = function(items, aggregations) {
 
+  var position = 0;
   return _.mapValues((aggregations), (val, key) => {
+    ++position;
     return {
       name: key,
       title: val.title || key.charAt(0).toUpperCase() + key.slice(1),
+      position: position,
       buckets: module.exports.buckets(items, key, val, aggregations).slice(0, val.size || 10)
     }
   })
