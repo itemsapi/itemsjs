@@ -1,7 +1,5 @@
 var _ = require('lodash');
-var Promise = require('bluebird');
 var lunr = require('lunr');
-
 
 /**
  * responsible for making full text searching on items

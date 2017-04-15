@@ -1,0 +1,29 @@
+{
+  "name": "itemsjs",
+  "description": "Created to perform fast search on small json dataset (up to 1000 elements).",
+  "main": "dist/itemsjs.js",
+  "version": "1.0.6",
+  "authors": [
+    "Matt Rzepa"
+  ],
+  "license": "Apache-2.0",
+  "keywords": [
+    "full",
+    "text",
+    "search",
+    "faceted",
+    "search",
+    "javascript",
+    "search",
+    "engine",
+    "json"
+  ],
+  "homepage": "https://github.com/itemsapi/itemsjs",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
