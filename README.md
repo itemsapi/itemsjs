@@ -261,11 +261,11 @@ Result
 
 ```js
 // initialize search index
+// `data` is an array of objects (items)
+// `configuration` is an instruction how to index data, how to generate faceted search (aggregations) and which fields are searchable.
 const itemsjs = require('itemsjs')(data, configuration);
 ```
 
-- `data` is an array of objects (items)
-- `configuration` is an instruction how to index data, how to generate faceted search (aggregations) and which fields are searchable.
 
 ```js
 // configuration example
@@ -276,9 +276,22 @@ var configuration = {
       size: 10
     }
   },
-  searchableFields: ['name', 'tags', genres']
+  searchableFields: ['name', 'tags', 'genres']
 }
 ```
+
+```js
+// search example
+var result = itemsjs.search({
+  per_page: 10,
+  page: 1,
+  query: 'drama',
+  filters: {
+    tags: ['1980s']
+  }
+})
+```
+
 
 ## Credit
 
