@@ -262,7 +262,8 @@ Result
 ```js
 // initialize search index
 // `data` is an array of objects (items)
-// `configuration` is an instruction how to index data, how to generate faceted search (aggregations) and which fields are searchable.
+// `configuration` is an instruction how to index data, 
+// how to generate faceted search (aggregations) and which fields are searchable.
 const itemsjs = require('itemsjs')(data, configuration);
 ```
 
