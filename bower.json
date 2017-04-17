@@ -2,7 +2,7 @@
   "name": "itemsjs",
   "description": "Created to perform fast search on small json dataset (up to 1000 elements).",
   "main": "dist/itemsjs.js",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "authors": [
     "Matt Rzepa"
   ],

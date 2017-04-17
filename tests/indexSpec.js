@@ -157,5 +157,30 @@ describe('itemjs general tests', function() {
     done();
   });
 
+  it('search by tags', function test(done) {
+    var items = [{
+      name: 'movie1',
+      tags: ['drama']
+    }, {
+      name: 'movie2',
+      tags: ['drama', 'crime']
+    }, {
+      name: 'movie3',
+    }];
+
+    var itemsjs = require('./../src/index')(items, {
+      searchableFields: ['name', 'tags']
+    });
+    var result = itemsjs.search({
+      query: 'drama'
+    });
+    assert.equal(result.data.items.length, 2);
+
+    var result = itemsjs.search({
+      query: 'crime'
+    });
+    assert.equal(result.data.items.length, 1);
+    done();
+  });
 
 });

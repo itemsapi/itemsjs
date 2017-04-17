@@ -6,26 +6,40 @@ var _ = require('lodash');
 
 describe('fulltext', function() {
 
-  var items = _.map([
-    'Godfather',
-    'Fight club',
-    'Forrest Gump'
-  ], (val) => {
-    return {
-      name: val
-    }
-  });
+  var items = [{
+    name: 'Godfather',
+    tags: ['mafia', 'crime'],
+  }, {
+    name: 'Fight club',
+    tags: ['dark humor', 'anti establishment'],
+  }, {
+    name: 'Forrest Gump',
+    tags: ['running', 'vietnam'],
+  }];
 
-  it('check includes', function test(done) {
+  it('checks search', function test(done) {
 
     var fulltext = new Fulltext(items);
     assert.equal(fulltext.search('club').length, 1);
     assert.equal(fulltext.search('gump').length, 1);
+    assert.equal(fulltext.search('forrest gump').length, 1);
+    assert.equal(fulltext.search('forrest GUMP').length, 1);
     assert.equal(fulltext.search('gump')[0].name, 'Forrest Gump');
     assert.equal(fulltext.search('gump')[0].id, undefined);
     assert.equal(fulltext.search('titanic').length, 0);
     assert.equal(fulltext.search().length, 3);
-    console.log(fulltext.search('gump'));
+
+    done();
+  });
+
+  it('checks search on another fields', function test(done) {
+
+    var fulltext = new Fulltext(items, {
+      searchableFields: ['name', 'tags']
+    });
+    assert.equal(fulltext.search('vietnam').length, 1);
+    assert.equal(fulltext.search('dark').length, 1);
+    assert.equal(fulltext.search('anti').length, 1);
 
     done();
   });

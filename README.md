@@ -17,7 +17,7 @@ npm install itemsjs
 ```
 
 ```js
-const itemsjs = require('itemsjs')(data);
+const itemsjs = require('itemsjs')(data, configuration);
 const items = itemsjs.search();
 ```
 
@@ -242,7 +242,28 @@ Result
 }
 ```
 
+## Guides
 
+```js
+// initialize search index
+const itemsjs = require('itemsjs')(data, configuration);
+```
+
+- `data` is an array of objects (items)
+- `configuration` is an instruction how to index data, how to generate faceted search (aggregations) and which fields are searchable.
+
+```js
+// configuration example
+var configuration = {
+  aggregations: {
+    tags: {
+      title: 'Tags',
+      size: 10
+    }
+  },
+  searchableFields: ['name', 'tags', genres']
+}
+```
 
 ## Credit
 

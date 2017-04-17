@@ -4,15 +4,20 @@ var lunr = require('lunr');
 /**
  * responsible for making full text searching on items
  */
-var Fulltext = function(items, schema) {
+var Fulltext = function(items, config) {
 
+  config = config || {};
+  config.searchableFields = config.searchableFields || [];
   this.items = items;
   // creating index
   this.idx = lunr(function () {
     // currently schema hardcoded
     this.field('name', { boost: 10 });
-    this.field('description');
-    this.field('tags');
+
+    var self = this;
+    _.forEach(config.searchableFields, function(field) {
+      self.field(field);
+    });
     this.ref('id');
   })
   //var items2 = _.clone(items)

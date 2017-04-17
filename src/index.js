@@ -8,7 +8,7 @@ module.exports = function itemsjs(items, configuration) {
 
   // responsible for full text search over the items
   // it makes inverted index and it is very fast
-  var fulltext = new Fulltext(items);
+  var fulltext = new Fulltext(items, configuration);
 
   return {
     /**
