@@ -21,6 +21,21 @@ const itemsjs = require('itemsjs')(data, configuration);
 const items = itemsjs.search();
 ```
 
+or using from the client side:
+
+```bash
+bower install itemsjs
+```
+
+```html
+<script src="/bower_components/itemsjs/dist/itemsjs.js"></script>
+```
+
+```js
+itemsjs = itemsjs(data, configuration);
+itemsjs.search()
+```
+
 ## Example
 
 ```bash
