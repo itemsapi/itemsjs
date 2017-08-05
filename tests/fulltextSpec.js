@@ -25,7 +25,7 @@ describe('fulltext', function() {
     assert.equal(fulltext.search('forrest gump').length, 1);
     assert.equal(fulltext.search('forrest GUMP').length, 1);
     assert.equal(fulltext.search('gump')[0].name, 'Forrest Gump');
-    assert.equal(fulltext.search('gump')[0].id, undefined);
+    assert.equal(fulltext.search('gump')[0].id, 3);
     assert.equal(fulltext.search('titanic').length, 0);
     assert.equal(fulltext.search().length, 3);
 

@@ -11,6 +11,7 @@ describe('itemjs general tests', function() {
     tags: ['a', 'b', 'c', 'd'],
     actors: ['a', 'b']
   }, {
+    id: 10,
     name: 'movie2',
     tags: ['a', 'e', 'f'],
     actors: ['a', 'b']
@@ -25,6 +26,9 @@ describe('itemjs general tests', function() {
   it('makes search', function test(done) {
     var result = itemsjs.search();
     assert.equal(result.data.items.length, 3);
+    assert.equal(result.data.items[0].id, 1);
+    assert.equal(result.data.items[1].id, 10);
+    assert.equal(result.data.items[2].id, 2);
     done();
   });
 

@@ -3,6 +3,7 @@ var lunr = require('lunr');
 
 /**
  * responsible for making full text searching on items
+ * config provide only searchableFields
  */
 var Fulltext = function(items, config) {
 
@@ -44,7 +45,7 @@ Fulltext.prototype = {
     }
     return _.map(this.idx.search(query), (val) => {
       var item = this.store[val.ref]
-      delete item.id;
+      //delete item.id;
       return item;
     })
   }
