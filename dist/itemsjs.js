@@ -17117,13 +17117,13 @@ module.exports = require('./src/index');
  *       this.field('title', 10)
  *       this.field('tags', 100)
  *       this.field('body')
- *
+ *       
  *       this.ref('cid')
- *
+ *       
  *       this.pipeline.add(function () {
  *         // some custom pipeline function
  *       })
- *
+ *       
  *     })
  *
  * @param {Function} config A function that will be called with the new instance
@@ -19211,7 +19211,9 @@ module.exports.includes = function(items, filters) {
 }
 
 module.exports.includes_any = function(items, filters) {
-  return !filters || _.some(filters, (val) => {
+
+  //return !filters || (_.isArray(filters) && !filters.length) || _.some(filters, (val) => {
+  return !filters || (filters instanceof Array && filters.length === 0) || _.some(filters, (val) => {
     return _.includes(items, val);
   });
 }
@@ -19293,23 +19295,24 @@ module.exports.search = function(items, input, configuration) {
 
 
   // responsible to filters items by aggregation values (processed input)
-  items = module.exports.items_by_aggregations(items, input.aggregations);
+  var filtered_items = module.exports.items_by_aggregations(items, input.aggregations);
 
   var per_page = input.per_page || 12;
   var page = input.page || 1;
 
   // calculate aggregations based on items and processed input
   // it returns buckets
+  //var aggregations = module.exports.aggregations(filtered_items, input.aggregations);
   var aggregations = module.exports.aggregations(items, input.aggregations);
 
   return {
     pagination: {
       per_page: per_page,
       page: page,
-      total: items.length
+      total: filtered_items.length
     },
     data: {
-      items: items.slice((page - 1) * per_page, page * per_page),
+      items: filtered_items.slice((page - 1) * per_page, page * per_page),
       aggregations: aggregations
     }
   };
@@ -19368,6 +19371,7 @@ module.exports.filterable_item = function(item, aggregations) {
 
 /*
  * fields count for one item based on aggregation options
+ * returns buckets objects
  */
 module.exports.bucket = function(item, aggregations) {
 
@@ -19379,13 +19383,15 @@ module.exports.bucket = function(item, aggregations) {
     if (_.every(clone_aggregations_keys, (key) => {
       //return helpers.includes(item[key], aggregations[key].filters);
       if (aggregations[key].conjunction === false) {
-        return helpers.includes_any(item[key], aggregations[key].filters);
+        return true;
+        //return helpers.includes_any(item[key], aggregations[key].filters);
       } else {
         return helpers.includes(item[key], aggregations[key].filters);
       }
     }) === true) {
 
-      if (aggregations[key].conjunction === false && helpers.includes_any(item[key], aggregations[key].filters)) {
+      //if (aggregations[key].conjunction === false && helpers.includes_any(item[key], aggregations[key].filters)) {
+      if (aggregations[key].conjunction === false) {
         return item[key] ? _.flatten([item[key]]) : [];
       } else if (aggregations[key].conjunction !== false && helpers.includes(item[key], aggregations[key].filters)) {
         return item[key] ? _.flatten([item[key]]) : [];
@@ -19413,7 +19419,8 @@ module.exports.buckets = function(items, field, agg, aggregations) {
 
     if (
       agg.conjunction !== false && helpers.includes(elements, agg.filters)
-    || agg.conjunction === false && helpers.includes_any(elements, agg.filters)
+    //|| agg.conjunction === false && helpers.includes_any(elements, agg.filters)
+    || agg.conjunction === false
        ) {
 
       // go through elements in item field
