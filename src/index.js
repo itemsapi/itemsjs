@@ -14,6 +14,7 @@ module.exports = function itemsjs(items, configuration) {
     /**
      * per_page
      * page
+     * query
      * filters
      */
     search: function(input) {
@@ -24,6 +25,8 @@ module.exports = function itemsjs(items, configuration) {
 
       // convert input and create aggregations
       // based on user input and search configuration
+      // @TODO it shouldn't be processed here or at all in that way.
+      // values should be provided as they were
       input.aggregations = _.mapValues((configuration.aggregations), (val, key) => {
         if (input.filters && input.filters[key]) {
           val.filters = input.filters[key];
@@ -34,6 +37,16 @@ module.exports = function itemsjs(items, configuration) {
       });
 
       return service.search(items, input)
+    },
+
+    /**
+     * returns list of elements for specific aggregation i.e. list of tags
+     * name
+     * query
+     * per_page
+     * page
+     */
+    aggregation: function(data) {
     }
   }
 }

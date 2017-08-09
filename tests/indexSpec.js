@@ -106,6 +106,56 @@ describe('itemjs general tests', function() {
     done();
   });
 
+  it('makes aggregations when configuration supplied and input provided', function test(done) {
+    var itemsjs = require('./../src/index')(items, {
+      aggregations: {
+        tags: {
+          type: 'terms',
+          size: 10,
+          title: 'Tags'
+        }
+      }
+    });
+    var result = itemsjs.search({
+      filters: {
+        tags: ['a']
+      }
+    });
+    assert.equal(result.data.items.length, 3);
+    assert.equal(result.data.aggregations.tags.name, 'tags');
+    assert.equal(result.data.aggregations.tags.buckets.length, 6);
+
+    var result = itemsjs.search({
+      filters: {
+        tags: ['a', 'z']
+      }
+    });
+    assert.equal(result.data.items.length, 0);
+    assert.equal(result.data.aggregations.tags.name, 'tags');
+    assert.equal(result.data.aggregations.tags.buckets.length, 0);
+
+    var itemsjs = require('./../src/index')(items, {
+      aggregations: {
+        tags: {
+          type: 'terms',
+          size: 10,
+          conjunction: false,
+          title: 'Tags'
+        },
+      }
+    });
+
+    var result = itemsjs.search({
+      filters: {
+        tags: ['a', 'c']
+      }
+    });
+    assert.equal(result.data.items.length, 3);
+    assert.equal(result.data.aggregations.tags.name, 'tags');
+    assert.equal(result.data.aggregations.tags.buckets.length, 6);
+    done();
+  });
+
   it('makes aggregations for non array (string) fields', function test(done) {
     var items = [{
       name: 'movie1',

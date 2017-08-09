@@ -2,18 +2,22 @@ var _ = require('lodash');
 var helpers = require('./helpers');
 var Fulltext = require('./fulltext');
 
-//module.exports.search = function(items, options) {
+/**
+ * search by filters
+ */
 module.exports.search = function(items, input, configuration) {
 
   input = input || {};
 
-  // responsible to filters items by aggregation values
+
+  // responsible to filters items by aggregation values (processed input)
   items = module.exports.items_by_aggregations(items, input.aggregations);
 
   var per_page = input.per_page || 12;
   var page = input.page || 1;
 
-  // calculate aggregations based on items and input
+  // calculate aggregations based on items and processed input
+  // it returns buckets
   var aggregations = module.exports.aggregations(items, input.aggregations);
 
   return {
@@ -29,16 +33,29 @@ module.exports.search = function(items, input, configuration) {
   };
 }
 
+/**
+ * return items which pass filters (aggregations)
+ */
 module.exports.items_by_aggregations = function(items, aggregations) {
+
   return _.filter(items, (item) => {
-    return module.exports.aggregateable_item(item, aggregations);
+    return module.exports.filterable_item(item, aggregations);
   });
 }
 
+/**
+ * it returns list of aggregations with buckets
+ * it calculates based on object filters like {tags: ['drama', '1980s']} against list of items
+ * in realtime
+ *
+ * @TODO
+ * consider caching aggregations results in startup time
+ */
 module.exports.aggregations = function(items, aggregations) {
 
   var position = 0;
   return _.mapValues((aggregations), (val, key) => {
+    // key is a 'tags' and val is ['drama', '1980s']
     ++position;
     return {
       name: key,
@@ -50,10 +67,20 @@ module.exports.aggregations = function(items, aggregations) {
 }
 
 
-module.exports.aggregateable_item = function(item, aggregations) {
+/**
+ * checks if item is passing aggregations - if it's filtered or not
+ * @TODO should accept filters (user input) as the parameter
+ * and not user params merged with global config
+ */
+module.exports.filterable_item = function(item, aggregations) {
 
   return _.every(_.keys(aggregations), (key) => {
-    return helpers.includes(item[key], aggregations[key].filters);
+
+    if (aggregations[key].conjunction === false) {
+      return helpers.includes_any(item[key], aggregations[key].filters);
+    } else {
+      return helpers.includes(item[key], aggregations[key].filters);
+    }
   });
 }
 
@@ -68,9 +95,17 @@ module.exports.bucket = function(item, aggregations) {
     let clone_aggregations_keys = _.keys(clone_aggregations);
 
     if (_.every(clone_aggregations_keys, (key) => {
-      return helpers.includes(item[key], aggregations[key].filters);
+      //return helpers.includes(item[key], aggregations[key].filters);
+      if (aggregations[key].conjunction === false) {
+        return helpers.includes_any(item[key], aggregations[key].filters);
+      } else {
+        return helpers.includes(item[key], aggregations[key].filters);
+      }
     }) === true) {
-      if (helpers.includes(item[key], aggregations[key].filters)) {
+
+      if (aggregations[key].conjunction === false && helpers.includes_any(item[key], aggregations[key].filters)) {
+        return item[key] ? _.flatten([item[key]]) : [];
+      } else if (aggregations[key].conjunction !== false && helpers.includes(item[key], aggregations[key].filters)) {
         return item[key] ? _.flatten([item[key]]) : [];
       } else {
         return [];
@@ -81,18 +116,27 @@ module.exports.bucket = function(item, aggregations) {
   });
 }
 
+/**
+ * returns buckets list for items for specific key and aggregation configuration
+ *
+ * @TODO it should be more lower level and should not be dependent directly on user configuration
+ * should be able to sort buckets alphabetically, by count and by asc or desc
+ */
 module.exports.buckets = function(items, field, agg, aggregations) {
 
   var buckets = _.transform(items, function(result, item) {
 
     item = module.exports.bucket(item, aggregations)
-    var keys = item[field];
+    var elements = item[field];
 
+    if (
+      agg.conjunction !== false && helpers.includes(elements, agg.filters)
+    || agg.conjunction === false && helpers.includes_any(elements, agg.filters)
+       ) {
 
-    if (helpers.includes(keys, agg.filters)) {
-      // go through keys in item field
-      for (var i = 0 ; keys && i < keys.length ; ++i) {
-        var key = keys[i];
+      // go through elements in item field
+      for (var i = 0 ; elements && i < elements.length ; ++i) {
+        var key = elements[i];
         if (!result[key]) {
           result[key] = 1;
         } else {

@@ -23,7 +23,9 @@ describe('bucket', function() {
 
   it('filters items by aggregations', function test(done) {
     var result = service.items_by_aggregations(items, {
-      tags: {},
+      tags: {
+        filters: ['a']
+      },
       actors: {}
     })
 
@@ -31,20 +33,88 @@ describe('bucket', function() {
     done();
   });
 
-  it('has aggregateable item', function test(done) {
-    assert.equal(service.aggregateable_item(items[0], {
+  it('filters items by aggregations and not existent filters', function test(done) {
+    var result = service.items_by_aggregations(items, {
+      tags: {
+        filters: ['z']
+      },
+      actors: {}
+    })
+
+    assert.equal(result.length, 0);
+    done();
+  });
+
+  it('filters items by aggregations and disjunction', function test(done) {
+    var result = service.items_by_aggregations(items, {
+      tags: {
+        filters: ['a', 'c'],
+        conjunction: false
+      },
+      actors: {}
+    })
+
+    assert.equal(result.length, 3);
+    done();
+  });
+
+  it('has filterable item', function test(done) {
+
+    var item = {
+      name: 'movie1',
+      tags: ['a', 'b', 'c', 'd'],
+      actors: ['a', 'b']
+    }
+
+    assert.equal(service.filterable_item(item, {
       tags: {},
       actors: {}
     }), true);
 
-    assert.equal(service.aggregateable_item(items[0], {
+    assert.equal(service.filterable_item(item, {
       tags: {
         filters: ['f']
       },
       actors: {}
     }), false);
 
-    assert.equal(service.aggregateable_item(items[0], {
+    assert.equal(service.filterable_item(item, {
+      tags: {
+        filters: ['a']
+      },
+      actors: {}
+    }), true);
+
+    assert.equal(service.filterable_item(item, {
+      tags: {
+        filters: ['a', 'f']
+      },
+    }), false);
+
+    assert.equal(service.filterable_item(item, {
+      tags: {
+        filters: ['a', 'f'],
+        conjunction: false
+      },
+    }), true);
+
+    assert.equal(service.filterable_item({
+      tags: [ 'a', 'e', 'f' ]
+    }, {
+      tags: {
+        filters: [ 'a', 'c' ],
+        conjunction: false
+      },
+    }), true);
+
+    assert.equal(service.filterable_item(item, {
+      tags: {
+        filters: ['g', 'f'],
+        conjunction: false
+      },
+    }), false);
+
+    assert.equal(service.filterable_item(item, {
       tags: {
         filters: ['a']
       },
@@ -53,18 +123,6 @@ describe('bucket', function() {
       }
     }), true);
 
-    done();
-  });
-
-  it('filters items by aggregations', function test(done) {
-    var result = service.items_by_aggregations(items, {
-      tags: {
-        filters: ['f']
-      },
-      actors: {}
-    })
-
-    assert.equal(result.length, 1);
     done();
   });
 

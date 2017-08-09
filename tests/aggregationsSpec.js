@@ -4,6 +4,7 @@ var should = require('should');
 var expect = require('expect');
 var assert = require('assert');
 var service = require('./../src/lib');
+var sinon = require('sinon')
 
 describe('aggregations', function() {
 
@@ -21,7 +22,6 @@ describe('aggregations', function() {
     actors: ['e']
   }]
 
-  console.log(JSON.stringify(items));
 
   it('returns buckets', function test(done) {
     // should be search here
@@ -110,12 +110,37 @@ describe('aggregations', function() {
       tags: {
         filters: ['e', 'f'],
         title: 'Tags',
-        conjunction: false
+        conjunction: true
       }
     })
 
     assert.equal(result.tags.buckets.length, 3);
     assert.equal(result.tags.title, 'Tags');
+
+    done();
+  });
+
+  it('returns buckets tag field with multi array filtering and disjunction', function test(done) {
+
+    var spy = sinon.spy(service, 'buckets');
+    var result = service.aggregations(items, {
+      tags: {
+        filters: ['e', 'z'],
+        title: 'Tags',
+        conjunction: false
+      }
+    })
+
+    assert.equal(spy.callCount, 1);
+    assert.equal(spy.firstCall.args[0].length, 3);
+    assert.equal(spy.firstCall.args[1], 'tags');
+    assert.equal(spy.firstCall.args[2].conjunction, false);
+    assert.deepEqual(spy.firstCall.args[2].filters, ['e', 'z']);
+    assert.equal(spy.firstCall.args[3].tags.conjunction, false);
+    assert.deepEqual(spy.firstCall.args[3].tags.filters, ['e', 'z']);
+    assert.equal(result.tags.buckets.length, 3);
+    assert.equal(result.tags.title, 'Tags');
+    spy.restore();
 
     done();
   });

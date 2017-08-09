@@ -23,11 +23,9 @@ describe('buckets', function() {
 
   it('returns aggregated fields for items', function test(done) {
     var result = service.buckets(items, 'tags', {
-      size: 5,
       title: 'Tags'
     }, {
       tags: {
-        size: 5,
         title: 'Tags'
       }
     });
@@ -39,7 +37,39 @@ describe('buckets', function() {
     done();
   });
 
-  it('returns aggregated fields for items with non array field', function test(done) {
+  it('returns aggregated fields for items with filters as non conjuction', function test(done) {
+    var result = service.buckets(items, 'tags', {
+      filters: ['a', 'e'],
+    }, {
+      tags: {
+      }
+    });
+
+    assert.equal(result.length, 3);
+    assert.equal(result[0].key, 'a');
+    assert.equal(result[0].doc_count, 1);
+    assert.equal(result[1].key, 'e');
+    assert.equal(result[1].doc_count, 1);
+    assert.equal(result[2].key, 'f');
+    assert.equal(result[2].doc_count, 1);
+
+    done();
+  });
+
+  it('returns aggregated fields for items with disjunctive filter', function test(done) {
+    var result = service.buckets(items, 'tags', {
+      filters: ['a', 'e'],
+      conjunction: false
+    }, {
+      tags: {
+      }
+    });
+
+    assert.equal(result.length, 6);
+    done();
+  });
+
+  it('returns aggregated fields for items with non array field (filters is empty)', function test(done) {
     var items = [{
       name: 'movie1',
       tags: 'a',
@@ -52,11 +82,9 @@ describe('buckets', function() {
     }]
 
     var result = service.buckets(items, 'tags', {
-      size: 5,
       title: 'Tags'
     }, {
       tags: {
-        size: 5,
         title: 'Tags'
       }
     });

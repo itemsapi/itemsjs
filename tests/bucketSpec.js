@@ -81,6 +81,46 @@ describe('bucket', function() {
     var result = service.bucket({
       name: 'movie1',
       tags: ['a', 'b', 'c', 'd'],
+      actors: ['a', 'b']
+    }, {
+      tags: {
+        filters: ['a', 'e'],
+        conjunction: false
+      },
+      actors: {}
+    })
+
+    assert.equal(result.tags.length, 4);
+    assert.equal(result.actors.length, 2);
+
+    done();
+  });
+
+  it('returns aggregated fields for one item', function test(done) {
+    var result = service.bucket({
+      name: 'movie1',
+      tags: ['a', 'b', 'c', 'd'],
+      actors: ['a', 'b']
+    }, {
+      tags: {
+        filters: ['a', 'e'],
+        conjunction: false
+      },
+      actors: {
+        filters: ['z']
+      }
+    })
+
+    assert.equal(result.tags.length, 0);
+    assert.equal(result.actors.length, 0);
+
+    done();
+  });
+
+  it('returns aggregated fields for one item', function test(done) {
+    var result = service.bucket({
+      name: 'movie1',
+      tags: ['a', 'b', 'c', 'd'],
       genre: ['drama', 'comedy'],
       actors: ['a', 'b']
     }, {
@@ -114,6 +154,29 @@ describe('bucket', function() {
 
     assert.equal(result.tags.length, 4);
     // string was converted to array
+    assert.equal(result.genre.length, 1);
+    assert.equal(result.actors.length, 2);
+
+    done();
+  });
+
+  it('returns aggregated fields for one item with non array field', function test(done) {
+    var result = service.bucket({
+      name: 'movie1',
+      tags: ['a', 'b', 'c', 'd'],
+      genre: 'drama',
+      actors: ['a', 'b']
+    }, {
+      genre: {
+        filters: ['drama']
+      },
+      tags: {
+        filters: ['a']
+      },
+      actors: {}
+    });
+
+    assert.equal(result.tags.length, 4);
     assert.equal(result.genre.length, 1);
     assert.equal(result.actors.length, 2);
 
