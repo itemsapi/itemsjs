@@ -7,7 +7,9 @@ module.exports.includes = function(items, filters) {
 }
 
 module.exports.includes_any = function(items, filters) {
-  return !filters || _.some(filters, (val) => {
+
+  //return !filters || (_.isArray(filters) && !filters.length) || _.some(filters, (val) => {
+  return !filters || (filters instanceof Array && filters.length === 0) || _.some(filters, (val) => {
     return _.includes(items, val);
   });
 }

@@ -66,6 +66,16 @@ describe('buckets', function() {
     });
 
     assert.equal(result.length, 6);
+
+    var result = service.buckets(items, 'tags', {
+      filters: ['z'],
+      conjunction: false
+    }, {
+      tags: {
+      }
+    });
+
+    assert.equal(result.length, 6);
     done();
   });
 

@@ -22,26 +22,6 @@ describe('aggregations', function() {
     actors: ['e']
   }]
 
-
-  it('returns buckets', function test(done) {
-    // should be search here
-    var result = service.aggregations(items, {
-      tags: {
-        //values: ['Berlin'],
-        //conjuction: true,
-        //type: 'terms',
-        //size: 10
-      },
-    })
-    //console.log(JSON.stringify(result, null, 2));
-    assert.equal(result.tags.buckets.length, 6);
-    assert.equal(result.tags.buckets[0].key, 'a');
-    assert.equal(result.tags.buckets[1].key, 'c');
-
-
-    done();
-  });
-
   it('returns buckets for two fields (tags, actors)', function test(done) {
     var result = service.aggregations(items, {
       tags: {
@@ -138,7 +118,7 @@ describe('aggregations', function() {
     assert.deepEqual(spy.firstCall.args[2].filters, ['e', 'z']);
     assert.equal(spy.firstCall.args[3].tags.conjunction, false);
     assert.deepEqual(spy.firstCall.args[3].tags.filters, ['e', 'z']);
-    assert.equal(result.tags.buckets.length, 3);
+    assert.equal(result.tags.buckets.length, 6);
     assert.equal(result.tags.title, 'Tags');
     spy.restore();
 

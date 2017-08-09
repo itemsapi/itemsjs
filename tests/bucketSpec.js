@@ -4,6 +4,8 @@ var should = require('should');
 var expect = require('expect');
 var assert = require('assert');
 var service = require('./../src/lib');
+var helpers = require('./../src/helpers');
+var sinon = require('sinon')
 
 describe('bucket', function() {
 
@@ -78,11 +80,14 @@ describe('bucket', function() {
   });
 
   it('returns aggregated fields for one item', function test(done) {
-    var result = service.bucket({
+
+    var item = {
       name: 'movie1',
       tags: ['a', 'b', 'c', 'd'],
       actors: ['a', 'b']
-    }, {
+    }
+
+    var result = service.bucket(item, {
       tags: {
         filters: ['a', 'e'],
         conjunction: false
@@ -92,6 +97,34 @@ describe('bucket', function() {
 
     assert.equal(result.tags.length, 4);
     assert.equal(result.actors.length, 2);
+
+    var spy = sinon.spy(helpers, 'includes_any');
+    var spy2 = sinon.spy(helpers, 'includes');
+
+
+
+    var result = service.bucket(item, {
+      tags: {
+        filters: ['e'],
+        conjunction: false
+      },
+      actors: {
+        filters: ['a']
+      }
+    })
+
+    //assert.equal(spy.callCount, 2);
+    //assert.deepEqual(spy.firstCall.args[0], ['a', 'b', 'c', 'd']);
+    //assert.deepEqual(spy.firstCall.args[1], ['e']);
+    //assert.equal(spy.firstCall.returnValue, false);
+    //console.log(spy2.firstCall.args);
+    assert.deepEqual(spy2.firstCall.args[0], ['a', 'b']);
+    assert.deepEqual(spy2.firstCall.args[1], ['a']);
+    assert.equal(spy2.firstCall.returnValue, true);
+    assert.equal(result.tags.length, 4);
+    assert.equal(result.actors.length, 2);
+    spy.restore();
+    spy2.restore();
 
     done();
   });
