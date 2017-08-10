@@ -2346,8 +2346,16 @@ module.exports.bucket_field = function(item, aggregations, key) {
   let clone_aggregations_keys = _.keys(clone_aggregations);
 
   // check if all aggregations except current key are including properly
-  if (_.every(clone_aggregations_keys, (key) => {
-    return helpers.includes(item[key], aggregations[key].filters);
+  // for key with conjunction = false there is different conditions
+  if (_.every(clone_aggregations_keys, (local_key) => {
+    //return helpers.includes(item[key], aggregations[key].filters);
+
+    if (aggregations[key].conjunction === false) {
+      return helpers.includes_any(item[local_key], aggregations[local_key].filters);
+    } else {
+      return helpers.includes(item[local_key], aggregations[local_key].filters);
+    }
+
   }) === true) {
 
     if (aggregations[key].conjunction === false || helpers.includes(item[key], aggregations[key].filters)) {
