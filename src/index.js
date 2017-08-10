@@ -1,5 +1,5 @@
 var service = require('./lib');
-var _ = require('lodash');
+var _ = require('./mylodash');
 var Fulltext = require('./fulltext');
 
 module.exports = function itemsjs(items, configuration) {

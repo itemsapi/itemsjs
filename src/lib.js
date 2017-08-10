@@ -1,4 +1,4 @@
-var _ = require('lodash');
+var _ = require('./mylodash');
 var helpers = require('./helpers');
 var Fulltext = require('./fulltext');
 
@@ -92,13 +92,11 @@ module.exports.filterable_item = function(item, aggregations) {
  */
 module.exports.bucket_field = function(item, aggregations, key) {
 
+  let clone_aggregations = _.clone(aggregations);
+  delete clone_aggregations[key];
+
   // all aggregations except current one
-  var clone_aggregations_keys = _.chain(aggregations)
-  .keys()
-  .filter(val => {
-    return val !== key
-  })
-  .value()
+  let clone_aggregations_keys = _.keys(clone_aggregations);
 
   // check if all aggregations except current key are including properly
   if (_.every(clone_aggregations_keys, (key) => {
