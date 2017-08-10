@@ -85,6 +85,35 @@ module.exports.filterable_item = function(item, aggregations) {
   });
 }
 
+
+/*
+ * fields count for one item based on aggregation options
+ * returns buckets objects
+ */
+module.exports.bucket_field = function(item, aggregations, key) {
+
+  // all aggregations except current one
+  var clone_aggregations_keys = _.chain(aggregations)
+  .keys()
+  .filter(val => {
+    return val !== key
+  })
+  .value()
+
+  // check if all aggregations except current key are including properly
+  if (_.every(clone_aggregations_keys, (key) => {
+    return helpers.includes(item[key], aggregations[key].filters);
+  }) === true) {
+
+    if (aggregations[key].conjunction === false || helpers.includes(item[key], aggregations[key].filters)) {
+      //return _.flatten([item[key]]);
+      return item[key] ? _.flatten([item[key]]) : [];
+    }
+  }
+
+  return [];
+}
+
 /*
  * fields count for one item based on aggregation options
  * returns buckets objects
@@ -92,31 +121,8 @@ module.exports.filterable_item = function(item, aggregations) {
 module.exports.bucket = function(item, aggregations) {
 
   return _.mapValues((aggregations), (val, key) => {
-    let clone_aggregations = _.clone(aggregations);
-    delete clone_aggregations[key];
-    let clone_aggregations_keys = _.keys(clone_aggregations);
 
-    if (_.every(clone_aggregations_keys, (key) => {
-      //return helpers.includes(item[key], aggregations[key].filters);
-      if (aggregations[key].conjunction === false) {
-        return true;
-        //return helpers.includes_any(item[key], aggregations[key].filters);
-      } else {
-        return helpers.includes(item[key], aggregations[key].filters);
-      }
-    }) === true) {
-
-      //if (aggregations[key].conjunction === false && helpers.includes_any(item[key], aggregations[key].filters)) {
-      if (aggregations[key].conjunction === false) {
-        return item[key] ? _.flatten([item[key]]) : [];
-      } else if (aggregations[key].conjunction !== false && helpers.includes(item[key], aggregations[key].filters)) {
-        return item[key] ? _.flatten([item[key]]) : [];
-      } else {
-        return [];
-      }
-    } else {
-      return [];
-    }
+    return module.exports.bucket_field(item, aggregations, key);
   });
 }
 

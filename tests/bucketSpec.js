@@ -87,21 +87,100 @@ describe('bucket', function() {
       actors: ['a', 'b']
     }
 
+    var result = service.bucket_field(item, {
+      tags: {
+        filters: ['a'],
+      },
+      actors: {
+        filters: []
+      }
+    }, 'tags')
+
+    assert.deepEqual(result, ['a', 'b', 'c', 'd']);
+
+    var result = service.bucket_field(item, {
+      tags: {
+        filters: ['a', 'z'],
+      },
+      actors: {
+        filters: []
+      }
+    }, 'tags')
+
+    assert.deepEqual(result, []);
+
+
+
+    var result = service.bucket_field(item, {
+      tags: {
+        filters: ['a', 'z'],
+        conjunction: false
+      },
+      actors: {
+        filters: [],
+      }
+    }, 'tags')
+
+    assert.deepEqual(result, ['a', 'b', 'c', 'd']);
+
+    var result = service.bucket_field(item, {
+      tags: {
+        filters: ['a', 'e'],
+      },
+      actors: {
+        filters: ['z']
+      }
+    }, 'tags')
+    assert.deepEqual(result, []);
+
+    var result = service.bucket_field(item, {
+      tags: {
+        filters: ['a', 'e'],
+        conjunction: false
+      },
+      actors: {
+        filters: ['z']
+      }
+    }, 'tags')
+    assert.deepEqual(result, []);
+
+    var result = service.bucket_field(item, {
+      tags: {
+        filters: ['a', 'e'],
+        conjunction: false
+      },
+      actors: {
+        filters: ['a', 'b']
+      }
+    }, 'tags')
+    assert.deepEqual(result, ['a', 'b', 'c', 'd']);
+
+    done();
+  })
+
+
+  it('returns aggregated fields for one item', function test(done) {
+
+    var item = {
+      name: 'movie1',
+      tags: ['a', 'b', 'c', 'd'],
+      actors: ['a', 'b']
+    }
+
     var result = service.bucket(item, {
       tags: {
         filters: ['a', 'e'],
         conjunction: false
       },
-      actors: {}
+      actors: {
+        filters: []
+      }
     })
 
     assert.equal(result.tags.length, 4);
-    assert.equal(result.actors.length, 2);
+    assert.equal(result.actors.length, 0);
 
-    var spy = sinon.spy(helpers, 'includes_any');
-    var spy2 = sinon.spy(helpers, 'includes');
-
-
+    var spy = sinon.spy(service, 'bucket_field');
 
     var result = service.bucket(item, {
       tags: {
@@ -113,18 +192,10 @@ describe('bucket', function() {
       }
     })
 
-    //assert.equal(spy.callCount, 2);
-    //assert.deepEqual(spy.firstCall.args[0], ['a', 'b', 'c', 'd']);
-    //assert.deepEqual(spy.firstCall.args[1], ['e']);
-    //assert.equal(spy.firstCall.returnValue, false);
-    //console.log(spy2.firstCall.args);
-    assert.deepEqual(spy2.firstCall.args[0], ['a', 'b']);
-    assert.deepEqual(spy2.firstCall.args[1], ['a']);
-    assert.equal(spy2.firstCall.returnValue, true);
     assert.equal(result.tags.length, 4);
-    assert.equal(result.actors.length, 2);
+    assert.equal(result.actors.length, 0);
+    assert.equal(spy.callCount, 2);
     spy.restore();
-    spy2.restore();
 
     done();
   });
