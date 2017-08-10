@@ -99,7 +99,7 @@ describe('bucket', function() {
     })
 
     assert.equal(result.tags.length, 4);
-    assert.equal(result.actors.length, 0);
+    assert.equal(result.actors.length, 2);
 
     var spy = sinon.spy(service, 'bucket_field');
 

@@ -74,7 +74,9 @@ describe('itemjs tests with movies fixture', function() {
 
     var itemsjs = require('./../src/index')(items, {
       aggregations: {
-        tags: {},
+        tags: {
+          size: 500
+        },
         genres: {
           conjunction: false,
           size: 200
@@ -87,15 +89,7 @@ describe('itemjs tests with movies fixture', function() {
     });
     assert.equal(result.data.items.length, 20);
     assert.equal(result.data.aggregations.genres.buckets.length, 13);
-
-    var result = itemsjs.search({
-      per_page: 100,
-      filters: {
-        genres: ['Biography'],
-      }
-    });
-    assert.equal(result.data.items.length, 3);
-    assert.equal(result.data.aggregations.genres.buckets.length, 13);
+    assert.equal(result.data.aggregations.tags.buckets.length, 92);
 
     var spy = sinon.spy(service, 'aggregations');
 
@@ -111,8 +105,23 @@ describe('itemjs tests with movies fixture', function() {
     //console.log(spy.firstCall.args);
     //console.log(result.data.aggregations.genres.buckets);
     assert.equal(result.data.items.length, 3);
+    assert.equal(result.data.aggregations.tags.buckets.length, 15);
     assert.equal(result.data.aggregations.genres.buckets.length, 13);
     spy.restore();
+
+
+    var result = itemsjs.search({
+      per_page: 100,
+      filters: {
+        genres: ['Biography', 'Sport']
+      }
+    });
+
+    assert.equal(result.data.items.length, 3);
+    assert.equal(result.data.aggregations.tags.buckets.length, 15);
+    assert.equal(result.data.aggregations.genres.buckets.length, 13);
+
+
 
     var result = itemsjs.search({
       per_page: 100,

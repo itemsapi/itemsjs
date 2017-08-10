@@ -2348,9 +2348,9 @@ module.exports.bucket_field = function(item, aggregations, key) {
   // check if all aggregations except current key are including properly
   // for key with conjunction = false there is different conditions
   if (_.every(clone_aggregations_keys, (local_key) => {
-    //return helpers.includes(item[key], aggregations[key].filters);
+    //return helpers.includes(item[local_key], aggregations[local_key].filters);
 
-    if (aggregations[key].conjunction === false) {
+    if (aggregations[local_key].conjunction === false) {
       return helpers.includes_any(item[local_key], aggregations[local_key].filters);
     } else {
       return helpers.includes(item[local_key], aggregations[local_key].filters);

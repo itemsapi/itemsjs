@@ -92,10 +92,21 @@ describe('bucket field', function() {
         conjunction: false
       },
       actors: {
+        filters: []
+      }
+    }, 'actors')
+    assert.deepEqual(result, ['a', 'b']);
+
+    var result = service.bucket_field(item, {
+      tags: {
+        filters: ['a', 'e'],
+        conjunction: false
+      },
+      actors: {
         filters: ['a', 'b', 'c']
       }
     }, 'tags')
-    assert.deepEqual(result, ['a', 'b', 'c', 'd']);
+    assert.deepEqual(result, []);
 
     done();
   })
