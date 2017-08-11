@@ -41,12 +41,13 @@ module.exports = function itemsjs(items, configuration) {
 
     /**
      * returns list of elements for specific aggregation i.e. list of tags
-     * name
+     * name (aggregation name)
      * query
      * per_page
      * page
      */
-    aggregation: function(data) {
+    aggregation: function(input) {
+      return service.aggregation(items, input, configuration.aggregations);
     }
   }
 }

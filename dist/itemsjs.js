@@ -2234,12 +2234,13 @@ module.exports = function itemsjs(items, configuration) {
 
     /**
      * returns list of elements for specific aggregation i.e. list of tags
-     * name
+     * name (aggregation name)
      * query
      * per_page
      * page
      */
-    aggregation: function(data) {
+    aggregation: function(input) {
+      return service.aggregation(items, input, configuration.aggregations);
     }
   }
 }
@@ -2279,6 +2280,37 @@ module.exports.search = function(items, input, configuration) {
       aggregations: aggregations
     }
   };
+}
+
+/**
+ * returns list of elements in aggregation
+ * useful for autocomplete or list all aggregation options
+ */
+module.exports.aggregation = function(items, input, aggregations) {
+
+  var per_page = input.per_page || 10;
+  var page = input.page || 1;
+
+  var buckets = module.exports.buckets(items, input.name, aggregations[input.name], aggregations)
+
+  if (input.query) {
+    buckets = _.filter(buckets, val => {
+      // responsible for query
+      // counterpart to startsWith
+      return val.key.toLowerCase().indexOf(input.query.toLowerCase()) === 0;
+    });
+  }
+
+  return {
+    pagination: {
+      per_page: per_page,
+      page: page,
+      total: buckets.length
+    },
+    data: {
+      buckets: buckets.slice((page - 1) * per_page, page * per_page),
+    }
+  }
 }
 
 /**
