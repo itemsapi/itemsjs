@@ -48,6 +48,15 @@ module.exports = function itemsjs(items, configuration) {
      */
     aggregation: function(input) {
       return service.aggregation(items, input, configuration.aggregations);
+    },
+
+    /**
+     * reindex items
+     * reinitialize fulltext search
+     */
+    reindex: function(newItems) {
+      items = newItems;
+      fulltext = new Fulltext(items, configuration);
     }
   }
 }
