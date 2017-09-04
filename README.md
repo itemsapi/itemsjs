@@ -67,13 +67,25 @@ var itemsjs = require('itemsjs')(data, {
   }
 });
 
-var result = itemsjs.search({
+/**
+ * get filtered list of movies 
+ */
+var movies = itemsjs.search({
   per_page: 1,
   filters: {
     tags: ['1980s']
   }
 })
-console.log(JSON.stringify(result, null, 2));
+console.log(JSON.stringify(movies, null, 2));
+
+/**
+ * get list of top tags 
+ */
+var top_tags = itemsjs.aggregation({
+  name: 'tags',
+  per_page: 10
+})
+console.log(JSON.stringify(top_tags, null, 2));
 ```
 
 Test that with :
