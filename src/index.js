@@ -1,5 +1,6 @@
 var service = require('./lib');
 var _ = require('./../lib/lodash');
+var helpers = require('./helpers');
 var Fulltext = require('./fulltext');
 
 module.exports = function itemsjs(items, configuration) {
@@ -23,20 +24,12 @@ module.exports = function itemsjs(items, configuration) {
       // make search by query first
       items = fulltext.search(input.query);
 
-      // convert input and create aggregations
-      // based on user input and search configuration
-      // @TODO it shouldn't be processed here or at all in that way.
-      // values should be provided as they were
-      input.aggregations = _.mapValues((configuration.aggregations), (val, key) => {
-        if (input.filters && input.filters[key]) {
-          val.filters = input.filters[key];
-        } else {
-          val.filters = [];
-        }
-        return val;
-      });
+      /**
+       * merge configuration aggregation with user input
+       */
+      input.aggregations = helpers.mergeAggregations(configuration.aggregations, input);
 
-      return service.search(items, input)
+      return service.search(items, input);
     },
 
     /**
@@ -47,6 +40,7 @@ module.exports = function itemsjs(items, configuration) {
      * page
      */
     aggregation: function(input) {
+
       return service.aggregation(items, input, configuration.aggregations);
     },
 

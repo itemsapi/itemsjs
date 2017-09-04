@@ -21,4 +21,28 @@ module.exports.intersection = function(a, b) {
   return _.intersection(a, _.flatten(b));
 }
 
+var clone = function(val) {
+
+  try {
+    return JSON.parse(JSON.stringify(val));
+  } catch (e) {
+    return val;
+  }
+}
+
+module.exports.mergeAggregations = function(aggregations, input) {
+
+  return _.mapValues(clone(aggregations), (val, key) => {
+
+    var filters = [];
+    if (input.filters && input.filters[key]) {
+      filters = input.filters[key];
+    }
+
+    val.filters = filters;
+
+    return val;
+  });
+}
+
 

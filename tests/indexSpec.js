@@ -21,7 +21,36 @@ describe('itemjs general tests', function() {
     actors: ['e']
   }]
 
-  var itemsjs = require('./../src/index')(items);
+  var itemsjs = require('./../src/index')(items, {
+    aggregations: {
+      tags: {
+        size: 10
+      }
+    }
+  });
+
+  it('checks aggregations', function test(done) {
+    var result = itemsjs.aggregation({
+      name: 'tags'
+    });
+
+    assert.equal(result.data.buckets.length, 6);
+    assert.equal(result.data.buckets[0].key, 'a');
+    assert.equal(result.data.buckets[0].doc_count, 3);
+    done();
+  });
+
+  it('checks aggregation with undefined aggregation', function test(done) {
+
+    try {
+      itemsjs.aggregation({
+        name: 'colors'
+      });
+    } catch (e) {
+      assert.ok(e.message.indexOf('Please define aggregation') !== -1);
+      done();
+    }
+  });
 
   it('makes search', function test(done) {
     var result = itemsjs.search();
@@ -103,6 +132,53 @@ describe('itemjs general tests', function() {
     assert.equal(result.data.items.length, 3);
     assert.equal(result.data.aggregations.tags.name, 'tags');
     assert.equal(result.data.aggregations.tags.buckets.length, 6);
+    done();
+  });
+
+  it('makes search aggregations and keep original configuration', function test(done) {
+
+    var items = [{
+      name: 'movie1',
+      tags: ['a', 'b', 'c', 'd'],
+      actors: ['a', 'b']
+    }, {
+      id: 10,
+      name: 'movie2',
+      tags: ['a', 'e', 'f'],
+      actors: ['a', 'b', 'c', 'd', 'e', 'f']
+    }, {
+      name: 'movie3',
+      tags: ['a', 'c'],
+      actors: ['e']
+    }]
+
+    var itemsjs = require('./../src/index')(items, {
+      aggregations: {
+        tags: {
+          type: 'terms',
+          size: 10,
+        },
+        actors: {
+          type: 'terms',
+          size: 10,
+        }
+      }
+    });
+    var result = itemsjs.search({
+      filters: {
+        tags: ['c']
+      }
+    });
+    assert.equal(result.data.items.length, 2);
+    assert.equal(result.data.aggregations.tags.name, 'tags');
+    assert.equal(result.data.aggregations.tags.buckets.length, 4);
+
+    var result = itemsjs.aggregation({
+      name: 'actors',
+      per_page: 10
+    });
+
+    assert.equal(result.data.buckets.length, 6);
     done();
   });
 

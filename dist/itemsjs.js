@@ -2188,11 +2188,36 @@ module.exports.intersection = function(a, b) {
   return _.intersection(a, _.flatten(b));
 }
 
+var clone = function(val) {
+
+  try {
+    return JSON.parse(JSON.stringify(val));
+  } catch (e) {
+    return val;
+  }
+}
+
+module.exports.mergeAggregations = function(aggregations, input) {
+
+  return _.mapValues(clone(aggregations), (val, key) => {
+
+    var filters = [];
+    if (input.filters && input.filters[key]) {
+      filters = input.filters[key];
+    }
+
+    val.filters = filters;
+
+    return val;
+  });
+}
+
 
 
 },{"./../lib/lodash":2}],6:[function(require,module,exports){
 var service = require('./lib');
 var _ = require('./../lib/lodash');
+var helpers = require('./helpers');
 var Fulltext = require('./fulltext');
 
 module.exports = function itemsjs(items, configuration) {
@@ -2216,20 +2241,12 @@ module.exports = function itemsjs(items, configuration) {
       // make search by query first
       items = fulltext.search(input.query);
 
-      // convert input and create aggregations
-      // based on user input and search configuration
-      // @TODO it shouldn't be processed here or at all in that way.
-      // values should be provided as they were
-      input.aggregations = _.mapValues((configuration.aggregations), (val, key) => {
-        if (input.filters && input.filters[key]) {
-          val.filters = input.filters[key];
-        } else {
-          val.filters = [];
-        }
-        return val;
-      });
+      /**
+       * merge configuration aggregation with user input
+       */
+      input.aggregations = helpers.mergeAggregations(configuration.aggregations, input);
 
-      return service.search(items, input)
+      return service.search(items, input);
     },
 
     /**
@@ -2240,6 +2257,7 @@ module.exports = function itemsjs(items, configuration) {
      * page
      */
     aggregation: function(input) {
+
       return service.aggregation(items, input, configuration.aggregations);
     },
 
@@ -2254,7 +2272,7 @@ module.exports = function itemsjs(items, configuration) {
   }
 }
 
-},{"./../lib/lodash":2,"./fulltext":4,"./lib":7}],7:[function(require,module,exports){
+},{"./../lib/lodash":2,"./fulltext":4,"./helpers":5,"./lib":7}],7:[function(require,module,exports){
 var _ = require('./../lib/lodash');
 var helpers = require('./helpers');
 var Fulltext = require('./fulltext');
@@ -2299,6 +2317,10 @@ module.exports.aggregation = function(items, input, aggregations) {
 
   var per_page = input.per_page || 10;
   var page = input.page || 1;
+
+  if (input.name && (!aggregations || !aggregations[input.name])) {
+    throw new Error(`Please define aggregation "${input.name}" in config`);
+  }
 
   var buckets = module.exports.buckets(items, input.name, aggregations[input.name], aggregations)
 

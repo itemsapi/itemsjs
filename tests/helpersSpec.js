@@ -33,4 +33,29 @@ describe('helpers', function() {
     done();
   });
 
+  it('merge configuration with user input', function test(done) {
+
+    var aggregations = {
+      tags: {
+        size: 15
+      }
+    }
+
+    var user_input = {
+      filters: {
+        tags: ['Tag1', 'Tag2'],
+        actors: ['Actor1']
+      }
+    }
+
+    var result = helpers.mergeAggregations(aggregations, user_input)
+
+    assert.equal(result.tags.size, 15);
+    assert.deepEqual(result.tags.filters, ['Tag1', 'Tag2']);
+
+    assert.equal(aggregations.tags.size, 15);
+    assert.equal(aggregations.tags.filters, undefined);
+
+    done();
+  });
 });

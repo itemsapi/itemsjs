@@ -43,6 +43,10 @@ module.exports.aggregation = function(items, input, aggregations) {
   var per_page = input.per_page || 10;
   var page = input.page || 1;
 
+  if (input.name && (!aggregations || !aggregations[input.name])) {
+    throw new Error(`Please define aggregation "${input.name}" in config`);
+  }
+
   var buckets = module.exports.buckets(items, input.name, aggregations[input.name], aggregations)
 
   if (input.query) {
