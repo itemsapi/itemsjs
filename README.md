@@ -97,15 +97,6 @@ node search.js
 
 ## API
 
-
-```js
-// initialize search index
-// `data` is an array of objects (items)
-// `configuration` is an instruction how to index data, 
-// how to generate faceted search (aggregations) and which fields are searchable.
-const itemsjs = require('itemsjs')(data, configuration);
-```
-
 ### var itemsjs = ItemsJS(data, [configuration])
 
 #### `data`
