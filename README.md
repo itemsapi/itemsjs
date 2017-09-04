@@ -257,7 +257,8 @@ Result
 }
 ```
 
-## Guides
+## API
+
 
 ```js
 // initialize search index
@@ -267,32 +268,55 @@ Result
 const itemsjs = require('itemsjs')(data, configuration);
 ```
 
+### var itemsjs = ItemsJS(data, [configuration])
 
-```js
-// configuration example
-var configuration = {
-  aggregations: {
-    tags: {
-      title: 'Tags',
-      size: 10
-    }
-  },
-  searchableFields: ['name', 'tags', 'genres']
-}
-```
+#### `data`
 
-```js
-// search example
-var result = itemsjs.search({
-  per_page: 10,
-  page: 1,
-  query: 'drama',
-  filters: {
-    tags: ['1980s']
-  }
-})
-```
+The first `data` argument is an array of objects.
 
+#### `configuration`
+
+Responsible for defining global configuration 
+
+  * **<code>aggregations</code>** filters configuration i.e. for `tags`, `actors`, `colors`, etc. Responsible for generating facets.
+
+  * **<code>searchableFields</code>** an array of searchable fields.
+
+
+### itemsjs.search(options)
+
+#### `options`
+
+  * **<code>per_page</code>** amount of items per page.
+
+  * **<code>page</code>** page number - used for pagination.
+
+  * **<code>query</code>** used for full text search.
+  
+  * **<code>filters</code>** filtering items based on specific aggregations i.e. {tags: ['drama' , 'historical']}  
+
+### itemsjs.aggregation(options)
+
+It returns full list of filters for specific aggregation
+
+#### `options`
+
+  * **<code>name</code>** aggregation name
+
+  * **<code>per_page</code>** filters per page
+
+  * **<code>page</code>** page number
+
+  * **<code>query</code>** used for quering filters. It's not full text search
+  
+### itemsjs.reindex(data)
+
+It's used in case you need to reindex the whole data
+
+#### `data`
+
+An array of objects.
+  
 
 ## Credit
 
