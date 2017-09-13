@@ -22,6 +22,14 @@ describe('helpers', function() {
     assert.equal(helpers.includes_any(['a', 'b', 'c'], 'f'), false);
     assert.equal(helpers.includes_any([ 'a', 'b', 'c', 'd' ], [ 'a', 'f' ]), true);
 
+    assert.equal(helpers.includes_any_element(['a', 'b', 'c'], ['a', 'b', 'e']), true);
+    assert.equal(helpers.includes_any_element(['a', 'b', 'c'], 'a'), true);
+    assert.equal(helpers.includes_any_element(['a', 'b', 'c']), false);
+    assert.equal(helpers.includes_any_element(['a', 'b', 'c'], []), false);
+    assert.equal(helpers.includes_any_element(['a', 'b', 'c'], ['f']), false);
+    assert.equal(helpers.includes_any_element(['a', 'b', 'c'], 'f'), false);
+    assert.equal(helpers.includes_any_element([ 'a', 'b', 'c', 'd' ], [ 'a', 'f' ]), true);
+
     done();
   });
 

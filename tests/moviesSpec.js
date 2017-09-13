@@ -46,6 +46,9 @@ describe('itemjs tests with movies fixture', function() {
           genres: ['Biography']
         }
       });
+
+      console.log(result.data.items);
+
       assert.equal(result.data.items.length, 3);
       assert.equal(result.data.aggregations.genres.buckets.length, 6);
 
@@ -141,6 +144,36 @@ describe('itemjs tests with movies fixture', function() {
 
       done();
     })
+  })
+
+  xit('makes search with not filters', function test(done) {
+
+    var itemsjs = require('./../src/index')(items, {
+      aggregations: {
+        tags: {
+        },
+        genres: {
+        }
+      }
+    });
+
+    var result = itemsjs.search({
+      per_page: 100,
+      filters: {
+        genres: ['Biography']
+      }, not_filters: {
+        genres: ['Sport']
+      }
+    });
+
+    console.log(result.data.items);
+
+    console.log(result.data.aggregations.genres.buckets);
+    assert.equal(result.data.items.length, 2);
+    assert.equal(result.data.aggregations.genres.buckets.length, 4);
+
+    done();
+
   })
 
   describe('aggregation', function() {

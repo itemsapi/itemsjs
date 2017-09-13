@@ -107,53 +107,92 @@ module.exports.aggregations = function(items, aggregations) {
  * checks if item is passing aggregations - if it's filtered or not
  * @TODO should accept filters (user input) as the parameter
  * and not user params merged with global config
+ * should be is_filterable_item
  */
 module.exports.filterable_item = function(item, aggregations) {
 
-  return _.every(_.keys(aggregations), (key) => {
+  var keys = _.keys(aggregations)
 
-    if (aggregations[key].conjunction === false) {
-      return helpers.includes_any(item[key], aggregations[key].filters);
-    } else {
-      return helpers.includes(item[key], aggregations[key].filters);
+  for (var i = 0 ; i < keys.length ; ++i) {
+
+    var key = keys[i]
+    if (helpers.is_not_filters_agg(aggregations[key]) && !helpers.not_filters_field(item[key], aggregations[key].not_filters)) {
+      return false;
+    } else if (helpers.is_disjunctive_agg(aggregations[key]) && !helpers.disjunctive_field(item[key], aggregations[key].filters)) {
+      return false;
+    } else if (helpers.is_conjunctive_agg(aggregations[key]) && !helpers.conjunctive_field(item[key], aggregations[key].filters)) {
+      return false;
     }
-  });
+  }
+
+  return true;
+
+  /*return _.every(_.keys(aggregations), (key) => {
+
+    if (helpers.is_disjunctive_agg(aggregations[key])) {
+      return helpers.disjunctive_field(item[key], aggregations[key].filters);
+    } else {
+      return helpers.conjunctive_field(item[key], aggregations[key].filters);
+    }
+  });*/
 }
 
-
 /*
- * fields count for one item based on aggregation options
- * returns buckets objects
+ * returns array of item key values only if they are passing aggregations criteria
  */
 module.exports.bucket_field = function(item, aggregations, key) {
 
   let clone_aggregations = _.clone(aggregations);
   delete clone_aggregations[key];
 
-  // all aggregations except current one
-  let clone_aggregations_keys = _.keys(clone_aggregations);
+  var clone_aggregations_keys = _.keys(clone_aggregations);
+  var keys = _.keys(aggregations);
 
-  // check if all aggregations except current key are including properly
-  // for key with conjunction = false there is different conditions
-  if (_.every(clone_aggregations_keys, (local_key) => {
-    //return helpers.includes(item[local_key], aggregations[local_key].filters);
+  for (var i = 0 ; i < keys.length ; ++i) {
 
-    if (aggregations[local_key].conjunction === false) {
-      return helpers.includes_any(item[local_key], aggregations[local_key].filters);
+    var it = keys[i]
+    if (helpers.is_not_filters_agg(aggregations[it])) {
+
+      if (!helpers.not_filters_field(item[it], aggregations[it].not_filters)) {
+        return [];
+      }
+    }
+  }
+
+  for (var i = 0 ; i < clone_aggregations_keys.length ; ++i) {
+
+    var it = clone_aggregations_keys[i];
+
+    if (helpers.is_disjunctive_agg(aggregations[it]) && !helpers.disjunctive_field(item[it], aggregations[it].filters)) {
+      return [];
+    } else if (helpers.is_conjunctive_agg(aggregations[it]) && !helpers.conjunctive_field(item[it], aggregations[it].filters)) {
+      return [];
+    }
+  }
+
+  /*if (_.every(clone_aggregations_keys, (local_key) => {
+
+    if (helpers.is_disjunctive_agg(aggregations[local_key])) {
+      return helpers.disjunctive_field(item[local_key], aggregations[local_key].filters);
     } else {
-      return helpers.includes(item[local_key], aggregations[local_key].filters);
+      return helpers.conjunctive_field(item[local_key], aggregations[local_key].filters);
     }
 
-  }) === true) {
+  }) === false) {
 
-    if (aggregations[key].conjunction === false || helpers.includes(item[key], aggregations[key].filters)) {
-      //return _.flatten([item[key]]);
-      return item[key] ? _.flatten([item[key]]) : [];
-    }
+    return [];
+
+  }*/
+
+  if (helpers.is_disjunctive_agg(aggregations[key]) || helpers.includes(item[key], aggregations[key].filters)) {
+    return item[key] ? _.flatten([item[key]]) : [];
   }
 
   return [];
 }
+
+
+
 
 /*
  * fields count for one item based on aggregation options
