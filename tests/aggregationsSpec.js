@@ -176,4 +176,30 @@ describe('aggregations', function() {
     done();
   });
 
+  xit('returns many aggregations around the same field', function test(done) {
+    var result = service.aggregations(items, {
+      tags: {
+        filters: []
+      },
+      tags_copy_1: {
+        field: 'tags',
+        filters: []
+      },
+      tags_copy_2: {
+        field: 'tags',
+        filters: []
+      },
+      actors: {
+        filters: []
+      }
+    })
+
+    assert.equal(result.tags.buckets.length, 6);
+    assert.equal(result.actors.buckets.length, 3);
+    assert.equal(result.tags_copy_1.buckets.length, 4);
+    assert.equal(result.tags_copy_2.buckets.length, 3);
+
+    done();
+  });
+
 });

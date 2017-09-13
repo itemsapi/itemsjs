@@ -148,12 +148,16 @@ module.exports.bucket_field = function(item, aggregations, key) {
   var clone_aggregations_keys = _.keys(clone_aggregations);
   var keys = _.keys(aggregations);
 
+  /**
+   * responsible for narrowing facets
+   */
   for (var i = 0 ; i < keys.length ; ++i) {
 
     var it = keys[i]
     if (helpers.is_not_filters_agg(aggregations[it])) {
 
       if (!helpers.not_filters_field(item[it], aggregations[it].not_filters)) {
+        //return ['Sport', 'Drama', 'History'];
         return [];
       }
     }
@@ -169,20 +173,6 @@ module.exports.bucket_field = function(item, aggregations, key) {
       return [];
     }
   }
-
-  /*if (_.every(clone_aggregations_keys, (local_key) => {
-
-    if (helpers.is_disjunctive_agg(aggregations[local_key])) {
-      return helpers.disjunctive_field(item[local_key], aggregations[local_key].filters);
-    } else {
-      return helpers.conjunctive_field(item[local_key], aggregations[local_key].filters);
-    }
-
-  }) === false) {
-
-    return [];
-
-  }*/
 
   if (helpers.is_disjunctive_agg(aggregations[key]) || helpers.includes(item[key], aggregations[key].filters)) {
     return item[key] ? _.flatten([item[key]]) : [];

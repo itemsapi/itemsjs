@@ -11,6 +11,7 @@ describe('itemjs tests with movies fixture', function() {
   var items = (require('./fixtures/movies.json'))
 
   describe('search', function() {
+
     it('makes search', function test(done) {
 
       var itemsjs = require('./../src/index')(items, {
@@ -25,18 +26,18 @@ describe('itemjs tests with movies fixture', function() {
       });
       assert.equal(result.data.items.length, 20);
 
-      //var spy = sinon.spy(service, 'aggregations');
 
-      //var result = itemsjs.search({
-      //per_page: 100,
-      //filters: {
-      //genres: ['Biography']
-      //}
-      //});
+      //var spy = sinon.spy(service, 'aggregations');
+      var result = itemsjs.search({
+        per_page: 100,
+        filters: {
+          genres: ['Biography']
+        }
+      });
 
       //assert.equal(spy.callCount, 1);
       //assert.equal(spy.firstCall.args[0].length, 20);
-      ////console.log(spy.firstCall.args);
+      assert.equal(result.data.items.length, 3);
       //spy.restore();
 
 
@@ -146,7 +147,7 @@ describe('itemjs tests with movies fixture', function() {
     })
   })
 
-  xit('makes search with not filters', function test(done) {
+  it('makes search with not filters', function test(done) {
 
     var itemsjs = require('./../src/index')(items, {
       aggregations: {
@@ -161,17 +162,38 @@ describe('itemjs tests with movies fixture', function() {
       per_page: 100,
       filters: {
         genres: ['Biography']
-      }, not_filters: {
+      }
+    });
+
+    console.log(result.data.aggregations.genres.buckets);
+    assert.equal(result.data.items.length, 3);
+    assert.equal(result.data.aggregations.genres.buckets.length, 6);
+
+    var result = itemsjs.search({
+      per_page: 100,
+      filters: {
         genres: ['Sport']
       }
     });
 
-    console.log(result.data.items);
+    console.log(result.data.aggregations.genres.buckets);
+    assert.equal(result.data.items.length, 1);
+    assert.equal(result.data.aggregations.genres.buckets.length, 4);
+
+
+    var result = itemsjs.search({
+      per_page: 100,
+      filters: {
+        genres: ['Biography']
+      },
+      not_filters: {
+        genres: ['Sport']
+      }
+    });
 
     console.log(result.data.aggregations.genres.buckets);
     assert.equal(result.data.items.length, 2);
     assert.equal(result.data.aggregations.genres.buckets.length, 4);
-
     done();
 
   })
