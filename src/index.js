@@ -29,7 +29,7 @@ module.exports = function itemsjs(items, configuration) {
        */
       input.aggregations = helpers.mergeAggregations(configuration.aggregations, input);
 
-      return service.search(items, input);
+      return service.search(items, input, configuration);
     },
 
     /**

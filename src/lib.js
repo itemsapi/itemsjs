@@ -11,10 +11,15 @@ module.exports.search = function(items, input, configuration) {
 
 
   // responsible to filters items by aggregation values (processed input)
+  // not sure now about the reason but probably performance
   var filtered_items = module.exports.items_by_aggregations(items, input.aggregations);
 
   var per_page = input.per_page || 12;
   var page = input.page || 1;
+
+  if (input.sort) {
+    filtered_items = module.exports.sorted_items(items, input.sort, configuration.sortings);
+  }
 
   // calculate aggregations based on items and processed input
   // it returns buckets
@@ -67,6 +72,23 @@ module.exports.aggregation = function(items, input, aggregations) {
       buckets: buckets.slice((page - 1) * per_page, page * per_page),
     }
   }
+}
+
+/**
+ * return items by sort
+ */
+module.exports.sorted_items = function(items, sort, sortings) {
+
+  if (sortings[sort] && sortings[sort].field) {
+
+    return _.orderBy(
+      items,
+      [sortings[sort].field],
+      [sortings[sort].order || 'asc']
+    );
+  }
+
+  return items;
 }
 
 /**
