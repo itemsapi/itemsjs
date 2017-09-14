@@ -18,6 +18,8 @@ describe('bucket field', function() {
       actors: ['a', 'b']
     }
 
+    var spy = sinon.spy(helpers, 'conjunctive_field');
+
     var result = service.bucket_field(item, {
       tags: {
         filters: ['a'],
@@ -27,7 +29,12 @@ describe('bucket field', function() {
       }
     }, 'tags')
 
+    assert.equal(spy.callCount, 1);
+    assert.deepEqual(spy.firstCall.args[0], ['a', 'b']);
+    assert.deepEqual(spy.firstCall.args[1], []);
+    assert.equal(true, spy.firstCall.returnValue);
     assert.deepEqual(result, ['a', 'b', 'c', 'd']);
+    spy.restore();
 
     var result = service.bucket_field(item, {
       tags: {
@@ -86,7 +93,7 @@ describe('bucket field', function() {
     }, 'tags')
     assert.deepEqual(result, ['a', 'b', 'c', 'd']);
 
-    var result = service.bucket_field(item, {
+    var aggregations = {
       tags: {
         filters: ['a', 'e'],
         conjunction: false
@@ -94,10 +101,16 @@ describe('bucket field', function() {
       actors: {
         filters: []
       }
-    }, 'actors')
+    }
+
+    var result = service.bucket_field(item, aggregations, 'actors')
     assert.deepEqual(result, ['a', 'b']);
 
-    var result = service.bucket_field(item, {
+    var result = service.bucket(item, aggregations)
+    assert.deepEqual(result.tags, ['a', 'b', 'c', 'd']);
+    assert.deepEqual(result.actors, ['a', 'b']);
+
+    var aggregations = {
       tags: {
         filters: ['a', 'e'],
         conjunction: false
@@ -105,10 +118,48 @@ describe('bucket field', function() {
       actors: {
         filters: ['a', 'b', 'c']
       }
-    }, 'tags')
+    }
+
+    var result = service.bucket_field(item, aggregations, 'tags')
     assert.deepEqual(result, []);
+    var result = service.bucket(item, aggregations)
+    assert.deepEqual(result.tags, []);
+    assert.deepEqual(result.actors, []);
 
     done();
   })
 
+  it('returns aggregated fields for one item (readable test)', function test(done) {
+
+    var item = {
+      tags: ['police', 'revenge', 'love', 'battle'],
+      actors: ['Robert', 'Clint', 'Michael', 'Brad'],
+      genres: ['Drama', 'Thriller', 'Comedy']
+    }
+
+    var aggregations = {
+      tags: {
+        filters: ['police'],
+      },
+      actors: {
+        filters: ['John'],
+        conjunction: false
+      },
+      genres: {
+        filters: ['Drama', 'Animation'],
+        conjunction: false
+      }
+    }
+
+    var result = service.bucket_field(item, aggregations, 'tags')
+    assert.deepEqual(result, []);
+
+    var result = service.bucket_field(item, aggregations, 'actors')
+    assert.deepEqual(result, ['Robert', 'Clint', 'Michael', 'Brad']);
+
+    var result = service.bucket_field(item, aggregations, 'genres')
+    assert.deepEqual(result, []);
+
+    done();
+  })
 })
