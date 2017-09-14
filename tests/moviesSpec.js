@@ -194,6 +194,20 @@ describe('itemjs tests with movies fixture', function() {
     console.log(result.data.aggregations.genres.buckets);
     assert.equal(result.data.items.length, 2);
     assert.equal(result.data.aggregations.genres.buckets.length, 4);
+
+    var result = itemsjs.search({
+      per_page: 100,
+      filters: {
+        genres: ['Biography']
+      },
+      exclude_filters: {
+        genres: ['Sport']
+      }
+    });
+
+    console.log(result.data.aggregations.genres.buckets);
+    assert.equal(result.data.items.length, 2);
+    assert.equal(result.data.aggregations.genres.buckets.length, 4);
     done();
 
   })

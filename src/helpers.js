@@ -60,6 +60,10 @@ module.exports.mergeAggregations = function(aggregations, input) {
       not_filters = input.not_filters[key];
     }
 
+    if (input.exclude_filters && input.exclude_filters[key]) {
+      not_filters = input.exclude_filters[key];
+    }
+
     val.not_filters = not_filters;
 
 
