@@ -18,7 +18,7 @@ module.exports.search = function(items, input, configuration) {
   var page = input.page || 1;
 
   if (input.sort) {
-    filtered_items = module.exports.sorted_items(items, input.sort, configuration.sortings);
+    filtered_items = module.exports.sorted_items(filtered_items, input.sort, configuration.sortings);
   }
 
   // calculate aggregations based on items and processed input
