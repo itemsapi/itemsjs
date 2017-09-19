@@ -162,4 +162,161 @@ describe('bucket field', function() {
 
     done();
   })
+
+  it('returns aggregated fields for one item (readable test)', function test(done) {
+
+    var item = {
+      tags: ['police', 'revenge', 'love', 'battle'],
+      actors: ['Robert', 'Clint', 'Michael', 'Brad'],
+      genres: []
+    }
+
+    var aggregations = {
+      tags: {
+        filters: ['police'],
+      },
+      empty_tags: {
+        field: 'tags',
+        type: 'is_empty'
+      },
+      empty_genres: {
+        field: 'genres',
+        type: 'is_empty'
+      },
+      /*actors: {
+        filters: ['John'],
+        conjunction: false
+      },
+      genres: {
+        filters: ['Drama', 'Animation'],
+        conjunction: false
+      }*/
+    }
+
+    var result = service.bucket_field(item, aggregations, 'tags')
+    assert.deepEqual(result, ['police', 'revenge', 'love', 'battle']);
+
+    var result = service.bucket_field(item, aggregations, 'empty_tags')
+    assert.deepEqual(result, ['not_empty']);
+
+    var result = service.bucket_field(item, aggregations, 'empty_genres')
+    assert.deepEqual(result, ['empty']);
+
+
+
+    var aggregations = {
+      tags: {
+        filters: ['historical', 'police'],
+        conjunction: false
+      },
+      empty_tags: {
+        field: 'tags',
+        type: 'is_empty'
+      },
+      empty_genres: {
+        field: 'genres',
+        type: 'is_empty'
+      }
+    }
+
+    var result = service.bucket_field(item, aggregations, 'tags')
+    assert.deepEqual(result, ['police', 'revenge', 'love', 'battle']);
+
+
+
+    var spy = sinon.spy(helpers, 'is_empty_agg');
+    var result = service.bucket_field(item, aggregations, 'empty_tags')
+    //assert.equal(spy.callCount, 1);
+    spy.restore();
+    assert.deepEqual(result, ['not_empty']);
+
+    var result = service.bucket_field(item, aggregations, 'empty_genres')
+    assert.deepEqual(result, ['empty']);
+
+    var aggregations = {
+      tags: {
+        filters: ['historical'],
+      },
+      empty_tags: {
+        field: 'tags',
+        type: 'is_empty'
+      },
+      empty_genres: {
+        field: 'genres',
+        type: 'is_empty'
+      }
+    }
+
+    var result = service.bucket_field(item, aggregations, 'tags')
+    assert.deepEqual(result, []);
+
+    var result = service.bucket_field(item, aggregations, 'empty_tags')
+    assert.deepEqual(result, []);
+
+    var result = service.bucket_field(item, aggregations, 'empty_genres')
+    assert.deepEqual(result, []);
+
+
+    var aggregations = {
+      tags: {
+        filters: ['police'],
+      },
+      empty_tags: {
+        field: 'tags',
+        filters: ['not_empty'],
+        type: 'is_empty'
+      },
+      empty_genres: {
+        field: 'genres',
+        type: 'is_empty'
+      }
+    }
+
+
+
+    var spy = sinon.spy(helpers, 'check_empty_field');
+
+    var result = service.bucket_field(item, aggregations, 'tags')
+    //assert.deepEqual(spy.firstCall.args[0], { field: 'tags', filters: [ 'not_empty' ], type: 'is_empty' });
+    assert.deepEqual(spy.firstCall.args[1], ['not_empty']);
+    spy.restore();
+    assert.deepEqual(result, ['police', 'revenge', 'love', 'battle']);
+
+    var result = service.bucket_field(item, aggregations, 'empty_tags')
+    assert.deepEqual(result, ['not_empty']);
+
+    var result = service.bucket_field(item, aggregations, 'empty_genres')
+    assert.deepEqual(result, ['empty']);
+
+    var aggregations = {
+      tags: {
+        filters: ['police'],
+      },
+      empty_tags: {
+        field: 'tags',
+        filters: ['empty'],
+        type: 'is_empty'
+      },
+      empty_genres: {
+        field: 'genres',
+        type: 'is_empty'
+      }
+    }
+
+    var result = service.bucket_field(item, aggregations, 'tags')
+    assert.deepEqual(result, []);
+
+    var spy = sinon.spy(helpers, 'check_empty_field');
+    var result = service.bucket_field(item, aggregations, 'empty_tags')
+    assert.equal(spy.callCount, 2);
+    assert.deepEqual(spy.secondCall.args[0], ['police', 'revenge', 'love', 'battle']);
+    assert.deepEqual(spy.secondCall.args[1], ['empty']);
+    spy.restore();
+    assert.deepEqual(result, []);
+
+    var result = service.bucket_field(item, aggregations, 'empty_genres')
+    assert.deepEqual(result, []);
+
+    done();
+  })
 })

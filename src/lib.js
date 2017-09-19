@@ -148,15 +148,6 @@ module.exports.filterable_item = function(item, aggregations) {
   }
 
   return true;
-
-  /*return _.every(_.keys(aggregations), (key) => {
-
-    if (helpers.is_disjunctive_agg(aggregations[key])) {
-      return helpers.disjunctive_field(item[key], aggregations[key].filters);
-    } else {
-      return helpers.conjunctive_field(item[key], aggregations[key].filters);
-    }
-  });*/
 }
 
 /*
@@ -171,7 +162,14 @@ module.exports.bucket_field = function(item, aggregations, key) {
   var keys = _.keys(aggregations);
 
   /**
-   * responsible for narrowing facets
+   * check if item value is empty
+   */
+  //if (helpers.is_empty_agg(aggregations[key])) {
+    //return helpers.empty_field(item[aggregations[key].field]) ? ['empty'] : ['not_empty'];
+  //}
+
+  /**
+   * responsible for narrowing facets with not_filter filter
    */
   for (var i = 0 ; i < keys.length ; ++i) {
 
@@ -185,15 +183,34 @@ module.exports.bucket_field = function(item, aggregations, key) {
     }
   }
 
+
   for (var i = 0 ; i < clone_aggregations_keys.length ; ++i) {
 
     var it = clone_aggregations_keys[i];
 
-    if (helpers.is_disjunctive_agg(aggregations[it]) && !helpers.disjunctive_field(item[it], aggregations[it].filters)) {
+    //if (helpers.is_empty_agg(aggregations[it]) && !helpers.includes(item[it], aggregations[it].filters)) {
+    if (helpers.is_empty_agg(aggregations[it])) {
+      if (!helpers.check_empty_field(item[aggregations[it].field], aggregations[it].filters)) {
+      //if (!helpers.check_empty_field(aggregations[it], aggregations[it].filters)) {
+        return [];
+      } else {
+        continue;
+      }
+    } else if (helpers.is_disjunctive_agg(aggregations[it]) && !helpers.disjunctive_field(item[it], aggregations[it].filters)) {
       return [];
     } else if (helpers.is_conjunctive_agg(aggregations[it]) && !helpers.conjunctive_field(item[it], aggregations[it].filters)) {
       return [];
     }
+
+  }
+
+  if (helpers.is_empty_agg(aggregations[key])) {
+    var temp = helpers.check_empty_field(item[aggregations[key].field], aggregations[key].filters)
+
+    if (temp) {
+      return temp;
+    }
+    return [];
   }
 
   if (helpers.is_disjunctive_agg(aggregations[key]) || helpers.includes(item[key], aggregations[key].filters)) {

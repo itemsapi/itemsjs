@@ -176,6 +176,81 @@ describe('aggregations', function() {
     done();
   });
 
+  xit('returns aggregations for empty type', function test(done) {
+    var result = service.aggregations(items, {
+      emptytags: {
+        type: 'is_empty',
+        field: 'tags'
+      }
+    })
+
+    assert.equal(result.emptytags.buckets.length, 2);
+    //assert.equal(result.actors.buckets.length, 0);
+
+    done();
+  });
+
+  it('returns many aggregations with is_empty aggregation type', function test(done) {
+
+    var items = [{
+      tags: ['a', 'b', 'c', 'd'],
+    }, {
+      tags: ['a', 'e', 'f'],
+    }, {
+    }]
+
+    var result = service.aggregations(items, {
+      tags: {
+        filters: []
+      },
+      is_empty_tags: {
+        field: 'tags',
+        type: 'is_empty'
+      }
+    })
+
+    assert.equal(result.tags.buckets.length, 6);
+    assert.equal(result.is_empty_tags.buckets.length, 2);
+    assert.equal(result.is_empty_tags.buckets[0].key, 'not_empty');
+    assert.equal(result.is_empty_tags.buckets[0].doc_count, 2);
+    assert.equal(result.is_empty_tags.buckets[1].key, 'empty');
+    assert.equal(result.is_empty_tags.buckets[1].doc_count, 1);
+
+    var result = service.aggregations(items, {
+      tags: {
+        filters: []
+      },
+      is_empty_tags: {
+        field: 'tags',
+        filters: ['not_empty'],
+        type: 'is_empty'
+      }
+    })
+
+    assert.equal(result.tags.buckets.length, 6);
+    assert.equal(result.is_empty_tags.buckets.length, 1);
+    assert.equal(result.is_empty_tags.buckets[0].key, 'not_empty');
+    assert.equal(result.is_empty_tags.buckets[0].doc_count, 2);
+
+    var result = service.aggregations(items, {
+      tags: {
+        filters: []
+      },
+      is_empty_tags: {
+        field: 'tags',
+        filters: ['empty'],
+        type: 'is_empty'
+      }
+    })
+
+    assert.equal(result.tags.buckets.length, 0);
+    assert.equal(result.is_empty_tags.buckets.length, 1);
+    assert.equal(result.is_empty_tags.buckets[0].key, 'empty');
+    assert.equal(result.is_empty_tags.buckets[0].doc_count, 1);
+
+    done();
+  });
+
   xit('returns many aggregations around the same field', function test(done) {
     var result = service.aggregations(items, {
       tags: {

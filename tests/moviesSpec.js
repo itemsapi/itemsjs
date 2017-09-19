@@ -212,6 +212,37 @@ describe('itemjs tests with movies fixture', function() {
 
   })
 
+  it('makes search with is_empty aggregation type', function test(done) {
+
+    var itemsjs = require('./../src/index')(items, {
+      aggregations: {
+        tags: {
+        },
+        empty_tags: {
+          type: 'is_empty',
+          field: 'tags'
+        }
+      }
+    });
+
+    var result = itemsjs.search({
+      per_page: 20,
+      filters: {
+        //genres: ['Biography']
+      }
+    });
+
+    //console.log(result.data.aggregations.genres.buckets);
+    assert.equal(result.data.items.length, 20);
+    assert.equal(result.data.aggregations.tags.buckets.length, 10);
+    assert.equal(result.data.aggregations.empty_tags.buckets.length, 1);
+    assert.equal(result.data.aggregations.empty_tags.buckets[0].doc_count, 20);
+    assert.equal(result.data.aggregations.empty_tags.buckets[0].key, 'not_empty');
+    console.log(result.data.aggregations.empty_tags.buckets);
+    done();
+  })
+
+
   describe('aggregation', function() {
 
     var itemsjs = require('./../src/index')(items, {

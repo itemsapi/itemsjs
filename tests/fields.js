@@ -65,14 +65,14 @@ describe('bucket field', function() {
     done();
   })
 
-  it('checks exists field', function test(done) {
+  xit('checks exists field', function test(done) {
 
     var result = assert.equal(
-      service.empty_field(['a', 'b', 'c', 'd']),
-      false
+      service.check_empty_field(['a', 'b', 'c', 'd']),
+      ['not_empty']
     )
 
-    var result = assert.equal(service.empty_field([]), true)
+    var result = assert.equal(service.check_empty_field([]), ['empty'])
 
     done();
   })

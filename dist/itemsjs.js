@@ -2215,6 +2215,10 @@ module.exports.mergeAggregations = function(aggregations, input) {
 
   return _.mapValues(clone(aggregations), (val, key) => {
 
+    if (!val.field) {
+      val.field = key;
+    }
+
     var filters = [];
     if (input.filters && input.filters[key]) {
       filters = input.filters[key];
@@ -2253,6 +2257,9 @@ var is_not_filters_agg = function(aggregation) {
   return aggregation.not_filters instanceof Array && aggregation.not_filters.length > 0;
 }
 
+var is_empty_agg = function(aggregation) {
+  return aggregation.type === 'is_empty';
+}
 
 var conjunctive_field = function(set, filters) {
   return module.exports.includes(set, filters);
@@ -2266,22 +2273,40 @@ var not_filters_field = function(set, filters) {
   return !module.exports.includes_any_element(set, filters);
 }
 
-var empty_field = function(set) {
+var check_empty_field = function(set, filters) {
+
+  var output = ['not_empty'];
+
+  if (set === undefined || set === null || (set instanceof Array && set.length === 0)) {
+
+    //return true;
+    output = ['empty'];
+  }
+
+  if (filters && !module.exports.includes(output, filters)) {
+    return false;
+  }
+
+  return output;
+}
+
+/*var empty_field = function(set, filters) {
   if (set === undefined || set === null || (set instanceof Array && set.length === 0)) {
     return true;
   }
 
   return false;
-}
+}*/
 
 module.exports.is_conjunctive_agg = is_conjunctive_agg;
 module.exports.is_disjunctive_agg = is_disjunctive_agg;
 module.exports.is_not_filters_agg = is_not_filters_agg;
+module.exports.is_empty_agg = is_empty_agg;
 
 module.exports.conjunctive_field = conjunctive_field;
 module.exports.disjunctive_field = disjunctive_field;
 module.exports.not_filters_field = not_filters_field;
-module.exports.empty_field = empty_field;
+module.exports.check_empty_field = check_empty_field;
 
 },{"./../lib/lodash":2}],6:[function(require,module,exports){
 var service = require('./lib');
@@ -2492,15 +2517,6 @@ module.exports.filterable_item = function(item, aggregations) {
   }
 
   return true;
-
-  /*return _.every(_.keys(aggregations), (key) => {
-
-    if (helpers.is_disjunctive_agg(aggregations[key])) {
-      return helpers.disjunctive_field(item[key], aggregations[key].filters);
-    } else {
-      return helpers.conjunctive_field(item[key], aggregations[key].filters);
-    }
-  });*/
 }
 
 /*
@@ -2515,7 +2531,14 @@ module.exports.bucket_field = function(item, aggregations, key) {
   var keys = _.keys(aggregations);
 
   /**
-   * responsible for narrowing facets
+   * check if item value is empty
+   */
+  //if (helpers.is_empty_agg(aggregations[key])) {
+    //return helpers.empty_field(item[aggregations[key].field]) ? ['empty'] : ['not_empty'];
+  //}
+
+  /**
+   * responsible for narrowing facets with not_filter filter
    */
   for (var i = 0 ; i < keys.length ; ++i) {
 
@@ -2529,15 +2552,34 @@ module.exports.bucket_field = function(item, aggregations, key) {
     }
   }
 
+
   for (var i = 0 ; i < clone_aggregations_keys.length ; ++i) {
 
     var it = clone_aggregations_keys[i];
 
-    if (helpers.is_disjunctive_agg(aggregations[it]) && !helpers.disjunctive_field(item[it], aggregations[it].filters)) {
+    //if (helpers.is_empty_agg(aggregations[it]) && !helpers.includes(item[it], aggregations[it].filters)) {
+    if (helpers.is_empty_agg(aggregations[it])) {
+      if (!helpers.check_empty_field(item[aggregations[it].field], aggregations[it].filters)) {
+      //if (!helpers.check_empty_field(aggregations[it], aggregations[it].filters)) {
+        return [];
+      } else {
+        continue;
+      }
+    } else if (helpers.is_disjunctive_agg(aggregations[it]) && !helpers.disjunctive_field(item[it], aggregations[it].filters)) {
       return [];
     } else if (helpers.is_conjunctive_agg(aggregations[it]) && !helpers.conjunctive_field(item[it], aggregations[it].filters)) {
       return [];
     }
+
+  }
+
+  if (helpers.is_empty_agg(aggregations[key])) {
+    var temp = helpers.check_empty_field(item[aggregations[key].field], aggregations[key].filters)
+
+    if (temp) {
+      return temp;
+    }
+    return [];
   }
 
   if (helpers.is_disjunctive_agg(aggregations[key]) || helpers.includes(item[key], aggregations[key].filters)) {
