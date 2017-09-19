@@ -110,12 +110,13 @@ var check_empty_field = function(set, filters) {
 
   var output = ['not_empty'];
 
-  if (set === undefined || set === null || (set instanceof Array && set.length === 0)) {
+  if (set === '' || set === undefined || set === null || (set instanceof Array && set.length === 0)) {
 
     //return true;
     output = ['empty'];
   }
 
+  // check also if filters is not empty array
   if (filters && !module.exports.includes(output, filters)) {
     return false;
   }

@@ -87,6 +87,7 @@ describe('helpers', function() {
     assert.deepEqual(helpers.check_empty_field(['a'], ['not_empty']), ['not_empty']);
     assert.deepEqual(helpers.check_empty_field([], ['not_empty']), false);
     assert.deepEqual(helpers.check_empty_field(['a'], ['empty']), false);
+    assert.deepEqual(helpers.check_empty_field(''), ['empty']);
 
     done();
   });

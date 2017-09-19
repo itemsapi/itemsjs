@@ -138,7 +138,12 @@ module.exports.filterable_item = function(item, aggregations) {
   for (var i = 0 ; i < keys.length ; ++i) {
 
     var key = keys[i]
-    if (helpers.is_not_filters_agg(aggregations[key]) && !helpers.not_filters_field(item[key], aggregations[key].not_filters)) {
+    if (helpers.is_empty_agg(aggregations[key])) {
+      if (helpers.check_empty_field(item[aggregations[key].field], aggregations[key].filters)) {
+        continue;
+      }
+      return false;
+    } else if (helpers.is_not_filters_agg(aggregations[key]) && !helpers.not_filters_field(item[key], aggregations[key].not_filters)) {
       return false;
     } else if (helpers.is_disjunctive_agg(aggregations[key]) && !helpers.disjunctive_field(item[key], aggregations[key].filters)) {
       return false;

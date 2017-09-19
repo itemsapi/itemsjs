@@ -135,6 +135,46 @@ describe('bucket', function() {
     done();
   });
 
+  it('checks filterable item using is_empty agg', function test(done) {
+
+    var item = {
+      name: 'movie1',
+      tags: ['a', 'b', 'c', 'd'],
+      actors: ['a', 'b']
+    }
+
+    assert.equal(service.filterable_item(item, {
+      tags: {
+      },
+      emptytags: {
+        field: 'tags',
+        type: 'is_empty'
+      }
+    }), true);
+
+    assert.equal(service.filterable_item(item, {
+      tags: {
+      },
+      emptytags: {
+        field: 'tags',
+        filters: ['not_empty'],
+        type: 'is_empty'
+      }
+    }), true);
+
+    assert.equal(service.filterable_item(item, {
+      tags: {
+      },
+      emptytags: {
+        field: 'tags',
+        filters: ['empty'],
+        type: 'is_empty'
+      }
+    }), false);
+
+    done();
+  });
+
 
   it('has not filterable item', function test(done) {
 
@@ -165,6 +205,17 @@ describe('bucket', function() {
   });
 
 
+  it('filters items by not filters aggregations', function test(done) {
+    var result = service.items_by_aggregations(items, {
+      tags: {
+        not_filters: ['a']
+      },
+      actors: {}
+    })
+
+    assert.equal(result.length, 0);
+    done();
+  });
 
   it('filters items by not filters aggregations', function test(done) {
     var result = service.items_by_aggregations(items, {
