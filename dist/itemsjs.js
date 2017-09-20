@@ -2551,18 +2551,7 @@ module.exports.filterable_item = function(item, aggregations) {
  */
 module.exports.bucket_field = function(item, aggregations, key) {
 
-  let clone_aggregations = _.clone(aggregations);
-  delete clone_aggregations[key];
-
-  var clone_aggregations_keys = _.keys(clone_aggregations);
   var keys = _.keys(aggregations);
-
-  /**
-   * check if item value is empty
-   */
-  //if (helpers.is_empty_agg(aggregations[key])) {
-    //return helpers.empty_field(item[aggregations[key].field]) ? ['empty'] : ['not_empty'];
-  //}
 
   /**
    * responsible for narrowing facets with not_filter filter
@@ -2573,21 +2562,21 @@ module.exports.bucket_field = function(item, aggregations, key) {
     if (helpers.is_not_filters_agg(aggregations[it])) {
 
       if (!helpers.not_filters_field(item[it], aggregations[it].not_filters)) {
-        //return ['Sport', 'Drama', 'History'];
         return [];
       }
     }
   }
 
+  for (var i = 0 ; i < keys.length ; ++i) {
 
-  for (var i = 0 ; i < clone_aggregations_keys.length ; ++i) {
+    if (keys[i] === key) {
+      continue;
+    }
 
-    var it = clone_aggregations_keys[i];
+    var it = keys[i];
 
-    //if (helpers.is_empty_agg(aggregations[it]) && !helpers.includes(item[it], aggregations[it].filters)) {
     if (helpers.is_empty_agg(aggregations[it])) {
       if (!helpers.check_empty_field(item[aggregations[it].field], aggregations[it].filters)) {
-      //if (!helpers.check_empty_field(aggregations[it], aggregations[it].filters)) {
         return [];
       } else {
         continue;
