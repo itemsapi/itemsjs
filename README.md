@@ -51,6 +51,12 @@ Create `search.js`:
 var data = require('./data.json');
 
 var itemsjs = require('itemsjs')(data, {
+  sortings: {
+    name_asc: {
+      field: 'name',
+      order: 'asc'
+    }
+  },
   aggregations: {
     tags: {
       title: 'Tags',
@@ -72,6 +78,7 @@ var itemsjs = require('itemsjs')(data, {
  */
 var movies = itemsjs.search({
   per_page: 1,
+  sort: 'name_asc',
   filters: {
     tags: ['1980s']
   }
@@ -109,6 +116,8 @@ Responsible for defining global configuration
 
   * **<code>aggregations</code>** filters configuration i.e. for `tags`, `actors`, `colors`, etc. Responsible for generating facets.
 
+  * **<code>sortings</code>** you can configure different sortings like `tags_asc`, `tags_desc` with options and later use it with one key.
+
   * **<code>searchableFields</code>** an array of searchable fields.
 
 
@@ -121,6 +130,8 @@ Responsible for defining global configuration
   * **<code>page</code>** page number - used for pagination.
 
   * **<code>query</code>** used for full text search.
+
+  * **<code>sort</code>** used for sorting. one of `sortings` key
   
   * **<code>filters</code>** filtering items based on specific aggregations i.e. {tags: ['drama' , 'historical']}  
 
