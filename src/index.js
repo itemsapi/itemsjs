@@ -16,20 +16,18 @@ module.exports = function itemsjs(items, configuration) {
      * per_page
      * page
      * query
+     * sort
      * filters
      */
     search: function(input) {
       input = input || {};
-
-      // make search by query first
-      items = fulltext.search(input.query);
 
       /**
        * merge configuration aggregation with user input
        */
       input.aggregations = helpers.mergeAggregations(configuration.aggregations, input);
 
-      return service.search(items, input, configuration);
+      return service.search(items, input, configuration, fulltext);
     },
 
     /**

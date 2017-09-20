@@ -5,32 +5,55 @@ var Fulltext = require('./fulltext');
 /**
  * search by filters
  */
-module.exports.search = function(items, input, configuration) {
+module.exports.search = function(items, input, configuration, fulltext) {
 
   input = input || {};
 
+  var search_time = 0;
+  // make search by query first
+  if (fulltext) {
 
-  // responsible to filters items by aggregation values (processed input)
-  // not sure now about the reason but probably performance
+    var search_start_time = new Date().getTime();
+    items = fulltext.search(input.query);
+    search_time = new Date().getTime() - search_start_time;
+  }
+
+  /**
+   * responsible for filtering items by aggregation values (processed input)
+   * not sure now about the reason but probably performance
+   */
   var filtered_items = module.exports.items_by_aggregations(items, input.aggregations);
 
   var per_page = input.per_page || 12;
   var page = input.page || 1;
 
+  /**
+   * sorting items
+   */
+  var sorting_time = 0;
   if (input.sort) {
+    var sorting_start_time = new Date().getTime();
     filtered_items = module.exports.sorted_items(filtered_items, input.sort, configuration.sortings);
+    sorting_time = new Date().getTime() - sorting_start_time;
   }
 
-  // calculate aggregations based on items and processed input
-  // it returns buckets
-  //var aggregations = module.exports.aggregations(filtered_items, input.aggregations);
+  /**
+   * calculating facets
+   */
+  var facets_start_time = new Date().getTime();
   var aggregations = module.exports.aggregations(items, input.aggregations);
+  var facets_time = new Date().getTime() - facets_start_time;
 
   return {
     pagination: {
       per_page: per_page,
       page: page,
       total: filtered_items.length
+    },
+    timings: {
+      facets: facets_time,
+      search: search_time,
+      sorting: sorting_time
     },
     data: {
       items: filtered_items.slice((page - 1) * per_page, page * per_page),

@@ -35,6 +35,9 @@ describe('itemjs tests with movies fixture', function() {
         }
       });
 
+      //console.log(result);
+      //throw new Error('ff')
+
       //assert.equal(spy.callCount, 1);
       //assert.equal(spy.firstCall.args[0].length, 20);
       assert.equal(result.data.items.length, 3);
