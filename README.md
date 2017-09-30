@@ -70,7 +70,8 @@ var itemsjs = require('itemsjs')(data, {
       title: 'Genres',
       size: 10
     }
-  }
+  },
+  searchableFields: ['name', 'tags']
 });
 
 /**
@@ -79,6 +80,8 @@ var itemsjs = require('itemsjs')(data, {
 var movies = itemsjs.search({
   per_page: 1,
   sort: 'name_asc',
+  // full text search
+  // query: 'forrest gump',
   filters: {
     tags: ['1980s']
   }
