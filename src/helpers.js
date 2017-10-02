@@ -1,8 +1,13 @@
-var _ = require('./../lib/lodash');
+var _every = require('lodash/every');
+var _includes = require('lodash/includes');
+var _some = require('lodash/some');
+var _mapValues = require('lodash/mapValues');
+var _intersection = require('lodash/intersection');
+var _flatten = require('lodash/flatten');
 
 module.exports.includes = function(items, filters) {
-  return !filters || _.every(filters, (val) => {
-    return _.includes(items, val);
+  return !filters || _every(filters, (val) => {
+    return _includes(items, val);
   });
 }
 
@@ -11,10 +16,10 @@ module.exports.includes = function(items, filters) {
  */
 module.exports.includes_any = function(items, filters) {
 
-  //return !filters || (_.isArray(filters) && !filters.length) || _.some(filters, (val) => {
-  return !filters || (filters instanceof Array && filters.length === 0) || _.some(filters, (val) => {
+  //return !filters || (_.isArray(filters) && !filters.length) || _some(filters, (val) => {
+  return !filters || (filters instanceof Array && filters.length === 0) || _some(filters, (val) => {
 
-    return _.includes(items, val);
+    return _includes(items, val);
   });
 }
 
@@ -23,8 +28,8 @@ module.exports.includes_any = function(items, filters) {
  */
 module.exports.includes_any_element = function(items, filters) {
 
-  return _.some(filters, (val) => {
-    return _.includes(items, val);
+  return _some(filters, (val) => {
+    return _includes(items, val);
   });
 }
 
@@ -32,7 +37,7 @@ module.exports.intersection = function(a, b) {
   if (!b) {
     return a;
   }
-  return _.intersection(a, _.flatten(b));
+  return _intersection(a, _flatten(b));
 }
 
 var clone = function(val) {
@@ -46,7 +51,7 @@ var clone = function(val) {
 
 module.exports.mergeAggregations = function(aggregations, input) {
 
-  return _.mapValues(clone(aggregations), (val, key) => {
+  return _mapValues(clone(aggregations), (val, key) => {
 
     if (!val.field) {
       val.field = key;

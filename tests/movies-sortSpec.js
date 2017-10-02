@@ -5,7 +5,7 @@ var expect = require('expect');
 var assert = require('assert');
 var sinon = require('sinon')
 var service = require('./../src/lib');
-var _ = require('lodash');
+var _chain = require('lodash/chain');
 
 describe('itemjs tests with movies fixture', function() {
 
@@ -51,13 +51,13 @@ describe('itemjs tests with movies fixture', function() {
     });
 
     assert.equal(result.data.items.length, 3);
-    assert.deepEqual(_.chain(result.data.items).map('name').value(), ['12 Angry Men', 'Dangal', 'Fight Club']);
+    assert.deepEqual(_chain(result.data.items).map('name').value(), ['12 Angry Men', 'Dangal', 'Fight Club']);
 
     var result = itemsjs.search({
       sort: 'name_desc',
       per_page: 3
     });
-    assert.deepEqual(_.chain(result.data.items).map('name').slice(0, 1).value(), ['The Shawshank Redemption']);
+    assert.deepEqual(_chain(result.data.items).map('name').slice(0, 1).value(), ['The Shawshank Redemption']);
 
     done();
   });

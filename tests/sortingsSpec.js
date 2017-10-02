@@ -5,7 +5,7 @@ var expect = require('expect');
 var assert = require('assert');
 var service = require('./../src/lib');
 var sinon = require('sinon')
-var _ = require('lodash');
+var _map = require('lodash/map');
 
 describe('aggregations', function() {
 
@@ -33,10 +33,10 @@ describe('aggregations', function() {
     }
 
     var result = service.sorted_items(items, 'name_asc', sortings);
-    assert.deepEqual(_.map(result, 'name'), ['movie1', 'movie2', 'movie3', 'movie7']);
+    assert.deepEqual(_map(result, 'name'), ['movie1', 'movie2', 'movie3', 'movie7']);
 
     var result = service.sorted_items(items, 'name_desc', sortings);
-    assert.deepEqual(_.map(result, 'name'), ['movie1', 'movie2', 'movie3', 'movie7'].reverse());
+    assert.deepEqual(_map(result, 'name'), ['movie1', 'movie2', 'movie3', 'movie7'].reverse());
     done();
   });
 });

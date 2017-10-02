@@ -1,4 +1,6 @@
-var _ = require('./../lib/lodash');
+var _forEach = require('lodash/forEach');
+var _map = require('lodash/map');
+var _mapKeys = require('lodash/map');
 var lunr = require('lunr');
 
 /**
@@ -16,14 +18,14 @@ var Fulltext = function(items, config) {
     this.field('name', { boost: 10 });
 
     var self = this;
-    _.forEach(config.searchableFields, function(field) {
+    _forEach(config.searchableFields, function(field) {
       self.field(field);
     });
     this.ref('id');
   })
   //var items2 = _.clone(items)
   var i = 1;
-  _.map(items, (doc) => {
+  _map(items, (doc) => {
 
     if (!doc.id) {
       doc.id = i;
@@ -32,7 +34,7 @@ var Fulltext = function(items, config) {
     this.idx.add(doc)
   })
 
-  this.store = _.mapKeys(items, (doc) => {
+  this.store = _mapKeys(items, (doc) => {
     return doc.id;
   })
 };
@@ -43,7 +45,7 @@ Fulltext.prototype = {
     if (!query) {
       return this.items;
     }
-    return _.map(this.idx.search(query), (val) => {
+    return _map(this.idx.search(query), (val) => {
       var item = this.store[val.ref]
       //delete item.id;
       return item;
