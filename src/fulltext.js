@@ -1,6 +1,6 @@
 var _forEach = require('lodash/forEach');
 var _map = require('lodash/map');
-var _mapKeys = require('lodash/map');
+var _mapKeys = require('lodash/mapKeys');
 var lunr = require('lunr');
 
 /**
