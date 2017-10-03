@@ -300,9 +300,9 @@ module.exports.buckets = function(items, field, agg, aggregations) {
   })
 
   if (agg.sort === 'term') {
-    buckets = _.orderBy(buckets, ['key'], [agg.order || 'asc']);
+    buckets = _orderBy(buckets, ['key'], [agg.order || 'asc']);
   } else {
-    buckets = _.orderBy(buckets, ['doc_count', 'key'], [agg.order || 'desc', 'asc']);
+    buckets = _orderBy(buckets, ['doc_count', 'key'], [agg.order || 'desc', 'asc']);
   }
   
   return buckets;
