@@ -299,13 +299,11 @@ module.exports.buckets = function(items, field, agg, aggregations) {
     };
   })
 
-  // sort array of objects from the most popular keywords
-  // and key asc
-  buckets = _sortBy(buckets, [(val) => {
-    return -val.doc_count;
-  }, (val) => {
-    return val.key;
-  }]);
-
+  if (agg.sort === 'term') {
+    buckets = _.orderBy(buckets, ['key'], [agg.order || 'asc']);
+  } else {
+    buckets = _.orderBy(buckets, ['doc_count', 'key'], [agg.order || 'desc', 'asc']);
+  }
+  
   return buckets;
 }

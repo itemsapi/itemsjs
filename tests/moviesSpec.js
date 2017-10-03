@@ -245,6 +245,44 @@ describe('itemjs tests with movies fixture', function() {
     done();
   })
 
+  describe('search with facets sorting', function() {
+
+    it('makes search and returns sorted facets', function test(done) {
+      var itemsjs = require('./../src/index')(items, {
+        aggregations: {
+          tags: {
+            sort: 'term',
+            order: 'desc'
+          }
+        }
+      });
+
+      var result = itemsjs.search();
+      assert.equal(result.data.aggregations.tags.buckets[0].key, 'wrongful imprisonment');
+
+      var itemsjs = require('./../src/index')(items, {
+        aggregations: {
+          tags: {
+            sort: 'term',
+            order: 'asc'
+          }
+        }
+      });
+      var result = itemsjs.search();
+      assert.equal(result.data.aggregations.tags.buckets[0].key, '1950s');
+
+      var itemsjs = require('./../src/index')(items, {
+        aggregations: {
+          tags: {
+            order: 'desc'
+          }
+        }
+      });
+      var result = itemsjs.search();
+      assert.equal(result.data.aggregations.tags.buckets[0].key, 'mafia');
+      done();
+    })
+  })
 
   describe('aggregation', function() {
 
@@ -329,4 +367,6 @@ describe('itemjs tests with movies fixture', function() {
       done()
     })
   })
+
+
 });
