@@ -24,11 +24,11 @@ const items = itemsjs.search();
 or using from the client side:
 
 ```bash
-bower install itemsjs
+npm install itemsjs
 ```
 
 ```html
-<script src="/bower_components/itemsjs/dist/itemsjs.js"></script>
+<script src="/node_modules/itemsjs/dist/itemsjs.js"></script>
 ```
 
 ```js
