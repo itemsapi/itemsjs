@@ -7749,7 +7749,7 @@ module.exports.buckets = function(items, field, agg, aggregations) {
   } else {
     buckets = _orderBy(buckets, ['doc_count', 'key'], [agg.order || 'desc', 'asc']);
   }
-  
+
   return buckets;
 }
 
