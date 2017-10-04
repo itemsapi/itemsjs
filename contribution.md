@@ -12,8 +12,8 @@ npm publish
 ## New lodash function
 
 ```bash
-# add a new function here and compile
-lodash include=some,forEach,map,mapKeys,mapValues,every,includes,intersection,filter,keys,clone,flatten,transform,sortBy -o lib/lodash.js -p
+# compile lodash
+npm run lodash
 ```
 
 
