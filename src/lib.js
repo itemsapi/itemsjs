@@ -1,4 +1,11 @@
-var _ = require('./../lib/lodash');
+var _filter = require('lodash/filter');
+var _map = require('lodash/map');
+var _mapValues = require('lodash/mapValues');
+var _keys = require('lodash/keys');
+var _flatten = require('lodash/flatten');
+var _orderBy = require('lodash/orderBy');
+var _sortBy = require('lodash/sortBy');
+var _transform = require('lodash/transform');
 var helpers = require('./helpers');
 var Fulltext = require('./fulltext');
 
@@ -78,7 +85,7 @@ module.exports.aggregation = function(items, input, aggregations) {
   var buckets = module.exports.buckets(items, input.name, aggregations[input.name], aggregations)
 
   if (input.query) {
-    buckets = _.filter(buckets, val => {
+    buckets = _filter(buckets, val => {
       // responsible for query
       // counterpart to startsWith
       return val.key.toLowerCase().indexOf(input.query.toLowerCase()) === 0;
@@ -104,7 +111,7 @@ module.exports.sorted_items = function(items, sort, sortings) {
 
   if (sortings[sort] && sortings[sort].field) {
 
-    return _.orderBy(
+    return _orderBy(
       items,
       [sortings[sort].field],
       [sortings[sort].order || 'asc']
@@ -119,7 +126,7 @@ module.exports.sorted_items = function(items, sort, sortings) {
  */
 module.exports.items_by_aggregations = function(items, aggregations) {
 
-  return _.filter(items, (item) => {
+  return _filter(items, (item) => {
     return module.exports.filterable_item(item, aggregations);
   });
 }
@@ -135,7 +142,7 @@ module.exports.items_by_aggregations = function(items, aggregations) {
 module.exports.aggregations = function(items, aggregations) {
 
   var position = 0;
-  return _.mapValues((aggregations), (val, key) => {
+  return _mapValues((aggregations), (val, key) => {
     // key is a 'tags' and val is ['drama', '1980s']
     ++position;
     return {
@@ -156,7 +163,7 @@ module.exports.aggregations = function(items, aggregations) {
  */
 module.exports.filterable_item = function(item, aggregations) {
 
-  var keys = _.keys(aggregations)
+  var keys = _keys(aggregations)
 
   for (var i = 0 ; i < keys.length ; ++i) {
 
@@ -183,7 +190,7 @@ module.exports.filterable_item = function(item, aggregations) {
  */
 module.exports.bucket_field = function(item, aggregations, key) {
 
-  var keys = _.keys(aggregations);
+  var keys = _keys(aggregations);
 
   /**
    * responsible for narrowing facets with not_filter filter
@@ -231,7 +238,7 @@ module.exports.bucket_field = function(item, aggregations, key) {
   }
 
   if (helpers.is_disjunctive_agg(aggregations[key]) || helpers.includes(item[key], aggregations[key].filters)) {
-    return item[key] ? _.flatten([item[key]]) : [];
+    return item[key] ? _flatten([item[key]]) : [];
   }
 
   return [];
@@ -246,7 +253,7 @@ module.exports.bucket_field = function(item, aggregations, key) {
  */
 module.exports.bucket = function(item, aggregations) {
 
-  return _.mapValues((aggregations), (val, key) => {
+  return _mapValues((aggregations), (val, key) => {
 
     return module.exports.bucket_field(item, aggregations, key);
   });
@@ -260,7 +267,7 @@ module.exports.bucket = function(item, aggregations) {
  */
 module.exports.buckets = function(items, field, agg, aggregations) {
 
-  var buckets = _.transform(items, function(result, item) {
+  var buckets = _transform(items, function(result, item) {
 
     item = module.exports.bucket(item, aggregations)
     var elements = item[field];
@@ -285,7 +292,7 @@ module.exports.buckets = function(items, field, agg, aggregations) {
   }, {});
 
   // transform object of objects to array of objects
-  buckets = _.map(buckets, (val, key) => {
+  buckets = _map(buckets, (val, key) => {
     return {
       key: key,
       doc_count: val
@@ -293,10 +300,10 @@ module.exports.buckets = function(items, field, agg, aggregations) {
   })
 
   if (agg.sort === 'term') {
-    buckets = _.orderBy(buckets, ['key'], [agg.order || 'asc']);
+    buckets = _orderBy(buckets, ['key'], [agg.order || 'asc']);
   } else {
-    buckets = _.orderBy(buckets, ['doc_count', 'key'], [agg.order || 'desc', 'asc']);
+    buckets = _orderBy(buckets, ['doc_count', 'key'], [agg.order || 'desc', 'asc']);
   }
-
+  
   return buckets;
 }

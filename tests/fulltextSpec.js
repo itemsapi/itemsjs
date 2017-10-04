@@ -2,7 +2,6 @@
 
 var assert = require('assert');
 var Fulltext = require('./../src/fulltext');
-var _ = require('lodash');
 
 describe('fulltext', function() {
 
