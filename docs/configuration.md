@@ -1,6 +1,6 @@
 # ItemsJS search configuration
 
-```
+```js
 var itemsjs = require('itemsjs')(data, {
   sortings: {
     year_asc: {
