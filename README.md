@@ -115,7 +115,7 @@ The first `data` argument is an array of objects.
 
 #### `configuration`
 
-Responsible for defining global configuration 
+Responsible for defining global configuration. Look for full example here - [configuration](/docs/configuration.md)
 
   * **<code>aggregations</code>** filters configuration i.e. for `tags`, `actors`, `colors`, etc. Responsible for generating facets.
 
