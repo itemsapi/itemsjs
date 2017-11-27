@@ -19,6 +19,16 @@ module.exports.search = function(items, input, configuration, fulltext) {
   }
 
   /**
+   * making a prefiltering after search and before faceting
+   * after search because search is very fast
+   * the goal is to make a library more customizable for developers
+   */
+  if (input.prefilter instanceof Function) {
+    items = input.prefilter(items);
+  }
+
+
+  /**
    * responsible for filtering items by aggregation values (processed input)
    * not sure now about the reason but probably performance
    */

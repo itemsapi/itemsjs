@@ -81,6 +81,16 @@ describe('itemjs general tests', function() {
     done();
   });
 
+  it('makes search with prefilter', function test(done) {
+    var result = itemsjs.search({
+      prefilter: function(items) {
+        return items.slice(0, 1);
+      }
+    });
+    assert.equal(result.data.items.length, 1);
+    done();
+  });
+
   it('makes search with aggregation filters', function test(done) {
 
     var itemsjs = require('./../src/index')(items, {
