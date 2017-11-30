@@ -310,3 +310,60 @@ module.exports.buckets = function(items, field, agg, aggregations) {
 
   return buckets;
 }
+
+/**
+ * returns list of elements in aggregation
+ * useful for autocomplete or list all aggregation options
+ */
+module.exports.similar = function(items, id, options) {
+
+  var result = [];
+  var per_page = options.per_page || 10;
+  var minimum = options.minimum || 0;
+  var page = options.page || 1;
+
+  var item;
+
+  for (var i = 0 ; i < items.length ; ++i) {
+    if (items[i].id === id) {
+      item = items[i];
+      break;
+    }
+  }
+
+  if (!options.field) {
+    throw new Error(`Please define field in options`);
+  }
+
+  var field = options.field;
+  var sorted_items = [];
+
+  for (var i = 0 ; i < items.length ; ++i) {
+
+    if (items[i].id !== id) {
+      var intersection = _.intersection(item[field], items[i][field])
+
+      if (intersection.length >= minimum) {
+        sorted_items.push(items[i]);
+        sorted_items[sorted_items.length - 1].intersection_length = intersection.length;
+      }
+    }
+  }
+
+  sorted_items = _.orderBy(
+    sorted_items,
+    ['intersection_length'],
+    ['desc']
+  );
+
+  return {
+    pagination: {
+      per_page: per_page,
+      page: page,
+      total: sorted_items.length
+    },
+    data: {
+      items: sorted_items.slice((page - 1) * per_page, page * per_page),
+    }
+  }
+}

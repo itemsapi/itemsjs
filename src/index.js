@@ -31,6 +31,15 @@ module.exports = function itemsjs(items, configuration) {
     },
 
     /**
+     * returns list of similar elements to specified item id
+     * id
+     */
+    similar: function(id, options) {
+
+      return service.similar(items, id, options);
+    },
+
+    /**
      * returns list of elements for specific aggregation i.e. list of tags
      * name (aggregation name)
      * query

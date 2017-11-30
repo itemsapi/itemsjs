@@ -151,6 +151,21 @@ It returns full list of filters for specific aggregation
   * **<code>page</code>** page number
 
   * **<code>query</code>** used for quering filters. It's not full text search
+
+### itemsjs.similar(id, options)
+
+It returns similar items to item for given id
+
+#### `options`
+
+  * **<code>field</code>** field name for computing similarity (i.e. tags, actors, colors)
+
+  * **<code>minimum</code>** what is the minimum intersection between field of based item and similar item to show them in the result
+
+  * **<code>per_page</code>** filters per page
+
+  * **<code>page</code>** page number
+
   
 ### itemsjs.reindex(data)
 
