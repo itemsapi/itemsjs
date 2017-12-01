@@ -12,6 +12,8 @@ Created to perform fast search on small json dataset (up to 1000 elements).
 
 ## Getting Started
 
+### NPM
+
 ```bash
 npm install itemsjs
 ```
@@ -20,6 +22,7 @@ npm install itemsjs
 const itemsjs = require('itemsjs')(data, configuration);
 const items = itemsjs.search();
 ```
+### Client side
 
 or using from the client side:
 
@@ -28,6 +31,11 @@ npm install itemsjs
 ```
 
 ```html
+<!-- use the latest release -->
+<script src="https://unpkg.com/itemsjs@latest/dist/itemsjs.min.js"></script>
+<!-- or use the specify version -->
+<script src="https://unpkg.com/itemsjs@1.0.37/dist/itemsjs.min.js"></script>
+<!-- or use it locally -->
 <script src="/node_modules/itemsjs/dist/itemsjs.js"></script>
 ```
 
