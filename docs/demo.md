@@ -1,6 +1,6 @@
 # Demo
 
-Example provided by @darkrubyist:
+Example animation provided by @darkrubyist:
 
 ![](https://media.giphy.com/media/2wYrjCuszHdDVHMQ6k/giphy.gif)
 
