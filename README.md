@@ -5,7 +5,11 @@ Created to perform fast search on small json dataset (up to 1000 elements).
 
 ## Demo
 
-[A few demo examples](/docs/demo.md)
+![](https://media.giphy.com/media/1xOcvGeYJPPFZxSpHy/giphy.gif) 
+
+(by @darkrubyist)
+
+[See another demo examples](/docs/demo.md)
 
 ## Features
 
