@@ -154,6 +154,18 @@ Responsible for defining global configuration. Look for full example here - [con
   
   * **<code>filters</code>** filtering items based on specific aggregations i.e. {tags: ['drama' , 'historical']}  
 
+### itemsjs.prefilter(items)
+
+It is making items prefiltering before search or aggregation, i.e.:
+
+```js
+itemsjs.prefilter(items) {
+  return items.filter(item => {
+    return item.price > 100;
+  });
+}
+```
+
 ### itemsjs.aggregation(options)
 
 It returns full list of filters for specific aggregation
