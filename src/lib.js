@@ -325,7 +325,7 @@ module.exports.similar = function(items, id, options) {
   var item;
 
   for (var i = 0 ; i < items.length ; ++i) {
-    if (items[i].id === id) {
+    if (items[i].id == id) {
       item = items[i];
       break;
     }
