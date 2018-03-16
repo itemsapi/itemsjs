@@ -5,7 +5,11 @@ Created to perform fast search on small json dataset (up to 1000 elements).
 
 ## Demo
 
-[A few demo examples](/docs/demo.md)
+![](https://media.giphy.com/media/1xOcvGeYJPPFZxSpHy/giphy.gif) 
+
+(by @darkrubyist)
+
+[See another demo examples](/docs/demo.md)
 
 ## Features
 
@@ -149,6 +153,18 @@ Responsible for defining global configuration. Look for full example here - [con
   * **<code>sort</code>** used for sorting. one of `sortings` key
   
   * **<code>filters</code>** filtering items based on specific aggregations i.e. {tags: ['drama' , 'historical']}  
+
+### itemsjs.prefilter(items)
+
+It is making items prefiltering before search or aggregation, i.e.:
+
+```js
+itemsjs.prefilter(items) {
+  return items.filter(item => {
+    return item.price > 100;
+  });
+}
+```
 
 ### itemsjs.aggregation(options)
 
