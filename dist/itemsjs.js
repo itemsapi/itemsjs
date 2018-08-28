@@ -1,60 +1,1542 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.itemsjs = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict';
-module.exports = require('./src/index');
+/*!
+ * itemsjs v1.0.39 - https://github.com/itemsapi/itemsjs#readme
+ * Apache-2.0 Licensed
+ */
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["itemsjs"] = factory();
+	else
+		root["itemsjs"] = factory();
+})(window, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
 
-},{"./src/index":6}],2:[function(require,module,exports){
-(function (global){
+/* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 /**
  * @license
  * Lodash (Custom Build) lodash.com/license | Underscore.js 1.8.3 underscorejs.org/LICENSE
  * Build: `lodash include="some,forEach,map,mapKeys,mapValues,every,includes,intersection,filter,keys,clone,flatten,transform,sortBy,orderBy" -o lib/lodash.js -p`
  */
-;(function(){function t(t,e){return t.set(e[0],e[1]),t}function e(t,e){return t.add(e),t}function n(t,e,n){switch(n.length){case 0:return t.call(e);case 1:return t.call(e,n[0]);case 2:return t.call(e,n[0],n[1]);case 3:return t.call(e,n[0],n[1],n[2])}return t.apply(e,n)}function r(t,e){for(var n=-1,r=null==t?0:t.length;++n<r&&false!==e(t[n],n,t););return t}function o(t,e){for(var n=-1,r=null==t?0:t.length;++n<r;)if(!e(t[n],n,t))return false;return true}function u(t,e){for(var n=-1,r=null==t?0:t.length,o=0,u=[];++n<r;){
-var c=t[n];e(c,n,t)&&(u[o++]=c)}return u}function c(t,e){return!(null==t||!t.length)&&-1<(e===e?d(t,e,0):s(t,b,0))}function i(t,e){for(var n=-1,r=null==t?0:t.length,o=Array(r);++n<r;)o[n]=e(t[n],n,t);return o}function a(t,e){for(var n=-1,r=e.length,o=t.length;++n<r;)t[o+n]=e[n];return t}function f(t,e,n){for(var r=-1,o=null==t?0:t.length;++r<o;)n=e(n,t[r],r,t);return n}function l(t,e){for(var n=-1,r=null==t?0:t.length;++n<r;)if(e(t[n],n,t))return true;return false}function s(t,e,n){var r=t.length;for(n+=-1;++n<r;)if(e(t[n],n,t))return n;
-return-1}function b(t){return t!==t}function h(t){return function(e){return null==e?Zt:e[t]}}function p(t,e){var n=t.length;for(t.sort(e);n--;)t[n]=t[n].c;return t}function y(t){return function(e){return t(e)}}function j(t,e){return i(e,function(e){return t[e]})}function v(t){var e=-1,n=Array(t.size);return t.forEach(function(t,r){n[++e]=[r,t]}),n}function g(t){var e=Object;return function(n){return t(e(n))}}function _(t){var e=-1,n=Array(t.size);return t.forEach(function(t){n[++e]=t}),n}function d(t,e,n){
---n;for(var r=t.length;++n<r;)if(t[n]===e)return n;return-1}function A(){}function m(t){var e=-1,n=null==t?0:t.length;for(this.clear();++e<n;){var r=t[e];this.set(r[0],r[1])}}function w(t){var e=-1,n=null==t?0:t.length;for(this.clear();++e<n;){var r=t[e];this.set(r[0],r[1])}}function O(t){var e=-1,n=null==t?0:t.length;for(this.clear();++e<n;){var r=t[e];this.set(r[0],r[1])}}function S(t){var e=-1,n=null==t?0:t.length;for(this.__data__=new O;++e<n;)this.add(t[e])}function k(t){this.size=(this.__data__=new w(t)).size;
-}function z(t,e){var n=On(t),r=!n&&wn(t),o=!n&&!r&&Sn(t),u=!n&&!r&&!o&&kn(t);if(n=n||r||o||u){for(var r=t.length,c=String,i=-1,a=Array(r);++i<r;)a[i]=c(i);r=a}else r=[];var f,c=r.length;for(f in t)!e&&!Ie.call(t,f)||n&&("length"==f||o&&("offset"==f||"parent"==f)||u&&("buffer"==f||"byteLength"==f||"byteOffset"==f)||_t(f,c))||r.push(f);return r}function x(t,e,n){var r=t[e];Ie.call(t,e)&&Ft(r,n)&&(n!==Zt||e in t)||$(t,e,n)}function F(t,e){for(var n=t.length;n--;)if(Ft(t[n][0],e))return n;return-1}function I(t,e){
-return t&&ut(e,Wt(e),t)}function E(t,e){return t&&ut(e,Gt(e),t)}function $(t,e,n){"__proto__"==e&&We?We(t,e,{configurable:true,enumerable:true,value:n,writable:true}):t[e]=n}function B(t,e,n,o,u,c){var i,a=1&e,f=2&e,l=4&e;if(n&&(i=u?n(t,o,u,c):n(t)),i!==Zt)return i;if(!Mt(t))return t;if(o=On(t)){if(i=jt(t),!a)return ot(t,i)}else{var s=gn(t),b="[object Function]"==s||"[object GeneratorFunction]"==s;if(Sn(t))return nt(t,a);if("[object Object]"==s||"[object Arguments]"==s||b&&!u){if(i=f||b?{}:typeof t.constructor!="function"||mt(t)?{}:bn(Pe(t)),
-!a)return f?it(t,E(i,t)):ct(t,I(i,t))}else{if(!ye[s])return u?t:{};i=vt(t,s,B,a)}}if(c||(c=new k),u=c.get(t))return u;c.set(t,i);var f=l?f?st:lt:f?Gt:Wt,h=o?Zt:f(t);return r(h||t,function(r,o){h&&(o=r,r=t[o]),x(i,o,B(r,e,n,o,t,c))}),i}function M(t,e){var n=true;return hn(t,function(t,r,o){return n=!!e(t,r,o)}),n}function U(t,e){var n=[];return hn(t,function(t,r,o){e(t,r,o)&&n.push(t)}),n}function D(t,e,n,r,o){var u=-1,c=t.length;for(n||(n=gt),o||(o=[]);++u<c;){var i=t[u];0<e&&n(i)?1<e?D(i,e-1,n,r,o):a(o,i):r||(o[o.length]=i);
-}return o}function L(t,e){return t&&pn(t,e,Wt)}function P(t,e){e=et(e,t);for(var n=0,r=e.length;null!=t&&n<r;)t=t[St(e[n++])];return n&&n==r?t:Zt}function N(t,e,n){return e=e(t),On(t)?e:a(e,n(t))}function V(t){if(null==t)t=t===Zt?"[object Undefined]":"[object Null]";else if(Te&&Te in Object(t)){var e=Ie.call(t,Te),n=t[Te];try{t[Te]=Zt;var r=true}catch(t){}var o=$e.call(t);r&&(e?t[Te]=n:delete t[Te]),t=o}else t=$e.call(t);return t}function C(t){return Ut(t)&&"[object Arguments]"==V(t)}function R(t,e,n,r,o){
-if(t===e)e=true;else if(null==t||null==e||!Ut(t)&&!Ut(e))e=t!==t&&e!==e;else t:{var u=On(t),c=On(e),i=u?"[object Array]":gn(t),a=c?"[object Array]":gn(e),i="[object Arguments]"==i?"[object Object]":i,a="[object Arguments]"==a?"[object Object]":a,f="[object Object]"==i,c="[object Object]"==a;if((a=i==a)&&Sn(t)){if(!Sn(e)){e=false;break t}u=true,f=false}if(a&&!f)o||(o=new k),e=u||kn(t)?at(t,e,n,r,R,o):ft(t,e,i,n,r,R,o);else{if(!(1&n)&&(u=f&&Ie.call(t,"__wrapped__"),i=c&&Ie.call(e,"__wrapped__"),u||i)){t=u?t.value():t,
-e=i?e.value():e,o||(o=new k),e=R(t,e,n,r,o);break t}if(a)e:if(o||(o=new k),u=1&n,i=lt(t),c=i.length,a=lt(e).length,c==a||u){for(f=c;f--;){var l=i[f];if(!(u?l in e:Ie.call(e,l))){e=false;break e}}if((a=o.get(t))&&o.get(e))e=a==e;else{a=true,o.set(t,e),o.set(e,t);for(var s=u;++f<c;){var l=i[f],b=t[l],h=e[l];if(r)var p=u?r(h,b,l,e,t,o):r(b,h,l,t,e,o);if(p===Zt?b!==h&&!R(b,h,n,r,o):!p){a=false;break}s||(s="constructor"==l)}a&&!s&&(n=t.constructor,r=e.constructor,n!=r&&"constructor"in t&&"constructor"in e&&!(typeof n=="function"&&n instanceof n&&typeof r=="function"&&r instanceof r)&&(a=false)),
-o.delete(t),o.delete(e),e=a}}else e=false;else e=false}}return e}function T(t,e){var n=e.length,r=n;if(null==t)return!r;for(t=Object(t);n--;){var o=e[n];if(o[2]?o[1]!==t[o[0]]:!(o[0]in t))return false}for(;++n<r;){var o=e[n],u=o[0],c=t[u],i=o[1];if(o[2]){if(c===Zt&&!(u in t))return false}else if(o=new k,void 0===Zt?!R(i,c,3,void 0,o):1)return false}return true}function W(t){return Ut(t)&&Bt(t.length)&&!!pe[V(t)]}function G(t){return typeof t=="function"?t:null==t?Ht:typeof t=="object"?On(t)?H(t[0],t[1]):K(t):Qt(t)}function q(t,e){
-var n=-1,r=It(t)?Array(t.length):[];return hn(t,function(t,o,u){r[++n]=e(t,o,u)}),r}function K(t){var e=pt(t);return 1==e.length&&e[0][2]?wt(e[0][0],e[0][1]):function(n){return n===t||T(n,e)}}function H(t,e){return At(t)&&e===e&&!Mt(e)?wt(St(t),e):function(n){var r=Rt(n,t);return r===Zt&&r===e?Tt(n,t):R(e,r,3)}}function J(t,e,n){var r=-1;return e=i(e.length?e:[Ht],y(bt())),t=q(t,function(t){return{a:i(e,function(e){return e(t)}),b:++r,c:t}}),p(t,function(t,e){var r;t:{r=-1;for(var o=t.a,u=e.a,c=o.length,i=n.length;++r<c;){
-var a;e:{a=o[r];var f=u[r];if(a!==f){var l=a!==Zt,s=null===a,b=a===a,h=Lt(a),p=f!==Zt,y=null===f,j=f===f,v=Lt(f);if(!y&&!v&&!h&&a>f||h&&p&&j&&!y&&!v||s&&p&&j||!l&&j||!b){a=1;break e}if(!s&&!h&&!v&&a<f||v&&l&&b&&!s&&!h||y&&l&&b||!p&&b||!j){a=-1;break e}}a=0}if(a){r=r>=i?a:a*("desc"==n[r]?-1:1);break t}}r=t.b-e.b}return r})}function Q(t){return function(e){return P(e,t)}}function X(t){return _n(Ot(t,Ht),t+"")}function Y(t,e){var n;return hn(t,function(t,r,o){return n=e(t,r,o),!n}),!!n}function Z(t){
-if(typeof t=="string")return t;if(On(t))return i(t,Z)+"";if(Lt(t))return sn?sn.call(t):"";var e=t+"";return"0"==e&&1/t==-te?"-0":e}function tt(t){return Et(t)?t:[]}function et(t,e){return On(t)?t:At(t,e)?[t]:dn(Ct(t))}function nt(t,e){if(e)return t.slice();var n=t.length,n=Le?Le(n):new t.constructor(n);return t.copy(n),n}function rt(t){var e=new t.constructor(t.byteLength);return new De(e).set(new De(t)),e}function ot(t,e){var n=-1,r=t.length;for(e||(e=Array(r));++n<r;)e[n]=t[n];return e}function ut(t,e,n){
-var r=!n;n||(n={});for(var o=-1,u=e.length;++o<u;){var c=e[o],i=Zt;i===Zt&&(i=t[c]),r?$(n,c,i):x(n,c,i)}return n}function ct(t,e){return ut(t,jn(t),e)}function it(t,e){return ut(t,vn(t),e)}function at(t,e,n,r,o,u){var c=1&n,i=t.length,a=e.length;if(i!=a&&!(c&&a>i))return false;if((a=u.get(t))&&u.get(e))return a==e;var a=-1,f=true,s=2&n?new S:Zt;for(u.set(t,e),u.set(e,t);++a<i;){var b=t[a],h=e[a];if(r)var p=c?r(h,b,a,e,t,u):r(b,h,a,t,e,u);if(p!==Zt){if(p)continue;f=false;break}if(s){if(!l(e,function(t,e){if(!s.has(e)&&(b===t||o(b,t,n,r,u)))return s.push(e);
-})){f=false;break}}else if(b!==h&&!o(b,h,n,r,u)){f=false;break}}return u.delete(t),u.delete(e),f}function ft(t,e,n,r,o,u,c){switch(n){case"[object DataView]":if(t.byteLength!=e.byteLength||t.byteOffset!=e.byteOffset)break;t=t.buffer,e=e.buffer;case"[object ArrayBuffer]":if(t.byteLength!=e.byteLength||!u(new De(t),new De(e)))break;return true;case"[object Boolean]":case"[object Date]":case"[object Number]":return Ft(+t,+e);case"[object Error]":return t.name==e.name&&t.message==e.message;case"[object RegExp]":
-case"[object String]":return t==e+"";case"[object Map]":var i=v;case"[object Set]":if(i||(i=_),t.size!=e.size&&!(1&r))break;return(n=c.get(t))?n==e:(r|=2,c.set(t,e),e=at(i(t),i(e),r,o,u,c),c.delete(t),e);case"[object Symbol]":if(ln)return ln.call(t)==ln.call(e)}return false}function lt(t){return N(t,Wt,jn)}function st(t){return N(t,Gt,vn)}function bt(){var t=A.iteratee||Jt,t=t===Jt?G:t;return arguments.length?t(arguments[0],arguments[1]):t}function ht(t,e){var n=t.__data__,r=typeof e;return("string"==r||"number"==r||"symbol"==r||"boolean"==r?"__proto__"!==e:null===e)?n[typeof e=="string"?"string":"hash"]:n.map;
-}function pt(t){for(var e=Wt(t),n=e.length;n--;){var r=e[n],o=t[r];e[n]=[r,o,o===o&&!Mt(o)]}return e}function yt(t,e){var n=null==t?Zt:t[e];return(!Mt(n)||Ee&&Ee in n?0:($t(n)?Be:se).test(kt(n)))?n:Zt}function jt(t){var e=t.length,n=t.constructor(e);return e&&"string"==typeof t[0]&&Ie.call(t,"index")&&(n.index=t.index,n.input=t.input),n}function vt(n,r,o,u){var c=n.constructor;switch(r){case"[object ArrayBuffer]":return rt(n);case"[object Boolean]":case"[object Date]":return new c(+n);case"[object DataView]":
-return r=u?rt(n.buffer):n.buffer,new n.constructor(r,n.byteOffset,n.byteLength);case"[object Float32Array]":case"[object Float64Array]":case"[object Int8Array]":case"[object Int16Array]":case"[object Int32Array]":case"[object Uint8Array]":case"[object Uint8ClampedArray]":case"[object Uint16Array]":case"[object Uint32Array]":return r=u?rt(n.buffer):n.buffer,new n.constructor(r,n.byteOffset,n.length);case"[object Map]":return r=u?o(v(n),1):v(n),f(r,t,new n.constructor);case"[object Number]":case"[object String]":
-return new c(n);case"[object RegExp]":return r=new n.constructor(n.source,ae.exec(n)),r.lastIndex=n.lastIndex,r;case"[object Set]":return r=u?o(_(n),1):_(n),f(r,e,new n.constructor);case"[object Symbol]":return ln?Object(ln.call(n)):{}}}function gt(t){return On(t)||wn(t)||!!(Re&&t&&t[Re])}function _t(t,e){return e=null==e?9007199254740991:e,!!e&&(typeof t=="number"||he.test(t))&&-1<t&&0==t%1&&t<e}function dt(t,e,n){if(!Mt(n))return false;var r=typeof e;return!!("number"==r?It(n)&&_t(e,n.length):"string"==r&&e in n)&&Ft(n[e],t);
-}function At(t,e){if(On(t))return false;var n=typeof t;return!("number"!=n&&"symbol"!=n&&"boolean"!=n&&null!=t&&!Lt(t))||(re.test(t)||!ne.test(t)||null!=e&&t in Object(e))}function mt(t){var e=t&&t.constructor;return t===(typeof e=="function"&&e.prototype||ze)}function wt(t,e){return function(n){return null!=n&&(n[t]===e&&(e!==Zt||t in Object(n)))}}function Ot(t,e){var r=void 0,r=He(r===Zt?t.length-1:r,0);return function(){for(var o=arguments,u=-1,c=He(o.length-r,0),i=Array(c);++u<c;)i[u]=o[r+u];for(u=-1,
-c=Array(r+1);++u<r;)c[u]=o[u];return c[r]=e(i),n(t,this,c)}}function St(t){if(typeof t=="string"||Lt(t))return t;var e=t+"";return"0"==e&&1/t==-te?"-0":e}function kt(t){if(null!=t){try{return Fe.call(t)}catch(t){}return t+""}return""}function zt(t,e){return(On(t)?r:hn)(t,bt(e,3))}function xt(t,e){function n(){var r=arguments,o=e?e.apply(this,r):r[0],u=n.cache;return u.has(o)?u.get(o):(r=t.apply(this,r),n.cache=u.set(o,r)||u,r)}if(typeof t!="function"||null!=e&&typeof e!="function")throw new TypeError("Expected a function");
-return n.cache=new(xt.Cache||O),n}function Ft(t,e){return t===e||t!==t&&e!==e}function It(t){return null!=t&&Bt(t.length)&&!$t(t)}function Et(t){return Ut(t)&&It(t)}function $t(t){return!!Mt(t)&&(t=V(t),"[object Function]"==t||"[object GeneratorFunction]"==t||"[object AsyncFunction]"==t||"[object Proxy]"==t)}function Bt(t){return typeof t=="number"&&-1<t&&0==t%1&&9007199254740991>=t}function Mt(t){var e=typeof t;return null!=t&&("object"==e||"function"==e)}function Ut(t){return null!=t&&typeof t=="object";
-}function Dt(t){return typeof t=="string"||!On(t)&&Ut(t)&&"[object String]"==V(t)}function Lt(t){return typeof t=="symbol"||Ut(t)&&"[object Symbol]"==V(t)}function Pt(t){return t?(t=Vt(t),t===te||t===-te?1.7976931348623157e308*(0>t?-1:1):t===t?t:0):0===t?t:0}function Nt(t){t=Pt(t);var e=t%1;return t===t?e?t-e:t:0}function Vt(t){if(typeof t=="number")return t;if(Lt(t))return ee;if(Mt(t)&&(t=typeof t.valueOf=="function"?t.valueOf():t,t=Mt(t)?t+"":t),typeof t!="string")return 0===t?t:+t;t=t.replace(ce,"");
-var e=le.test(t);return e||be.test(t)?ve(t.slice(2),e?2:8):fe.test(t)?ee:+t}function Ct(t){return null==t?"":Z(t)}function Rt(t,e,n){return t=null==t?Zt:P(t,e),t===Zt?n:t}function Tt(t,e){var n;if(n=null!=t){n=t;var r;r=et(e,n);for(var o=-1,u=r.length,c=false;++o<u;){var i=St(r[o]);if(!(c=null!=n&&null!=n&&i in Object(n)))break;n=n[i]}c||++o!=u?n=c:(u=null==n?0:n.length,n=!!u&&Bt(u)&&_t(i,u)&&(On(n)||wn(n)))}return n}function Wt(t){if(It(t))t=z(t);else if(mt(t)){var e,n=[];for(e in Object(t))Ie.call(t,e)&&"constructor"!=e&&n.push(e);
-t=n}else t=Ke(t);return t}function Gt(t){if(It(t))t=z(t,true);else if(Mt(t)){var e,n=mt(t),r=[];for(e in t)("constructor"!=e||!n&&Ie.call(t,e))&&r.push(e);t=r}else{if(e=[],null!=t)for(n in Object(t))e.push(n);t=e}return t}function qt(t){return null==t?[]:j(t,Wt(t))}function Kt(t){return function(){return t}}function Ht(t){return t}function Jt(t){return G(typeof t=="function"?t:B(t,1))}function Qt(t){return At(t)?h(St(t)):Q(t)}function Xt(){return[]}function Yt(){return false}var Zt,te=1/0,ee=NaN,ne=/\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,re=/^\w*$/,oe=/^\./,ue=/[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g,ce=/^\s+|\s+$/g,ie=/\\(\\)?/g,ae=/\w*$/,fe=/^[-+]0x[0-9a-f]+$/i,le=/^0b[01]+$/i,se=/^\[object .+?Constructor\]$/,be=/^0o[0-7]+$/i,he=/^(?:0|[1-9]\d*)$/,pe={};
-pe["[object Float32Array]"]=pe["[object Float64Array]"]=pe["[object Int8Array]"]=pe["[object Int16Array]"]=pe["[object Int32Array]"]=pe["[object Uint8Array]"]=pe["[object Uint8ClampedArray]"]=pe["[object Uint16Array]"]=pe["[object Uint32Array]"]=true,pe["[object Arguments]"]=pe["[object Array]"]=pe["[object ArrayBuffer]"]=pe["[object Boolean]"]=pe["[object DataView]"]=pe["[object Date]"]=pe["[object Error]"]=pe["[object Function]"]=pe["[object Map]"]=pe["[object Number]"]=pe["[object Object]"]=pe["[object RegExp]"]=pe["[object Set]"]=pe["[object String]"]=pe["[object WeakMap]"]=false;
-var ye={};ye["[object Arguments]"]=ye["[object Array]"]=ye["[object ArrayBuffer]"]=ye["[object DataView]"]=ye["[object Boolean]"]=ye["[object Date]"]=ye["[object Float32Array]"]=ye["[object Float64Array]"]=ye["[object Int8Array]"]=ye["[object Int16Array]"]=ye["[object Int32Array]"]=ye["[object Map]"]=ye["[object Number]"]=ye["[object Object]"]=ye["[object RegExp]"]=ye["[object Set]"]=ye["[object String]"]=ye["[object Symbol]"]=ye["[object Uint8Array]"]=ye["[object Uint8ClampedArray]"]=ye["[object Uint16Array]"]=ye["[object Uint32Array]"]=true,
-ye["[object Error]"]=ye["[object Function]"]=ye["[object WeakMap]"]=false;var je,ve=parseInt,ge=typeof global=="object"&&global&&global.Object===Object&&global,_e=typeof self=="object"&&self&&self.Object===Object&&self,de=ge||_e||Function("return this")(),Ae=typeof exports=="object"&&exports&&!exports.nodeType&&exports,me=Ae&&typeof module=="object"&&module&&!module.nodeType&&module,we=me&&me.exports===Ae,Oe=we&&ge.process;t:{try{je=Oe&&Oe.binding&&Oe.binding("util");break t}catch(t){}je=void 0}var Se=je&&je.isTypedArray,ke=Array.prototype,ze=Object.prototype,xe=de["__core-js_shared__"],Fe=Function.prototype.toString,Ie=ze.hasOwnProperty,Ee=function(){
-var t=/[^.]+$/.exec(xe&&xe.keys&&xe.keys.IE_PROTO||"");return t?"Symbol(src)_1."+t:""}(),$e=ze.toString,Be=RegExp("^"+Fe.call(Ie).replace(/[\\^$.*+?()[\]{}|]/g,"\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g,"$1.*?")+"$"),Me=we?de.Buffer:Zt,Ue=de.Symbol,De=de.Uint8Array,Le=Me?Me.f:Zt,Pe=g(Object.getPrototypeOf),Ne=Object.create,Ve=ze.propertyIsEnumerable,Ce=ke.splice,Re=Ue?Ue.isConcatSpreadable:Zt,Te=Ue?Ue.toStringTag:Zt,We=function(){try{var t=yt(Object,"defineProperty");
-return t({},"",{}),t}catch(t){}}(),Ge=Object.getOwnPropertySymbols,qe=Me?Me.isBuffer:Zt,Ke=g(Object.keys),He=Math.max,Je=Math.min,Qe=Date.now,Xe=yt(de,"DataView"),Ye=yt(de,"Map"),Ze=yt(de,"Promise"),tn=yt(de,"Set"),en=yt(de,"WeakMap"),nn=yt(Object,"create"),rn=kt(Xe),on=kt(Ye),un=kt(Ze),cn=kt(tn),an=kt(en),fn=Ue?Ue.prototype:Zt,ln=fn?fn.valueOf:Zt,sn=fn?fn.toString:Zt,bn=function(){function t(){}return function(e){return Mt(e)?Ne?Ne(e):(t.prototype=e,e=new t,t.prototype=Zt,e):{}}}();m.prototype.clear=function(){
-this.__data__=nn?nn(null):{},this.size=0},m.prototype.delete=function(t){return t=this.has(t)&&delete this.__data__[t],this.size-=t?1:0,t},m.prototype.get=function(t){var e=this.__data__;return nn?(t=e[t],"__lodash_hash_undefined__"===t?Zt:t):Ie.call(e,t)?e[t]:Zt},m.prototype.has=function(t){var e=this.__data__;return nn?e[t]!==Zt:Ie.call(e,t)},m.prototype.set=function(t,e){var n=this.__data__;return this.size+=this.has(t)?0:1,n[t]=nn&&e===Zt?"__lodash_hash_undefined__":e,this},w.prototype.clear=function(){
-this.__data__=[],this.size=0},w.prototype.delete=function(t){var e=this.__data__;return t=F(e,t),!(0>t)&&(t==e.length-1?e.pop():Ce.call(e,t,1),--this.size,true)},w.prototype.get=function(t){var e=this.__data__;return t=F(e,t),0>t?Zt:e[t][1]},w.prototype.has=function(t){return-1<F(this.__data__,t)},w.prototype.set=function(t,e){var n=this.__data__,r=F(n,t);return 0>r?(++this.size,n.push([t,e])):n[r][1]=e,this},O.prototype.clear=function(){this.size=0,this.__data__={hash:new m,map:new(Ye||w),string:new m
-}},O.prototype.delete=function(t){return t=ht(this,t).delete(t),this.size-=t?1:0,t},O.prototype.get=function(t){return ht(this,t).get(t)},O.prototype.has=function(t){return ht(this,t).has(t)},O.prototype.set=function(t,e){var n=ht(this,t),r=n.size;return n.set(t,e),this.size+=n.size==r?0:1,this},S.prototype.add=S.prototype.push=function(t){return this.__data__.set(t,"__lodash_hash_undefined__"),this},S.prototype.has=function(t){return this.__data__.has(t)},k.prototype.clear=function(){this.__data__=new w,
-this.size=0},k.prototype.delete=function(t){var e=this.__data__;return t=e.delete(t),this.size=e.size,t},k.prototype.get=function(t){return this.__data__.get(t)},k.prototype.has=function(t){return this.__data__.has(t)},k.prototype.set=function(t,e){var n=this.__data__;if(n instanceof w){var r=n.__data__;if(!Ye||199>r.length)return r.push([t,e]),this.size=++n.size,this;n=this.__data__=new O(r)}return n.set(t,e),this.size=n.size,this};var hn=function(t,e){return function(n,r){if(null==n)return n;if(!It(n))return t(n,r);
-for(var o=n.length,u=e?o:-1,c=Object(n);(e?u--:++u<o)&&false!==r(c[u],u,c););return n}}(L),pn=function(t){return function(e,n,r){var o=-1,u=Object(e);r=r(e);for(var c=r.length;c--;){var i=r[t?c:++o];if(false===n(u[i],i,u))break}return e}}(),yn=We?function(t,e){return We(t,"toString",{configurable:true,enumerable:false,value:Kt(e),writable:true})}:Ht,jn=Ge?function(t){return null==t?[]:(t=Object(t),u(Ge(t),function(e){return Ve.call(t,e)}))}:Xt,vn=Ge?function(t){for(var e=[];t;)a(e,jn(t)),t=Pe(t);return e}:Xt,gn=V;
-(Xe&&"[object DataView]"!=gn(new Xe(new ArrayBuffer(1)))||Ye&&"[object Map]"!=gn(new Ye)||Ze&&"[object Promise]"!=gn(Ze.resolve())||tn&&"[object Set]"!=gn(new tn)||en&&"[object WeakMap]"!=gn(new en))&&(gn=function(t){var e=V(t);if(t=(t="[object Object]"==e?t.constructor:Zt)?kt(t):"")switch(t){case rn:return"[object DataView]";case on:return"[object Map]";case un:return"[object Promise]";case cn:return"[object Set]";case an:return"[object WeakMap]"}return e});var _n=function(t){var e=0,n=0;return function(){
-var r=Qe(),o=16-(r-n);if(n=r,0<o){if(800<=++e)return arguments[0]}else e=0;return t.apply(Zt,arguments)}}(yn),dn=function(t){t=xt(t,function(t){return 500===e.size&&e.clear(),t});var e=t.cache;return t}(function(t){var e=[];return oe.test(t)&&e.push(""),t.replace(ue,function(t,n,r,o){e.push(r?o.replace(ie,"$1"):n||t)}),e}),An=X(function(t){var e=i(t,tt);if(e.length&&e[0]===t[0]){t=e[0].length;for(var n=e.length,r=n,o=Array(n),u=1/0,a=[];r--;){var f=e[r],u=Je(f.length,u);o[r]=120<=t&&120<=f.length?new S(r&&f):Zt;
-}var f=e[0],l=-1,s=o[0];t:for(;++l<t&&a.length<u;){var b=f[l],h=b,b=0!==b?b:0;if(s?!s.has(h):!c(a,h)){for(r=n;--r;){var p=o[r];if(p?!p.has(h):!c(e[r],h))continue t}s&&s.push(h),a.push(b)}}e=a}else e=[];return e}),mn=X(function(t,e){if(null==t)return[];var n=e.length;return 1<n&&dt(t,e[0],e[1])?e=[]:2<n&&dt(e[0],e[1],e[2])&&(e=[e[0]]),J(t,D(e,1),[])});xt.Cache=O;var wn=C(function(){return arguments}())?C:function(t){return Ut(t)&&Ie.call(t,"callee")&&!Ve.call(t,"callee")},On=Array.isArray,Sn=qe||Yt,kn=Se?y(Se):W;
-A.constant=Kt,A.filter=function(t,e){return(On(t)?u:U)(t,bt(e,3))},A.flatten=function(t){return(null==t?0:t.length)?D(t,1):[]},A.intersection=An,A.iteratee=Jt,A.keys=Wt,A.keysIn=Gt,A.map=function(t,e){return(On(t)?i:q)(t,bt(e,3))},A.mapKeys=function(t,e){var n={};return e=bt(e,3),L(t,function(t,r,o){$(n,e(t,r,o),t)}),n},A.mapValues=function(t,e){var n={};return e=bt(e,3),L(t,function(t,r,o){$(n,r,e(t,r,o))}),n},A.memoize=xt,A.orderBy=function(t,e,n,r){return null==t?[]:(On(e)||(e=null==e?[]:[e]),
-n=r?Zt:n,On(n)||(n=null==n?[]:[n]),J(t,e,n))},A.property=Qt,A.sortBy=mn,A.transform=function(t,e,n){var o=On(t),u=o||Sn(t)||kn(t);if(e=bt(e,4),null==n){var c=t&&t.constructor;n=u?o?new c:[]:Mt(t)&&$t(c)?bn(Pe(t)):{}}return(u?r:L)(t,function(t,r,o){return e(n,t,r,o)}),n},A.values=qt,A.clone=function(t){return B(t,4)},A.eq=Ft,A.every=function(t,e,n){var r=On(t)?o:M;return n&&dt(t,e,n)&&(e=Zt),r(t,bt(e,3))},A.forEach=zt,A.get=Rt,A.hasIn=Tt,A.identity=Ht,A.includes=function(t,e,n,r){return t=It(t)?t:qt(t),
-n=n&&!r?Nt(n):0,r=t.length,0>n&&(n=He(r+n,0)),Dt(t)?n<=r&&-1<t.indexOf(e,n):!!r&&-1<(e===e?d(t,e,n):s(t,b,n))},A.isArguments=wn,A.isArray=On,A.isArrayLike=It,A.isArrayLikeObject=Et,A.isBuffer=Sn,A.isFunction=$t,A.isLength=Bt,A.isObject=Mt,A.isObjectLike=Ut,A.isString=Dt,A.isSymbol=Lt,A.isTypedArray=kn,A.stubArray=Xt,A.stubFalse=Yt,A.some=function(t,e,n){var r=On(t)?l:Y;return n&&dt(t,e,n)&&(e=Zt),r(t,bt(e,3))},A.toFinite=Pt,A.toInteger=Nt,A.toNumber=Vt,A.toString=Ct,A.each=zt,A.VERSION="4.17.4",typeof define=="function"&&typeof define.amd=="object"&&define.amd?(de._=A,
-define(function(){return A})):me?((me.exports=A)._=A,Ae._=A):de._=A}).call(this);
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],3:[function(require,module,exports){
+;(function () {
+  function t(t, e) {
+    return t.set(e[0], e[1]), t;
+  }function e(t, e) {
+    return t.add(e), t;
+  }function n(t, e, n) {
+    switch (n.length) {case 0:
+        return t.call(e);case 1:
+        return t.call(e, n[0]);case 2:
+        return t.call(e, n[0], n[1]);case 3:
+        return t.call(e, n[0], n[1], n[2]);}return t.apply(e, n);
+  }function r(t, e) {
+    for (var n = -1, r = null == t ? 0 : t.length; ++n < r && false !== e(t[n], n, t);) {}return t;
+  }function o(t, e) {
+    for (var n = -1, r = null == t ? 0 : t.length; ++n < r;) {
+      if (!e(t[n], n, t)) return false;
+    }return true;
+  }function u(t, e) {
+    for (var n = -1, r = null == t ? 0 : t.length, o = 0, u = []; ++n < r;) {
+      var c = t[n];e(c, n, t) && (u[o++] = c);
+    }return u;
+  }function c(t, e) {
+    return !(null == t || !t.length) && -1 < (e === e ? d(t, e, 0) : s(t, b, 0));
+  }function i(t, e) {
+    for (var n = -1, r = null == t ? 0 : t.length, o = Array(r); ++n < r;) {
+      o[n] = e(t[n], n, t);
+    }return o;
+  }function a(t, e) {
+    for (var n = -1, r = e.length, o = t.length; ++n < r;) {
+      t[o + n] = e[n];
+    }return t;
+  }function f(t, e, n) {
+    for (var r = -1, o = null == t ? 0 : t.length; ++r < o;) {
+      n = e(n, t[r], r, t);
+    }return n;
+  }function l(t, e) {
+    for (var n = -1, r = null == t ? 0 : t.length; ++n < r;) {
+      if (e(t[n], n, t)) return true;
+    }return false;
+  }function s(t, e, n) {
+    var r = t.length;for (n += -1; ++n < r;) {
+      if (e(t[n], n, t)) return n;
+    }return -1;
+  }function b(t) {
+    return t !== t;
+  }function h(t) {
+    return function (e) {
+      return null == e ? Zt : e[t];
+    };
+  }function p(t, e) {
+    var n = t.length;for (t.sort(e); n--;) {
+      t[n] = t[n].c;
+    }return t;
+  }function y(t) {
+    return function (e) {
+      return t(e);
+    };
+  }function j(t, e) {
+    return i(e, function (e) {
+      return t[e];
+    });
+  }function v(t) {
+    var e = -1,
+        n = Array(t.size);return t.forEach(function (t, r) {
+      n[++e] = [r, t];
+    }), n;
+  }function g(t) {
+    var e = Object;return function (n) {
+      return t(e(n));
+    };
+  }function _(t) {
+    var e = -1,
+        n = Array(t.size);return t.forEach(function (t) {
+      n[++e] = t;
+    }), n;
+  }function d(t, e, n) {
+    --n;for (var r = t.length; ++n < r;) {
+      if (t[n] === e) return n;
+    }return -1;
+  }function A() {}function m(t) {
+    var e = -1,
+        n = null == t ? 0 : t.length;for (this.clear(); ++e < n;) {
+      var r = t[e];this.set(r[0], r[1]);
+    }
+  }function w(t) {
+    var e = -1,
+        n = null == t ? 0 : t.length;for (this.clear(); ++e < n;) {
+      var r = t[e];this.set(r[0], r[1]);
+    }
+  }function O(t) {
+    var e = -1,
+        n = null == t ? 0 : t.length;for (this.clear(); ++e < n;) {
+      var r = t[e];this.set(r[0], r[1]);
+    }
+  }function S(t) {
+    var e = -1,
+        n = null == t ? 0 : t.length;for (this.__data__ = new O(); ++e < n;) {
+      this.add(t[e]);
+    }
+  }function k(t) {
+    this.size = (this.__data__ = new w(t)).size;
+  }function z(t, e) {
+    var n = On(t),
+        r = !n && wn(t),
+        o = !n && !r && Sn(t),
+        u = !n && !r && !o && kn(t);if (n = n || r || o || u) {
+      for (var r = t.length, c = String, i = -1, a = Array(r); ++i < r;) {
+        a[i] = c(i);
+      }r = a;
+    } else r = [];var f,
+        c = r.length;for (f in t) {
+      !e && !Ie.call(t, f) || n && ("length" == f || o && ("offset" == f || "parent" == f) || u && ("buffer" == f || "byteLength" == f || "byteOffset" == f) || _t(f, c)) || r.push(f);
+    }return r;
+  }function x(t, e, n) {
+    var r = t[e];Ie.call(t, e) && Ft(r, n) && (n !== Zt || e in t) || $(t, e, n);
+  }function F(t, e) {
+    for (var n = t.length; n--;) {
+      if (Ft(t[n][0], e)) return n;
+    }return -1;
+  }function I(t, e) {
+    return t && ut(e, Wt(e), t);
+  }function E(t, e) {
+    return t && ut(e, Gt(e), t);
+  }function $(t, e, n) {
+    "__proto__" == e && We ? We(t, e, { configurable: true, enumerable: true, value: n, writable: true }) : t[e] = n;
+  }function B(t, e, n, o, u, c) {
+    var i,
+        a = 1 & e,
+        f = 2 & e,
+        l = 4 & e;if (n && (i = u ? n(t, o, u, c) : n(t)), i !== Zt) return i;if (!Mt(t)) return t;if (o = On(t)) {
+      if (i = jt(t), !a) return ot(t, i);
+    } else {
+      var s = gn(t),
+          b = "[object Function]" == s || "[object GeneratorFunction]" == s;if (Sn(t)) return nt(t, a);if ("[object Object]" == s || "[object Arguments]" == s || b && !u) {
+        if (i = f || b ? {} : typeof t.constructor != "function" || mt(t) ? {} : bn(Pe(t)), !a) return f ? it(t, E(i, t)) : ct(t, I(i, t));
+      } else {
+        if (!ye[s]) return u ? t : {};i = vt(t, s, B, a);
+      }
+    }if (c || (c = new k()), u = c.get(t)) return u;c.set(t, i);var f = l ? f ? st : lt : f ? Gt : Wt,
+        h = o ? Zt : f(t);return r(h || t, function (r, o) {
+      h && (o = r, r = t[o]), x(i, o, B(r, e, n, o, t, c));
+    }), i;
+  }function M(t, e) {
+    var n = true;return hn(t, function (t, r, o) {
+      return n = !!e(t, r, o);
+    }), n;
+  }function U(t, e) {
+    var n = [];return hn(t, function (t, r, o) {
+      e(t, r, o) && n.push(t);
+    }), n;
+  }function D(t, e, n, r, o) {
+    var u = -1,
+        c = t.length;for (n || (n = gt), o || (o = []); ++u < c;) {
+      var i = t[u];0 < e && n(i) ? 1 < e ? D(i, e - 1, n, r, o) : a(o, i) : r || (o[o.length] = i);
+    }return o;
+  }function L(t, e) {
+    return t && pn(t, e, Wt);
+  }function P(t, e) {
+    e = et(e, t);for (var n = 0, r = e.length; null != t && n < r;) {
+      t = t[St(e[n++])];
+    }return n && n == r ? t : Zt;
+  }function N(t, e, n) {
+    return e = e(t), On(t) ? e : a(e, n(t));
+  }function V(t) {
+    if (null == t) t = t === Zt ? "[object Undefined]" : "[object Null]";else if (Te && Te in Object(t)) {
+      var e = Ie.call(t, Te),
+          n = t[Te];try {
+        t[Te] = Zt;var r = true;
+      } catch (t) {}var o = $e.call(t);r && (e ? t[Te] = n : delete t[Te]), t = o;
+    } else t = $e.call(t);return t;
+  }function C(t) {
+    return Ut(t) && "[object Arguments]" == V(t);
+  }function R(t, e, n, r, o) {
+    if (t === e) e = true;else if (null == t || null == e || !Ut(t) && !Ut(e)) e = t !== t && e !== e;else t: {
+      var u = On(t),
+          c = On(e),
+          i = u ? "[object Array]" : gn(t),
+          a = c ? "[object Array]" : gn(e),
+          i = "[object Arguments]" == i ? "[object Object]" : i,
+          a = "[object Arguments]" == a ? "[object Object]" : a,
+          f = "[object Object]" == i,
+          c = "[object Object]" == a;if ((a = i == a) && Sn(t)) {
+        if (!Sn(e)) {
+          e = false;break t;
+        }u = true, f = false;
+      }if (a && !f) o || (o = new k()), e = u || kn(t) ? at(t, e, n, r, R, o) : ft(t, e, i, n, r, R, o);else {
+        if (!(1 & n) && (u = f && Ie.call(t, "__wrapped__"), i = c && Ie.call(e, "__wrapped__"), u || i)) {
+          t = u ? t.value() : t, e = i ? e.value() : e, o || (o = new k()), e = R(t, e, n, r, o);break t;
+        }if (a) {
+          e: if (o || (o = new k()), u = 1 & n, i = lt(t), c = i.length, a = lt(e).length, c == a || u) {
+            for (f = c; f--;) {
+              var l = i[f];if (!(u ? l in e : Ie.call(e, l))) {
+                e = false;break e;
+              }
+            }if ((a = o.get(t)) && o.get(e)) e = a == e;else {
+              a = true, o.set(t, e), o.set(e, t);for (var s = u; ++f < c;) {
+                var l = i[f],
+                    b = t[l],
+                    h = e[l];if (r) var p = u ? r(h, b, l, e, t, o) : r(b, h, l, t, e, o);if (p === Zt ? b !== h && !R(b, h, n, r, o) : !p) {
+                  a = false;break;
+                }s || (s = "constructor" == l);
+              }a && !s && (n = t.constructor, r = e.constructor, n != r && "constructor" in t && "constructor" in e && !(typeof n == "function" && n instanceof n && typeof r == "function" && r instanceof r) && (a = false)), o.delete(t), o.delete(e), e = a;
+            }
+          } else e = false;
+        } else e = false;
+      }
+    }return e;
+  }function T(t, e) {
+    var n = e.length,
+        r = n;if (null == t) return !r;for (t = Object(t); n--;) {
+      var o = e[n];if (o[2] ? o[1] !== t[o[0]] : !(o[0] in t)) return false;
+    }for (; ++n < r;) {
+      var o = e[n],
+          u = o[0],
+          c = t[u],
+          i = o[1];if (o[2]) {
+        if (c === Zt && !(u in t)) return false;
+      } else if (o = new k(), void 0 === Zt ? !R(i, c, 3, void 0, o) : 1) return false;
+    }return true;
+  }function W(t) {
+    return Ut(t) && Bt(t.length) && !!pe[V(t)];
+  }function G(t) {
+    return typeof t == "function" ? t : null == t ? Ht : (typeof t === "undefined" ? "undefined" : _typeof(t)) == "object" ? On(t) ? H(t[0], t[1]) : K(t) : Qt(t);
+  }function q(t, e) {
+    var n = -1,
+        r = It(t) ? Array(t.length) : [];return hn(t, function (t, o, u) {
+      r[++n] = e(t, o, u);
+    }), r;
+  }function K(t) {
+    var e = pt(t);return 1 == e.length && e[0][2] ? wt(e[0][0], e[0][1]) : function (n) {
+      return n === t || T(n, e);
+    };
+  }function H(t, e) {
+    return At(t) && e === e && !Mt(e) ? wt(St(t), e) : function (n) {
+      var r = Rt(n, t);return r === Zt && r === e ? Tt(n, t) : R(e, r, 3);
+    };
+  }function J(t, e, n) {
+    var r = -1;return e = i(e.length ? e : [Ht], y(bt())), t = q(t, function (t) {
+      return { a: i(e, function (e) {
+          return e(t);
+        }), b: ++r, c: t };
+    }), p(t, function (t, e) {
+      var r;t: {
+        r = -1;for (var o = t.a, u = e.a, c = o.length, i = n.length; ++r < c;) {
+          var a;e: {
+            a = o[r];var f = u[r];if (a !== f) {
+              var l = a !== Zt,
+                  s = null === a,
+                  b = a === a,
+                  h = Lt(a),
+                  p = f !== Zt,
+                  y = null === f,
+                  j = f === f,
+                  v = Lt(f);if (!y && !v && !h && a > f || h && p && j && !y && !v || s && p && j || !l && j || !b) {
+                a = 1;break e;
+              }if (!s && !h && !v && a < f || v && l && b && !s && !h || y && l && b || !p && b || !j) {
+                a = -1;break e;
+              }
+            }a = 0;
+          }if (a) {
+            r = r >= i ? a : a * ("desc" == n[r] ? -1 : 1);break t;
+          }
+        }r = t.b - e.b;
+      }return r;
+    });
+  }function Q(t) {
+    return function (e) {
+      return P(e, t);
+    };
+  }function X(t) {
+    return _n(Ot(t, Ht), t + "");
+  }function Y(t, e) {
+    var n;return hn(t, function (t, r, o) {
+      return n = e(t, r, o), !n;
+    }), !!n;
+  }function Z(t) {
+    if (typeof t == "string") return t;if (On(t)) return i(t, Z) + "";if (Lt(t)) return sn ? sn.call(t) : "";var e = t + "";return "0" == e && 1 / t == -te ? "-0" : e;
+  }function tt(t) {
+    return Et(t) ? t : [];
+  }function et(t, e) {
+    return On(t) ? t : At(t, e) ? [t] : dn(Ct(t));
+  }function nt(t, e) {
+    if (e) return t.slice();var n = t.length,
+        n = Le ? Le(n) : new t.constructor(n);return t.copy(n), n;
+  }function rt(t) {
+    var e = new t.constructor(t.byteLength);return new De(e).set(new De(t)), e;
+  }function ot(t, e) {
+    var n = -1,
+        r = t.length;for (e || (e = Array(r)); ++n < r;) {
+      e[n] = t[n];
+    }return e;
+  }function ut(t, e, n) {
+    var r = !n;n || (n = {});for (var o = -1, u = e.length; ++o < u;) {
+      var c = e[o],
+          i = Zt;i === Zt && (i = t[c]), r ? $(n, c, i) : x(n, c, i);
+    }return n;
+  }function ct(t, e) {
+    return ut(t, jn(t), e);
+  }function it(t, e) {
+    return ut(t, vn(t), e);
+  }function at(t, e, n, r, o, u) {
+    var c = 1 & n,
+        i = t.length,
+        a = e.length;if (i != a && !(c && a > i)) return false;if ((a = u.get(t)) && u.get(e)) return a == e;var a = -1,
+        f = true,
+        s = 2 & n ? new S() : Zt;for (u.set(t, e), u.set(e, t); ++a < i;) {
+      var b = t[a],
+          h = e[a];if (r) var p = c ? r(h, b, a, e, t, u) : r(b, h, a, t, e, u);if (p !== Zt) {
+        if (p) continue;f = false;break;
+      }if (s) {
+        if (!l(e, function (t, e) {
+          if (!s.has(e) && (b === t || o(b, t, n, r, u))) return s.push(e);
+        })) {
+          f = false;break;
+        }
+      } else if (b !== h && !o(b, h, n, r, u)) {
+        f = false;break;
+      }
+    }return u.delete(t), u.delete(e), f;
+  }function ft(t, e, n, r, o, u, c) {
+    switch (n) {case "[object DataView]":
+        if (t.byteLength != e.byteLength || t.byteOffset != e.byteOffset) break;t = t.buffer, e = e.buffer;case "[object ArrayBuffer]":
+        if (t.byteLength != e.byteLength || !u(new De(t), new De(e))) break;return true;case "[object Boolean]":case "[object Date]":case "[object Number]":
+        return Ft(+t, +e);case "[object Error]":
+        return t.name == e.name && t.message == e.message;case "[object RegExp]":
+      case "[object String]":
+        return t == e + "";case "[object Map]":
+        var i = v;case "[object Set]":
+        if (i || (i = _), t.size != e.size && !(1 & r)) break;return (n = c.get(t)) ? n == e : (r |= 2, c.set(t, e), e = at(i(t), i(e), r, o, u, c), c.delete(t), e);case "[object Symbol]":
+        if (ln) return ln.call(t) == ln.call(e);}return false;
+  }function lt(t) {
+    return N(t, Wt, jn);
+  }function st(t) {
+    return N(t, Gt, vn);
+  }function bt() {
+    var t = A.iteratee || Jt,
+        t = t === Jt ? G : t;return arguments.length ? t(arguments[0], arguments[1]) : t;
+  }function ht(t, e) {
+    var n = t.__data__,
+        r = typeof e === "undefined" ? "undefined" : _typeof(e);return ("string" == r || "number" == r || "symbol" == r || "boolean" == r ? "__proto__" !== e : null === e) ? n[typeof e == "string" ? "string" : "hash"] : n.map;
+  }function pt(t) {
+    for (var e = Wt(t), n = e.length; n--;) {
+      var r = e[n],
+          o = t[r];e[n] = [r, o, o === o && !Mt(o)];
+    }return e;
+  }function yt(t, e) {
+    var n = null == t ? Zt : t[e];return (!Mt(n) || Ee && Ee in n ? 0 : ($t(n) ? Be : se).test(kt(n))) ? n : Zt;
+  }function jt(t) {
+    var e = t.length,
+        n = t.constructor(e);return e && "string" == typeof t[0] && Ie.call(t, "index") && (n.index = t.index, n.input = t.input), n;
+  }function vt(n, r, o, u) {
+    var c = n.constructor;switch (r) {case "[object ArrayBuffer]":
+        return rt(n);case "[object Boolean]":case "[object Date]":
+        return new c(+n);case "[object DataView]":
+        return r = u ? rt(n.buffer) : n.buffer, new n.constructor(r, n.byteOffset, n.byteLength);case "[object Float32Array]":case "[object Float64Array]":case "[object Int8Array]":case "[object Int16Array]":case "[object Int32Array]":case "[object Uint8Array]":case "[object Uint8ClampedArray]":case "[object Uint16Array]":case "[object Uint32Array]":
+        return r = u ? rt(n.buffer) : n.buffer, new n.constructor(r, n.byteOffset, n.length);case "[object Map]":
+        return r = u ? o(v(n), 1) : v(n), f(r, t, new n.constructor());case "[object Number]":case "[object String]":
+        return new c(n);case "[object RegExp]":
+        return r = new n.constructor(n.source, ae.exec(n)), r.lastIndex = n.lastIndex, r;case "[object Set]":
+        return r = u ? o(_(n), 1) : _(n), f(r, e, new n.constructor());case "[object Symbol]":
+        return ln ? Object(ln.call(n)) : {};}
+  }function gt(t) {
+    return On(t) || wn(t) || !!(Re && t && t[Re]);
+  }function _t(t, e) {
+    return e = null == e ? 9007199254740991 : e, !!e && (typeof t == "number" || he.test(t)) && -1 < t && 0 == t % 1 && t < e;
+  }function dt(t, e, n) {
+    if (!Mt(n)) return false;var r = typeof e === "undefined" ? "undefined" : _typeof(e);return !!("number" == r ? It(n) && _t(e, n.length) : "string" == r && e in n) && Ft(n[e], t);
+  }function At(t, e) {
+    if (On(t)) return false;var n = typeof t === "undefined" ? "undefined" : _typeof(t);return !("number" != n && "symbol" != n && "boolean" != n && null != t && !Lt(t)) || re.test(t) || !ne.test(t) || null != e && t in Object(e);
+  }function mt(t) {
+    var e = t && t.constructor;return t === (typeof e == "function" && e.prototype || ze);
+  }function wt(t, e) {
+    return function (n) {
+      return null != n && n[t] === e && (e !== Zt || t in Object(n));
+    };
+  }function Ot(t, e) {
+    var r = void 0,
+        r = He(r === Zt ? t.length - 1 : r, 0);return function () {
+      for (var o = arguments, u = -1, c = He(o.length - r, 0), i = Array(c); ++u < c;) {
+        i[u] = o[r + u];
+      }for (u = -1, c = Array(r + 1); ++u < r;) {
+        c[u] = o[u];
+      }return c[r] = e(i), n(t, this, c);
+    };
+  }function St(t) {
+    if (typeof t == "string" || Lt(t)) return t;var e = t + "";return "0" == e && 1 / t == -te ? "-0" : e;
+  }function kt(t) {
+    if (null != t) {
+      try {
+        return Fe.call(t);
+      } catch (t) {}return t + "";
+    }return "";
+  }function zt(t, e) {
+    return (On(t) ? r : hn)(t, bt(e, 3));
+  }function xt(t, e) {
+    function n() {
+      var r = arguments,
+          o = e ? e.apply(this, r) : r[0],
+          u = n.cache;return u.has(o) ? u.get(o) : (r = t.apply(this, r), n.cache = u.set(o, r) || u, r);
+    }if (typeof t != "function" || null != e && typeof e != "function") throw new TypeError("Expected a function");
+    return n.cache = new (xt.Cache || O)(), n;
+  }function Ft(t, e) {
+    return t === e || t !== t && e !== e;
+  }function It(t) {
+    return null != t && Bt(t.length) && !$t(t);
+  }function Et(t) {
+    return Ut(t) && It(t);
+  }function $t(t) {
+    return !!Mt(t) && (t = V(t), "[object Function]" == t || "[object GeneratorFunction]" == t || "[object AsyncFunction]" == t || "[object Proxy]" == t);
+  }function Bt(t) {
+    return typeof t == "number" && -1 < t && 0 == t % 1 && 9007199254740991 >= t;
+  }function Mt(t) {
+    var e = typeof t === "undefined" ? "undefined" : _typeof(t);return null != t && ("object" == e || "function" == e);
+  }function Ut(t) {
+    return null != t && (typeof t === "undefined" ? "undefined" : _typeof(t)) == "object";
+  }function Dt(t) {
+    return typeof t == "string" || !On(t) && Ut(t) && "[object String]" == V(t);
+  }function Lt(t) {
+    return (typeof t === "undefined" ? "undefined" : _typeof(t)) == "symbol" || Ut(t) && "[object Symbol]" == V(t);
+  }function Pt(t) {
+    return t ? (t = Vt(t), t === te || t === -te ? 1.7976931348623157e308 * (0 > t ? -1 : 1) : t === t ? t : 0) : 0 === t ? t : 0;
+  }function Nt(t) {
+    t = Pt(t);var e = t % 1;return t === t ? e ? t - e : t : 0;
+  }function Vt(t) {
+    if (typeof t == "number") return t;if (Lt(t)) return ee;if (Mt(t) && (t = typeof t.valueOf == "function" ? t.valueOf() : t, t = Mt(t) ? t + "" : t), typeof t != "string") return 0 === t ? t : +t;t = t.replace(ce, "");
+    var e = le.test(t);return e || be.test(t) ? ve(t.slice(2), e ? 2 : 8) : fe.test(t) ? ee : +t;
+  }function Ct(t) {
+    return null == t ? "" : Z(t);
+  }function Rt(t, e, n) {
+    return t = null == t ? Zt : P(t, e), t === Zt ? n : t;
+  }function Tt(t, e) {
+    var n;if (n = null != t) {
+      n = t;var r;r = et(e, n);for (var o = -1, u = r.length, c = false; ++o < u;) {
+        var i = St(r[o]);if (!(c = null != n && null != n && i in Object(n))) break;n = n[i];
+      }c || ++o != u ? n = c : (u = null == n ? 0 : n.length, n = !!u && Bt(u) && _t(i, u) && (On(n) || wn(n)));
+    }return n;
+  }function Wt(t) {
+    if (It(t)) t = z(t);else if (mt(t)) {
+      var e,
+          n = [];for (e in Object(t)) {
+        Ie.call(t, e) && "constructor" != e && n.push(e);
+      }t = n;
+    } else t = Ke(t);return t;
+  }function Gt(t) {
+    if (It(t)) t = z(t, true);else if (Mt(t)) {
+      var e,
+          n = mt(t),
+          r = [];for (e in t) {
+        ("constructor" != e || !n && Ie.call(t, e)) && r.push(e);
+      }t = r;
+    } else {
+      if (e = [], null != t) for (n in Object(t)) {
+        e.push(n);
+      }t = e;
+    }return t;
+  }function qt(t) {
+    return null == t ? [] : j(t, Wt(t));
+  }function Kt(t) {
+    return function () {
+      return t;
+    };
+  }function Ht(t) {
+    return t;
+  }function Jt(t) {
+    return G(typeof t == "function" ? t : B(t, 1));
+  }function Qt(t) {
+    return At(t) ? h(St(t)) : Q(t);
+  }function Xt() {
+    return [];
+  }function Yt() {
+    return false;
+  }var Zt,
+      te = 1 / 0,
+      ee = NaN,
+      ne = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
+      re = /^\w*$/,
+      oe = /^\./,
+      ue = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g,
+      ce = /^\s+|\s+$/g,
+      ie = /\\(\\)?/g,
+      ae = /\w*$/,
+      fe = /^[-+]0x[0-9a-f]+$/i,
+      le = /^0b[01]+$/i,
+      se = /^\[object .+?Constructor\]$/,
+      be = /^0o[0-7]+$/i,
+      he = /^(?:0|[1-9]\d*)$/,
+      pe = {};
+  pe["[object Float32Array]"] = pe["[object Float64Array]"] = pe["[object Int8Array]"] = pe["[object Int16Array]"] = pe["[object Int32Array]"] = pe["[object Uint8Array]"] = pe["[object Uint8ClampedArray]"] = pe["[object Uint16Array]"] = pe["[object Uint32Array]"] = true, pe["[object Arguments]"] = pe["[object Array]"] = pe["[object ArrayBuffer]"] = pe["[object Boolean]"] = pe["[object DataView]"] = pe["[object Date]"] = pe["[object Error]"] = pe["[object Function]"] = pe["[object Map]"] = pe["[object Number]"] = pe["[object Object]"] = pe["[object RegExp]"] = pe["[object Set]"] = pe["[object String]"] = pe["[object WeakMap]"] = false;
+  var ye = {};ye["[object Arguments]"] = ye["[object Array]"] = ye["[object ArrayBuffer]"] = ye["[object DataView]"] = ye["[object Boolean]"] = ye["[object Date]"] = ye["[object Float32Array]"] = ye["[object Float64Array]"] = ye["[object Int8Array]"] = ye["[object Int16Array]"] = ye["[object Int32Array]"] = ye["[object Map]"] = ye["[object Number]"] = ye["[object Object]"] = ye["[object RegExp]"] = ye["[object Set]"] = ye["[object String]"] = ye["[object Symbol]"] = ye["[object Uint8Array]"] = ye["[object Uint8ClampedArray]"] = ye["[object Uint16Array]"] = ye["[object Uint32Array]"] = true, ye["[object Error]"] = ye["[object Function]"] = ye["[object WeakMap]"] = false;var je,
+      ve = parseInt,
+      ge = (typeof global === "undefined" ? "undefined" : _typeof(global)) == "object" && global && global.Object === Object && global,
+      _e = (typeof self === "undefined" ? "undefined" : _typeof(self)) == "object" && self && self.Object === Object && self,
+      de = ge || _e || Function("return this")(),
+      Ae = ( false ? undefined : _typeof(exports)) == "object" && exports && !exports.nodeType && exports,
+      me = Ae && ( false ? undefined : _typeof(module)) == "object" && module && !module.nodeType && module,
+      we = me && me.exports === Ae,
+      Oe = we && ge.process;t: {
+    try {
+      je = Oe && Oe.binding && Oe.binding("util");break t;
+    } catch (t) {}je = void 0;
+  }var Se = je && je.isTypedArray,
+      ke = Array.prototype,
+      ze = Object.prototype,
+      xe = de["__core-js_shared__"],
+      Fe = Function.prototype.toString,
+      Ie = ze.hasOwnProperty,
+      Ee = function () {
+    var t = /[^.]+$/.exec(xe && xe.keys && xe.keys.IE_PROTO || "");return t ? "Symbol(src)_1." + t : "";
+  }(),
+      $e = ze.toString,
+      Be = RegExp("^" + Fe.call(Ie).replace(/[\\^$.*+?()[\]{}|]/g, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$"),
+      Me = we ? de.Buffer : Zt,
+      Ue = de.Symbol,
+      De = de.Uint8Array,
+      Le = Me ? Me.f : Zt,
+      Pe = g(Object.getPrototypeOf),
+      Ne = Object.create,
+      Ve = ze.propertyIsEnumerable,
+      Ce = ke.splice,
+      Re = Ue ? Ue.isConcatSpreadable : Zt,
+      Te = Ue ? Ue.toStringTag : Zt,
+      We = function () {
+    try {
+      var t = yt(Object, "defineProperty");
+      return t({}, "", {}), t;
+    } catch (t) {}
+  }(),
+      Ge = Object.getOwnPropertySymbols,
+      qe = Me ? Me.isBuffer : Zt,
+      Ke = g(Object.keys),
+      He = Math.max,
+      Je = Math.min,
+      Qe = Date.now,
+      Xe = yt(de, "DataView"),
+      Ye = yt(de, "Map"),
+      Ze = yt(de, "Promise"),
+      tn = yt(de, "Set"),
+      en = yt(de, "WeakMap"),
+      nn = yt(Object, "create"),
+      rn = kt(Xe),
+      on = kt(Ye),
+      un = kt(Ze),
+      cn = kt(tn),
+      an = kt(en),
+      fn = Ue ? Ue.prototype : Zt,
+      ln = fn ? fn.valueOf : Zt,
+      sn = fn ? fn.toString : Zt,
+      bn = function () {
+    function t() {}return function (e) {
+      return Mt(e) ? Ne ? Ne(e) : (t.prototype = e, e = new t(), t.prototype = Zt, e) : {};
+    };
+  }();m.prototype.clear = function () {
+    this.__data__ = nn ? nn(null) : {}, this.size = 0;
+  }, m.prototype.delete = function (t) {
+    return t = this.has(t) && delete this.__data__[t], this.size -= t ? 1 : 0, t;
+  }, m.prototype.get = function (t) {
+    var e = this.__data__;return nn ? (t = e[t], "__lodash_hash_undefined__" === t ? Zt : t) : Ie.call(e, t) ? e[t] : Zt;
+  }, m.prototype.has = function (t) {
+    var e = this.__data__;return nn ? e[t] !== Zt : Ie.call(e, t);
+  }, m.prototype.set = function (t, e) {
+    var n = this.__data__;return this.size += this.has(t) ? 0 : 1, n[t] = nn && e === Zt ? "__lodash_hash_undefined__" : e, this;
+  }, w.prototype.clear = function () {
+    this.__data__ = [], this.size = 0;
+  }, w.prototype.delete = function (t) {
+    var e = this.__data__;return t = F(e, t), !(0 > t) && (t == e.length - 1 ? e.pop() : Ce.call(e, t, 1), --this.size, true);
+  }, w.prototype.get = function (t) {
+    var e = this.__data__;return t = F(e, t), 0 > t ? Zt : e[t][1];
+  }, w.prototype.has = function (t) {
+    return -1 < F(this.__data__, t);
+  }, w.prototype.set = function (t, e) {
+    var n = this.__data__,
+        r = F(n, t);return 0 > r ? (++this.size, n.push([t, e])) : n[r][1] = e, this;
+  }, O.prototype.clear = function () {
+    this.size = 0, this.__data__ = { hash: new m(), map: new (Ye || w)(), string: new m()
+    };
+  }, O.prototype.delete = function (t) {
+    return t = ht(this, t).delete(t), this.size -= t ? 1 : 0, t;
+  }, O.prototype.get = function (t) {
+    return ht(this, t).get(t);
+  }, O.prototype.has = function (t) {
+    return ht(this, t).has(t);
+  }, O.prototype.set = function (t, e) {
+    var n = ht(this, t),
+        r = n.size;return n.set(t, e), this.size += n.size == r ? 0 : 1, this;
+  }, S.prototype.add = S.prototype.push = function (t) {
+    return this.__data__.set(t, "__lodash_hash_undefined__"), this;
+  }, S.prototype.has = function (t) {
+    return this.__data__.has(t);
+  }, k.prototype.clear = function () {
+    this.__data__ = new w(), this.size = 0;
+  }, k.prototype.delete = function (t) {
+    var e = this.__data__;return t = e.delete(t), this.size = e.size, t;
+  }, k.prototype.get = function (t) {
+    return this.__data__.get(t);
+  }, k.prototype.has = function (t) {
+    return this.__data__.has(t);
+  }, k.prototype.set = function (t, e) {
+    var n = this.__data__;if (n instanceof w) {
+      var r = n.__data__;if (!Ye || 199 > r.length) return r.push([t, e]), this.size = ++n.size, this;n = this.__data__ = new O(r);
+    }return n.set(t, e), this.size = n.size, this;
+  };var hn = function (t, e) {
+    return function (n, r) {
+      if (null == n) return n;if (!It(n)) return t(n, r);
+      for (var o = n.length, u = e ? o : -1, c = Object(n); (e ? u-- : ++u < o) && false !== r(c[u], u, c);) {}return n;
+    };
+  }(L),
+      pn = function (t) {
+    return function (e, n, r) {
+      var o = -1,
+          u = Object(e);r = r(e);for (var c = r.length; c--;) {
+        var i = r[t ? c : ++o];if (false === n(u[i], i, u)) break;
+      }return e;
+    };
+  }(),
+      yn = We ? function (t, e) {
+    return We(t, "toString", { configurable: true, enumerable: false, value: Kt(e), writable: true });
+  } : Ht,
+      jn = Ge ? function (t) {
+    return null == t ? [] : (t = Object(t), u(Ge(t), function (e) {
+      return Ve.call(t, e);
+    }));
+  } : Xt,
+      vn = Ge ? function (t) {
+    for (var e = []; t;) {
+      a(e, jn(t)), t = Pe(t);
+    }return e;
+  } : Xt,
+      gn = V;
+  (Xe && "[object DataView]" != gn(new Xe(new ArrayBuffer(1))) || Ye && "[object Map]" != gn(new Ye()) || Ze && "[object Promise]" != gn(Ze.resolve()) || tn && "[object Set]" != gn(new tn()) || en && "[object WeakMap]" != gn(new en())) && (gn = function gn(t) {
+    var e = V(t);if (t = (t = "[object Object]" == e ? t.constructor : Zt) ? kt(t) : "") switch (t) {case rn:
+        return "[object DataView]";case on:
+        return "[object Map]";case un:
+        return "[object Promise]";case cn:
+        return "[object Set]";case an:
+        return "[object WeakMap]";}return e;
+  });var _n = function (t) {
+    var e = 0,
+        n = 0;return function () {
+      var r = Qe(),
+          o = 16 - (r - n);if (n = r, 0 < o) {
+        if (800 <= ++e) return arguments[0];
+      } else e = 0;return t.apply(Zt, arguments);
+    };
+  }(yn),
+      dn = function (t) {
+    t = xt(t, function (t) {
+      return 500 === e.size && e.clear(), t;
+    });var e = t.cache;return t;
+  }(function (t) {
+    var e = [];return oe.test(t) && e.push(""), t.replace(ue, function (t, n, r, o) {
+      e.push(r ? o.replace(ie, "$1") : n || t);
+    }), e;
+  }),
+      An = X(function (t) {
+    var e = i(t, tt);if (e.length && e[0] === t[0]) {
+      t = e[0].length;for (var n = e.length, r = n, o = Array(n), u = 1 / 0, a = []; r--;) {
+        var f = e[r],
+            u = Je(f.length, u);o[r] = 120 <= t && 120 <= f.length ? new S(r && f) : Zt;
+      }var f = e[0],
+          l = -1,
+          s = o[0];t: for (; ++l < t && a.length < u;) {
+        var b = f[l],
+            h = b,
+            b = 0 !== b ? b : 0;if (s ? !s.has(h) : !c(a, h)) {
+          for (r = n; --r;) {
+            var p = o[r];if (p ? !p.has(h) : !c(e[r], h)) continue t;
+          }s && s.push(h), a.push(b);
+        }
+      }e = a;
+    } else e = [];return e;
+  }),
+      mn = X(function (t, e) {
+    if (null == t) return [];var n = e.length;return 1 < n && dt(t, e[0], e[1]) ? e = [] : 2 < n && dt(e[0], e[1], e[2]) && (e = [e[0]]), J(t, D(e, 1), []);
+  });xt.Cache = O;var wn = C(function () {
+    return arguments;
+  }()) ? C : function (t) {
+    return Ut(t) && Ie.call(t, "callee") && !Ve.call(t, "callee");
+  },
+      On = Array.isArray,
+      Sn = qe || Yt,
+      kn = Se ? y(Se) : W;
+  A.constant = Kt, A.filter = function (t, e) {
+    return (On(t) ? u : U)(t, bt(e, 3));
+  }, A.flatten = function (t) {
+    return (null == t ? 0 : t.length) ? D(t, 1) : [];
+  }, A.intersection = An, A.iteratee = Jt, A.keys = Wt, A.keysIn = Gt, A.map = function (t, e) {
+    return (On(t) ? i : q)(t, bt(e, 3));
+  }, A.mapKeys = function (t, e) {
+    var n = {};return e = bt(e, 3), L(t, function (t, r, o) {
+      $(n, e(t, r, o), t);
+    }), n;
+  }, A.mapValues = function (t, e) {
+    var n = {};return e = bt(e, 3), L(t, function (t, r, o) {
+      $(n, r, e(t, r, o));
+    }), n;
+  }, A.memoize = xt, A.orderBy = function (t, e, n, r) {
+    return null == t ? [] : (On(e) || (e = null == e ? [] : [e]), n = r ? Zt : n, On(n) || (n = null == n ? [] : [n]), J(t, e, n));
+  }, A.property = Qt, A.sortBy = mn, A.transform = function (t, e, n) {
+    var o = On(t),
+        u = o || Sn(t) || kn(t);if (e = bt(e, 4), null == n) {
+      var c = t && t.constructor;n = u ? o ? new c() : [] : Mt(t) && $t(c) ? bn(Pe(t)) : {};
+    }return (u ? r : L)(t, function (t, r, o) {
+      return e(n, t, r, o);
+    }), n;
+  }, A.values = qt, A.clone = function (t) {
+    return B(t, 4);
+  }, A.eq = Ft, A.every = function (t, e, n) {
+    var r = On(t) ? o : M;return n && dt(t, e, n) && (e = Zt), r(t, bt(e, 3));
+  }, A.forEach = zt, A.get = Rt, A.hasIn = Tt, A.identity = Ht, A.includes = function (t, e, n, r) {
+    return t = It(t) ? t : qt(t), n = n && !r ? Nt(n) : 0, r = t.length, 0 > n && (n = He(r + n, 0)), Dt(t) ? n <= r && -1 < t.indexOf(e, n) : !!r && -1 < (e === e ? d(t, e, n) : s(t, b, n));
+  }, A.isArguments = wn, A.isArray = On, A.isArrayLike = It, A.isArrayLikeObject = Et, A.isBuffer = Sn, A.isFunction = $t, A.isLength = Bt, A.isObject = Mt, A.isObjectLike = Ut, A.isString = Dt, A.isSymbol = Lt, A.isTypedArray = kn, A.stubArray = Xt, A.stubFalse = Yt, A.some = function (t, e, n) {
+    var r = On(t) ? l : Y;return n && dt(t, e, n) && (e = Zt), r(t, bt(e, 3));
+  }, A.toFinite = Pt, A.toInteger = Nt, A.toNumber = Vt, A.toString = Ct, A.each = zt, A.VERSION = "4.17.4", "function" == "function" && _typeof(__webpack_require__(1)) == "object" && __webpack_require__(1) ? (de._ = A, !(__WEBPACK_AMD_DEFINE_RESULT__ = (function () {
+    return A;
+  }).call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))) : me ? ((me.exports = A)._ = A, Ae._ = A) : de._ = A;
+}).call(this);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(7), __webpack_require__(8)(module)))
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
+module.exports = __webpack_amd_options__;
+
+/* WEBPACK VAR INJECTION */}.call(this, {}))
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _ = __webpack_require__(0);
+
+module.exports.includes = function (items, filters) {
+  return !filters || _.every(filters, function (val) {
+    return _.includes(items, val);
+  });
+};
+
 /**
+ * not sure if mathematically correct
+ */
+module.exports.includes_any = function (items, filters) {
+
+  //return !filters || (_.isArray(filters) && !filters.length) || _.some(filters, (val) => {
+  return !filters || filters instanceof Array && filters.length === 0 || _.some(filters, function (val) {
+
+    return _.includes(items, val);
+  });
+};
+
+/**
+ * if included particular elements (not array)
+ */
+module.exports.includes_any_element = function (items, filters) {
+
+  return _.some(filters, function (val) {
+    return _.includes(items, val);
+  });
+};
+
+module.exports.intersection = function (a, b) {
+  if (!b) {
+    return a;
+  }
+  return _.intersection(a, _.flatten(b));
+};
+
+var clone = function clone(val) {
+
+  try {
+    return JSON.parse(JSON.stringify(val));
+  } catch (e) {
+    return val;
+  }
+};
+
+module.exports.mergeAggregations = function (aggregations, input) {
+
+  return _.mapValues(clone(aggregations), function (val, key) {
+
+    if (!val.field) {
+      val.field = key;
+    }
+
+    var filters = [];
+    if (input.filters && input.filters[key]) {
+      filters = input.filters[key];
+    }
+
+    val.filters = filters;
+
+    var not_filters = [];
+    if (input.not_filters && input.not_filters[key]) {
+      not_filters = input.not_filters[key];
+    }
+
+    if (input.exclude_filters && input.exclude_filters[key]) {
+      not_filters = input.exclude_filters[key];
+    }
+
+    val.not_filters = not_filters;
+
+    return val;
+  });
+};
+
+/**
+ * should be moved to the new facet class
+ */
+var is_conjunctive_agg = function is_conjunctive_agg(aggregation) {
+  return aggregation.conjunction !== false;
+};
+
+var is_disjunctive_agg = function is_disjunctive_agg(aggregation) {
+  return aggregation.conjunction === false;
+};
+
+var is_not_filters_agg = function is_not_filters_agg(aggregation) {
+  return aggregation.not_filters instanceof Array && aggregation.not_filters.length > 0;
+};
+
+var is_empty_agg = function is_empty_agg(aggregation) {
+  return aggregation.type === 'is_empty';
+};
+
+var conjunctive_field = function conjunctive_field(set, filters) {
+  return module.exports.includes(set, filters);
+};
+
+var disjunctive_field = function disjunctive_field(set, filters) {
+  return module.exports.includes_any(set, filters);
+};
+
+var not_filters_field = function not_filters_field(set, filters) {
+  return !module.exports.includes_any_element(set, filters);
+};
+
+var check_empty_field = function check_empty_field(set, filters) {
+
+  var output = ['not_empty'];
+
+  if (set === '' || set === undefined || set === null || set instanceof Array && set.length === 0) {
+
+    //return true;
+    output = ['empty'];
+  }
+
+  // check also if filters is not empty array
+  if (filters && !module.exports.includes(output, filters)) {
+    return false;
+  }
+
+  return output;
+};
+
+/*var empty_field = function(set, filters) {
+  if (set === undefined || set === null || (set instanceof Array && set.length === 0)) {
+    return true;
+  }
+
+  return false;
+}*/
+
+module.exports.is_conjunctive_agg = is_conjunctive_agg;
+module.exports.is_disjunctive_agg = is_disjunctive_agg;
+module.exports.is_not_filters_agg = is_not_filters_agg;
+module.exports.is_empty_agg = is_empty_agg;
+
+module.exports.conjunctive_field = conjunctive_field;
+module.exports.disjunctive_field = disjunctive_field;
+module.exports.not_filters_field = not_filters_field;
+module.exports.check_empty_field = check_empty_field;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _ = __webpack_require__(0);
+var lunr = __webpack_require__(9);
+
+/**
+ * responsible for making full text searching on items
+ * config provide only searchableFields
+ */
+var Fulltext = function Fulltext(items, config) {
+  var _this = this;
+
+  config = config || {};
+  config.searchableFields = config.searchableFields || [];
+  this.items = items;
+  // creating index
+  this.idx = lunr(function () {
+    // currently schema hardcoded
+    this.field('name', { boost: 10 });
+
+    var self = this;
+    _.forEach(config.searchableFields, function (field) {
+      self.field(field);
+    });
+    this.ref('id');
+  });
+  //var items2 = _.clone(items)
+  var i = 1;
+  _.map(items, function (doc) {
+
+    if (!doc.id) {
+      doc.id = i;
+      ++i;
+    }
+    _this.idx.add(doc);
+  });
+
+  this.store = _.mapKeys(items, function (doc) {
+    return doc.id;
+  });
+};
+
+Fulltext.prototype = {
+
+  search: function search(query) {
+    var _this2 = this;
+
+    if (!query) {
+      return this.items;
+    }
+    return _.map(this.idx.search(query), function (val) {
+      var item = _this2.store[val.ref];
+      //delete item.id;
+      return item;
+    });
+  }
+};
+
+module.exports = Fulltext;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(5);
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var service = __webpack_require__(6);
+var _ = __webpack_require__(0);
+var helpers = __webpack_require__(2);
+var Fulltext = __webpack_require__(3);
+
+module.exports = function itemsjs(items, configuration) {
+
+  configuration = configuration || {};
+
+  // responsible for full text search over the items
+  // it makes inverted index and it is very fast
+  var fulltext = new Fulltext(items, configuration);
+
+  return {
+    /**
+     * per_page
+     * page
+     * query
+     * sort
+     * filters
+     */
+    search: function search(input) {
+      input = input || {};
+
+      /**
+       * merge configuration aggregation with user input
+       */
+      input.aggregations = helpers.mergeAggregations(configuration.aggregations, input);
+
+      return service.search(items, input, configuration, fulltext);
+    },
+
+    /**
+     * returns list of similar elements to specified item id
+     * id
+     */
+    similar: function similar(id, options) {
+
+      return service.similar(items, id, options);
+    },
+
+    /**
+     * returns list of elements for specific aggregation i.e. list of tags
+     * name (aggregation name)
+     * query
+     * per_page
+     * page
+     */
+    aggregation: function aggregation(input) {
+
+      return service.aggregation(items, input, configuration.aggregations);
+    },
+
+    /**
+     * reindex items
+     * reinitialize fulltext search
+     */
+    reindex: function reindex(newItems) {
+      items = newItems;
+      fulltext = new Fulltext(items, configuration);
+    }
+  };
+};
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _ = __webpack_require__(0);
+var helpers = __webpack_require__(2);
+var Fulltext = __webpack_require__(3);
+
+/**
+ * search by filters
+ */
+module.exports.search = function (items, input, configuration, fulltext) {
+
+  input = input || {};
+
+  var search_time = 0;
+  // make search by query first
+  if (fulltext) {
+
+    var search_start_time = new Date().getTime();
+    items = fulltext.search(input.query);
+    search_time = new Date().getTime() - search_start_time;
+  }
+
+  /**
+   * making a prefiltering after search and before faceting
+   * after search because search is very fast
+   * the goal is to make a library more customizable for developers
+   */
+  if (input.prefilter instanceof Function) {
+    items = input.prefilter(items);
+  }
+
+  /**
+   * responsible for filtering items by aggregation values (processed input)
+   * not sure now about the reason but probably performance
+   */
+  var filtered_items = module.exports.items_by_aggregations(items, input.aggregations);
+
+  var per_page = input.per_page || 12;
+  var page = input.page || 1;
+
+  /**
+   * sorting items
+   */
+  var sorting_time = 0;
+  if (input.sort) {
+    var sorting_start_time = new Date().getTime();
+    filtered_items = module.exports.sorted_items(filtered_items, input.sort, configuration.sortings);
+    sorting_time = new Date().getTime() - sorting_start_time;
+  }
+
+  /**
+   * calculating facets
+   */
+  var facets_start_time = new Date().getTime();
+  var aggregations = module.exports.aggregations(items, input.aggregations);
+  var facets_time = new Date().getTime() - facets_start_time;
+
+  return {
+    pagination: {
+      per_page: per_page,
+      page: page,
+      total: filtered_items.length
+    },
+    timings: {
+      facets: facets_time,
+      search: search_time,
+      sorting: sorting_time
+    },
+    data: {
+      items: filtered_items.slice((page - 1) * per_page, page * per_page),
+      aggregations: aggregations
+    }
+  };
+};
+
+/**
+ * returns list of elements in aggregation
+ * useful for autocomplete or list all aggregation options
+ */
+module.exports.aggregation = function (items, input, aggregations) {
+
+  var per_page = input.per_page || 10;
+  var page = input.page || 1;
+
+  if (input.name && (!aggregations || !aggregations[input.name])) {
+    throw new Error('Please define aggregation "' + input.name + '" in config');
+  }
+
+  var buckets = module.exports.buckets(items, input.name, aggregations[input.name], aggregations);
+
+  if (input.query) {
+    buckets = _.filter(buckets, function (val) {
+      // responsible for query
+      // counterpart to startsWith
+      return val.key.toLowerCase().indexOf(input.query.toLowerCase()) === 0;
+    });
+  }
+
+  return {
+    pagination: {
+      per_page: per_page,
+      page: page,
+      total: buckets.length
+    },
+    data: {
+      buckets: buckets.slice((page - 1) * per_page, page * per_page)
+    }
+  };
+};
+
+/**
+ * return items by sort
+ */
+module.exports.sorted_items = function (items, sort, sortings) {
+
+  if (sortings[sort] && sortings[sort].field) {
+
+    return _.orderBy(items, [sortings[sort].field], [sortings[sort].order || 'asc']);
+  }
+
+  return items;
+};
+
+/**
+ * return items which pass filters (aggregations)
+ */
+module.exports.items_by_aggregations = function (items, aggregations) {
+
+  return _.filter(items, function (item) {
+    return module.exports.filterable_item(item, aggregations);
+  });
+};
+
+/**
+ * it returns list of aggregations with buckets
+ * it calculates based on object filters like {tags: ['drama', '1980s']} against list of items
+ * in realtime
+ *
+ * @TODO
+ * consider caching aggregations results in startup time
+ */
+module.exports.aggregations = function (items, aggregations) {
+
+  var position = 0;
+  return _.mapValues(aggregations, function (val, key) {
+    // key is a 'tags' and val is ['drama', '1980s']
+    ++position;
+    return {
+      name: key,
+      title: val.title || key.charAt(0).toUpperCase() + key.slice(1),
+      position: position,
+      buckets: module.exports.buckets(items, key, val, aggregations).slice(0, val.size || 10)
+    };
+  });
+};
+
+/**
+ * checks if item is passing aggregations - if it's filtered or not
+ * @TODO should accept filters (user input) as the parameter
+ * and not user params merged with global config
+ * should be is_filterable_item
+ */
+module.exports.filterable_item = function (item, aggregations) {
+
+  var keys = _.keys(aggregations);
+
+  for (var i = 0; i < keys.length; ++i) {
+
+    var key = keys[i];
+    if (helpers.is_empty_agg(aggregations[key])) {
+      if (helpers.check_empty_field(item[aggregations[key].field], aggregations[key].filters)) {
+        continue;
+      }
+      return false;
+    } else if (helpers.is_not_filters_agg(aggregations[key]) && !helpers.not_filters_field(item[key], aggregations[key].not_filters)) {
+      return false;
+    } else if (helpers.is_disjunctive_agg(aggregations[key]) && !helpers.disjunctive_field(item[key], aggregations[key].filters)) {
+      return false;
+    } else if (helpers.is_conjunctive_agg(aggregations[key]) && !helpers.conjunctive_field(item[key], aggregations[key].filters)) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+/*
+ * returns array of item key values only if they are passing aggregations criteria
+ */
+module.exports.bucket_field = function (item, aggregations, key) {
+
+  var keys = _.keys(aggregations);
+
+  /**
+   * responsible for narrowing facets with not_filter filter
+   */
+  for (var i = 0; i < keys.length; ++i) {
+
+    var it = keys[i];
+    if (helpers.is_not_filters_agg(aggregations[it])) {
+
+      if (!helpers.not_filters_field(item[it], aggregations[it].not_filters)) {
+        return [];
+      }
+    }
+  }
+
+  for (var i = 0; i < keys.length; ++i) {
+
+    if (keys[i] === key) {
+      continue;
+    }
+
+    var it = keys[i];
+
+    if (helpers.is_empty_agg(aggregations[it])) {
+      if (!helpers.check_empty_field(item[aggregations[it].field], aggregations[it].filters)) {
+        return [];
+      } else {
+        continue;
+      }
+    } else if (helpers.is_disjunctive_agg(aggregations[it]) && !helpers.disjunctive_field(item[it], aggregations[it].filters)) {
+      return [];
+    } else if (helpers.is_conjunctive_agg(aggregations[it]) && !helpers.conjunctive_field(item[it], aggregations[it].filters)) {
+      return [];
+    }
+  }
+
+  if (helpers.is_empty_agg(aggregations[key])) {
+    var temp = helpers.check_empty_field(item[aggregations[key].field], aggregations[key].filters);
+
+    if (temp) {
+      return temp;
+    }
+    return [];
+  }
+
+  if (helpers.is_disjunctive_agg(aggregations[key]) || helpers.includes(item[key], aggregations[key].filters)) {
+    return item[key] ? _.flatten([item[key]]) : [];
+  }
+
+  return [];
+};
+
+/*
+ * fields count for one item based on aggregation options
+ * returns buckets objects
+ */
+module.exports.bucket = function (item, aggregations) {
+
+  return _.mapValues(aggregations, function (val, key) {
+
+    return module.exports.bucket_field(item, aggregations, key);
+  });
+};
+
+/**
+ * returns buckets list for items for specific key and aggregation configuration
+ *
+ * @TODO it should be more lower level and should not be dependent directly on user configuration
+ * should be able to sort buckets alphabetically, by count and by asc or desc
+ */
+module.exports.buckets = function (items, field, agg, aggregations) {
+
+  var buckets = _.transform(items, function (result, item) {
+
+    item = module.exports.bucket(item, aggregations);
+    var elements = item[field];
+
+    if (agg.conjunction !== false && helpers.includes(elements, agg.filters)
+    //|| agg.conjunction === false && helpers.includes_any(elements, agg.filters)
+    || agg.conjunction === false) {
+
+      // go through elements in item field
+      for (var i = 0; elements && i < elements.length; ++i) {
+        var key = elements[i];
+        if (!result[key]) {
+          result[key] = 1;
+        } else {
+          result[key] += 1;
+        }
+      }
+    }
+  }, {});
+
+  // transform object of objects to array of objects
+  buckets = _.map(buckets, function (val, key) {
+    return {
+      key: key,
+      doc_count: val
+    };
+  });
+
+  if (agg.sort === 'term') {
+    buckets = _.orderBy(buckets, ['key'], [agg.order || 'asc']);
+  } else {
+    buckets = _.orderBy(buckets, ['doc_count', 'key'], [agg.order || 'desc', 'asc']);
+  }
+
+  return buckets;
+};
+
+/**
+ * returns list of elements in aggregation
+ * useful for autocomplete or list all aggregation options
+ */
+module.exports.similar = function (items, id, options) {
+
+  var result = [];
+  var per_page = options.per_page || 10;
+  var minimum = options.minimum || 0;
+  var page = options.page || 1;
+
+  var item;
+
+  for (var i = 0; i < items.length; ++i) {
+    if (items[i].id == id) {
+      item = items[i];
+      break;
+    }
+  }
+
+  if (!options.field) {
+    throw new Error('Please define field in options');
+  }
+
+  var field = options.field;
+  var sorted_items = [];
+
+  for (var i = 0; i < items.length; ++i) {
+
+    if (items[i].id !== id) {
+      var intersection = _.intersection(item[field], items[i][field]);
+
+      if (intersection.length >= minimum) {
+        sorted_items.push(items[i]);
+        sorted_items[sorted_items.length - 1].intersection_length = intersection.length;
+      }
+    }
+  }
+
+  sorted_items = _.orderBy(sorted_items, ['intersection_length'], ['desc']);
+
+  return {
+    pagination: {
+      per_page: per_page,
+      page: page,
+      total: sorted_items.length
+    },
+    data: {
+      items: sorted_items.slice((page - 1) * per_page, page * per_page)
+    }
+  };
+};
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1, eval)("this");
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if (!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
  * lunr - http://lunrjs.com - A bit like Solr, but much smaller and not as bright - 1.0.0
  * Copyright (C) 2017 Oliver Nightingale
  * @license MIT
@@ -2084,20 +3566,14 @@ lunr.TokenStore.prototype.toJSON = function () {
    * Export code from https://github.com/umdjs/umd/blob/master/returnExports.js
    */
   ;(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
+    if (true) {
       // AMD. Register as an anonymous module.
-      define(factory)
-    } else if (typeof exports === 'object') {
-      /**
-       * Node. Does not work with strict CommonJS, but
-       * only CommonJS-like enviroments that support module.exports,
-       * like Node.
-       */
-      module.exports = factory()
-    } else {
-      // Browser globals (root is window)
-      root.lunr = factory()
-    }
+      !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))
+    } else {}
   }(this, function () {
     /**
      * Just return a value to define the module export.
@@ -2108,642 +3584,7 @@ lunr.TokenStore.prototype.toJSON = function () {
   }))
 })();
 
-},{}],4:[function(require,module,exports){
-var _ = require('./../lib/lodash');
-var lunr = require('lunr');
 
-/**
- * responsible for making full text searching on items
- * config provide only searchableFields
- */
-var Fulltext = function(items, config) {
-
-  config = config || {};
-  config.searchableFields = config.searchableFields || [];
-  this.items = items;
-  // creating index
-  this.idx = lunr(function () {
-    // currently schema hardcoded
-    this.field('name', { boost: 10 });
-
-    var self = this;
-    _.forEach(config.searchableFields, function(field) {
-      self.field(field);
-    });
-    this.ref('id');
-  })
-  //var items2 = _.clone(items)
-  var i = 1;
-  _.map(items, (doc) => {
-
-    if (!doc.id) {
-      doc.id = i;
-      ++i;
-    }
-    this.idx.add(doc)
-  })
-
-  this.store = _.mapKeys(items, (doc) => {
-    return doc.id;
-  })
-};
-
-Fulltext.prototype = {
-
-  search: function(query) {
-    if (!query) {
-      return this.items;
-    }
-    return _.map(this.idx.search(query), (val) => {
-      var item = this.store[val.ref]
-      //delete item.id;
-      return item;
-    })
-  }
-}
-
-module.exports = Fulltext;
-
-},{"./../lib/lodash":2,"lunr":3}],5:[function(require,module,exports){
-var _ = require('./../lib/lodash');
-
-module.exports.includes = function(items, filters) {
-  return !filters || _.every(filters, (val) => {
-    return _.includes(items, val);
-  });
-}
-
-/**
- * not sure if mathematically correct
- */
-module.exports.includes_any = function(items, filters) {
-
-  //return !filters || (_.isArray(filters) && !filters.length) || _.some(filters, (val) => {
-  return !filters || (filters instanceof Array && filters.length === 0) || _.some(filters, (val) => {
-
-    return _.includes(items, val);
-  });
-}
-
-/**
- * if included particular elements (not array)
- */
-module.exports.includes_any_element = function(items, filters) {
-
-  return _.some(filters, (val) => {
-    return _.includes(items, val);
-  });
-}
-
-module.exports.intersection = function(a, b) {
-  if (!b) {
-    return a;
-  }
-  return _.intersection(a, _.flatten(b));
-}
-
-var clone = function(val) {
-
-  try {
-    return JSON.parse(JSON.stringify(val));
-  } catch (e) {
-    return val;
-  }
-}
-
-module.exports.mergeAggregations = function(aggregations, input) {
-
-  return _.mapValues(clone(aggregations), (val, key) => {
-
-    if (!val.field) {
-      val.field = key;
-    }
-
-    var filters = [];
-    if (input.filters && input.filters[key]) {
-      filters = input.filters[key];
-    }
-
-    val.filters = filters;
-
-    var not_filters = [];
-    if (input.not_filters && input.not_filters[key]) {
-      not_filters = input.not_filters[key];
-    }
-
-    if (input.exclude_filters && input.exclude_filters[key]) {
-      not_filters = input.exclude_filters[key];
-    }
-
-    val.not_filters = not_filters;
-
-
-    return val;
-  });
-}
-
-/**
- * should be moved to the new facet class
- */
-var is_conjunctive_agg = function(aggregation) {
-  return aggregation.conjunction !== false;
-}
-
-var is_disjunctive_agg = function(aggregation) {
-  return aggregation.conjunction === false;
-}
-
-var is_not_filters_agg = function(aggregation) {
-  return aggregation.not_filters instanceof Array && aggregation.not_filters.length > 0;
-}
-
-var is_empty_agg = function(aggregation) {
-  return aggregation.type === 'is_empty';
-}
-
-var conjunctive_field = function(set, filters) {
-  return module.exports.includes(set, filters);
-}
-
-var disjunctive_field = function(set, filters) {
-  return module.exports.includes_any(set, filters);
-}
-
-var not_filters_field = function(set, filters) {
-  return !module.exports.includes_any_element(set, filters);
-}
-
-var check_empty_field = function(set, filters) {
-
-  var output = ['not_empty'];
-
-  if (set === '' || set === undefined || set === null || (set instanceof Array && set.length === 0)) {
-
-    //return true;
-    output = ['empty'];
-  }
-
-  // check also if filters is not empty array
-  if (filters && !module.exports.includes(output, filters)) {
-    return false;
-  }
-
-  return output;
-}
-
-/*var empty_field = function(set, filters) {
-  if (set === undefined || set === null || (set instanceof Array && set.length === 0)) {
-    return true;
-  }
-
-  return false;
-}*/
-
-module.exports.is_conjunctive_agg = is_conjunctive_agg;
-module.exports.is_disjunctive_agg = is_disjunctive_agg;
-module.exports.is_not_filters_agg = is_not_filters_agg;
-module.exports.is_empty_agg = is_empty_agg;
-
-module.exports.conjunctive_field = conjunctive_field;
-module.exports.disjunctive_field = disjunctive_field;
-module.exports.not_filters_field = not_filters_field;
-module.exports.check_empty_field = check_empty_field;
-
-},{"./../lib/lodash":2}],6:[function(require,module,exports){
-var service = require('./lib');
-var _ = require('./../lib/lodash');
-var helpers = require('./helpers');
-var Fulltext = require('./fulltext');
-
-module.exports = function itemsjs(items, configuration) {
-
-  configuration = configuration || {};
-
-  // responsible for full text search over the items
-  // it makes inverted index and it is very fast
-  var fulltext = new Fulltext(items, configuration);
-
-  return {
-    /**
-     * per_page
-     * page
-     * query
-     * sort
-     * filters
-     */
-    search: function(input) {
-      input = input || {};
-
-      /**
-       * merge configuration aggregation with user input
-       */
-      input.aggregations = helpers.mergeAggregations(configuration.aggregations, input);
-
-      return service.search(items, input, configuration, fulltext);
-    },
-
-    /**
-     * returns list of similar elements to specified item id
-     * id
-     */
-    similar: function(id, options) {
-
-      return service.similar(items, id, options);
-    },
-
-    /**
-     * returns list of elements for specific aggregation i.e. list of tags
-     * name (aggregation name)
-     * query
-     * per_page
-     * page
-     */
-    aggregation: function(input) {
-
-      return service.aggregation(items, input, configuration.aggregations);
-    },
-
-    /**
-     * reindex items
-     * reinitialize fulltext search
-     */
-    reindex: function(newItems) {
-      items = newItems;
-      fulltext = new Fulltext(items, configuration);
-    }
-  }
-}
-
-},{"./../lib/lodash":2,"./fulltext":4,"./helpers":5,"./lib":7}],7:[function(require,module,exports){
-var _ = require('./../lib/lodash');
-var helpers = require('./helpers');
-var Fulltext = require('./fulltext');
-
-/**
- * search by filters
- */
-module.exports.search = function(items, input, configuration, fulltext) {
-
-  input = input || {};
-
-  var search_time = 0;
-  // make search by query first
-  if (fulltext) {
-
-    var search_start_time = new Date().getTime();
-    items = fulltext.search(input.query);
-    search_time = new Date().getTime() - search_start_time;
-  }
-
-  /**
-   * making a prefiltering after search and before faceting
-   * after search because search is very fast
-   * the goal is to make a library more customizable for developers
-   */
-  if (input.prefilter instanceof Function) {
-    items = input.prefilter(items);
-  }
-
-
-  /**
-   * responsible for filtering items by aggregation values (processed input)
-   * not sure now about the reason but probably performance
-   */
-  var filtered_items = module.exports.items_by_aggregations(items, input.aggregations);
-
-  var per_page = input.per_page || 12;
-  var page = input.page || 1;
-
-  /**
-   * sorting items
-   */
-  var sorting_time = 0;
-  if (input.sort) {
-    var sorting_start_time = new Date().getTime();
-    filtered_items = module.exports.sorted_items(filtered_items, input.sort, configuration.sortings);
-    sorting_time = new Date().getTime() - sorting_start_time;
-  }
-
-  /**
-   * calculating facets
-   */
-  var facets_start_time = new Date().getTime();
-  var aggregations = module.exports.aggregations(items, input.aggregations);
-  var facets_time = new Date().getTime() - facets_start_time;
-
-  return {
-    pagination: {
-      per_page: per_page,
-      page: page,
-      total: filtered_items.length
-    },
-    timings: {
-      facets: facets_time,
-      search: search_time,
-      sorting: sorting_time
-    },
-    data: {
-      items: filtered_items.slice((page - 1) * per_page, page * per_page),
-      aggregations: aggregations
-    }
-  };
-}
-
-/**
- * returns list of elements in aggregation
- * useful for autocomplete or list all aggregation options
- */
-module.exports.aggregation = function(items, input, aggregations) {
-
-  var per_page = input.per_page || 10;
-  var page = input.page || 1;
-
-  if (input.name && (!aggregations || !aggregations[input.name])) {
-    throw new Error(`Please define aggregation "${input.name}" in config`);
-  }
-
-  var buckets = module.exports.buckets(items, input.name, aggregations[input.name], aggregations)
-
-  if (input.query) {
-    buckets = _.filter(buckets, val => {
-      // responsible for query
-      // counterpart to startsWith
-      return val.key.toLowerCase().indexOf(input.query.toLowerCase()) === 0;
-    });
-  }
-
-  return {
-    pagination: {
-      per_page: per_page,
-      page: page,
-      total: buckets.length
-    },
-    data: {
-      buckets: buckets.slice((page - 1) * per_page, page * per_page),
-    }
-  }
-}
-
-/**
- * return items by sort
- */
-module.exports.sorted_items = function(items, sort, sortings) {
-
-  if (sortings[sort] && sortings[sort].field) {
-
-    return _.orderBy(
-      items,
-      [sortings[sort].field],
-      [sortings[sort].order || 'asc']
-    );
-  }
-
-  return items;
-}
-
-/**
- * return items which pass filters (aggregations)
- */
-module.exports.items_by_aggregations = function(items, aggregations) {
-
-  return _.filter(items, (item) => {
-    return module.exports.filterable_item(item, aggregations);
-  });
-}
-
-/**
- * it returns list of aggregations with buckets
- * it calculates based on object filters like {tags: ['drama', '1980s']} against list of items
- * in realtime
- *
- * @TODO
- * consider caching aggregations results in startup time
- */
-module.exports.aggregations = function(items, aggregations) {
-
-  var position = 0;
-  return _.mapValues((aggregations), (val, key) => {
-    // key is a 'tags' and val is ['drama', '1980s']
-    ++position;
-    return {
-      name: key,
-      title: val.title || key.charAt(0).toUpperCase() + key.slice(1),
-      position: position,
-      buckets: module.exports.buckets(items, key, val, aggregations).slice(0, val.size || 10)
-    }
-  })
-}
-
-
-/**
- * checks if item is passing aggregations - if it's filtered or not
- * @TODO should accept filters (user input) as the parameter
- * and not user params merged with global config
- * should be is_filterable_item
- */
-module.exports.filterable_item = function(item, aggregations) {
-
-  var keys = _.keys(aggregations)
-
-  for (var i = 0 ; i < keys.length ; ++i) {
-
-    var key = keys[i]
-    if (helpers.is_empty_agg(aggregations[key])) {
-      if (helpers.check_empty_field(item[aggregations[key].field], aggregations[key].filters)) {
-        continue;
-      }
-      return false;
-    } else if (helpers.is_not_filters_agg(aggregations[key]) && !helpers.not_filters_field(item[key], aggregations[key].not_filters)) {
-      return false;
-    } else if (helpers.is_disjunctive_agg(aggregations[key]) && !helpers.disjunctive_field(item[key], aggregations[key].filters)) {
-      return false;
-    } else if (helpers.is_conjunctive_agg(aggregations[key]) && !helpers.conjunctive_field(item[key], aggregations[key].filters)) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-/*
- * returns array of item key values only if they are passing aggregations criteria
- */
-module.exports.bucket_field = function(item, aggregations, key) {
-
-  var keys = _.keys(aggregations);
-
-  /**
-   * responsible for narrowing facets with not_filter filter
-   */
-  for (var i = 0 ; i < keys.length ; ++i) {
-
-    var it = keys[i]
-    if (helpers.is_not_filters_agg(aggregations[it])) {
-
-      if (!helpers.not_filters_field(item[it], aggregations[it].not_filters)) {
-        return [];
-      }
-    }
-  }
-
-  for (var i = 0 ; i < keys.length ; ++i) {
-
-    if (keys[i] === key) {
-      continue;
-    }
-
-    var it = keys[i];
-
-    if (helpers.is_empty_agg(aggregations[it])) {
-      if (!helpers.check_empty_field(item[aggregations[it].field], aggregations[it].filters)) {
-        return [];
-      } else {
-        continue;
-      }
-    } else if (helpers.is_disjunctive_agg(aggregations[it]) && !helpers.disjunctive_field(item[it], aggregations[it].filters)) {
-      return [];
-    } else if (helpers.is_conjunctive_agg(aggregations[it]) && !helpers.conjunctive_field(item[it], aggregations[it].filters)) {
-      return [];
-    }
-
-  }
-
-  if (helpers.is_empty_agg(aggregations[key])) {
-    var temp = helpers.check_empty_field(item[aggregations[key].field], aggregations[key].filters)
-
-    if (temp) {
-      return temp;
-    }
-    return [];
-  }
-
-  if (helpers.is_disjunctive_agg(aggregations[key]) || helpers.includes(item[key], aggregations[key].filters)) {
-    return item[key] ? _.flatten([item[key]]) : [];
-  }
-
-  return [];
-}
-
-
-
-
-/*
- * fields count for one item based on aggregation options
- * returns buckets objects
- */
-module.exports.bucket = function(item, aggregations) {
-
-  return _.mapValues((aggregations), (val, key) => {
-
-    return module.exports.bucket_field(item, aggregations, key);
-  });
-}
-
-/**
- * returns buckets list for items for specific key and aggregation configuration
- *
- * @TODO it should be more lower level and should not be dependent directly on user configuration
- * should be able to sort buckets alphabetically, by count and by asc or desc
- */
-module.exports.buckets = function(items, field, agg, aggregations) {
-
-  var buckets = _.transform(items, function(result, item) {
-
-    item = module.exports.bucket(item, aggregations)
-    var elements = item[field];
-
-    if (
-      agg.conjunction !== false && helpers.includes(elements, agg.filters)
-    //|| agg.conjunction === false && helpers.includes_any(elements, agg.filters)
-    || agg.conjunction === false
-       ) {
-
-      // go through elements in item field
-      for (var i = 0 ; elements && i < elements.length ; ++i) {
-        var key = elements[i];
-        if (!result[key]) {
-          result[key] = 1;
-        } else {
-          result[key] += 1;
-        }
-      }
-    }
-
-  }, {});
-
-  // transform object of objects to array of objects
-  buckets = _.map(buckets, (val, key) => {
-    return {
-      key: key,
-      doc_count: val
-    };
-  })
-
-  if (agg.sort === 'term') {
-    buckets = _.orderBy(buckets, ['key'], [agg.order || 'asc']);
-  } else {
-    buckets = _.orderBy(buckets, ['doc_count', 'key'], [agg.order || 'desc', 'asc']);
-  }
-
-  return buckets;
-}
-
-/**
- * returns list of elements in aggregation
- * useful for autocomplete or list all aggregation options
- */
-module.exports.similar = function(items, id, options) {
-
-  var result = [];
-  var per_page = options.per_page || 10;
-  var minimum = options.minimum || 0;
-  var page = options.page || 1;
-
-  var item;
-
-  for (var i = 0 ; i < items.length ; ++i) {
-    if (items[i].id === id) {
-      item = items[i];
-      break;
-    }
-  }
-
-  if (!options.field) {
-    throw new Error(`Please define field in options`);
-  }
-
-  var field = options.field;
-  var sorted_items = [];
-
-  for (var i = 0 ; i < items.length ; ++i) {
-
-    if (items[i].id !== id) {
-      var intersection = _.intersection(item[field], items[i][field])
-
-      if (intersection.length >= minimum) {
-        sorted_items.push(items[i]);
-        sorted_items[sorted_items.length - 1].intersection_length = intersection.length;
-      }
-    }
-  }
-
-  sorted_items = _.orderBy(
-    sorted_items,
-    ['intersection_length'],
-    ['desc']
-  );
-
-  return {
-    pagination: {
-      per_page: per_page,
-      page: page,
-      total: sorted_items.length
-    },
-    data: {
-      items: sorted_items.slice((page - 1) * per_page, page * per_page),
-    }
-  }
-}
-
-},{"./../lib/lodash":2,"./fulltext":4,"./helpers":5}]},{},[1])(1)
+/***/ })
+/******/ ])["default"];
 });
