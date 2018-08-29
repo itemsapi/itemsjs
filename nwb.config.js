@@ -4,6 +4,7 @@ module.exports = {
     esModules: true,
     umd: {
       global: 'itemsjs',
+      entry: './umd.js',
       externals: {}
     }
   }
