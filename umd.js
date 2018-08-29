@@ -1,2 +1,2 @@
-const itemjs = require('./src/index.js');
-export default itemjs;
+const itemsjs = require('./src/index.js');
+export default itemsjs;
