@@ -1059,8 +1059,8 @@ module.exports = __webpack_require__(5);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-var itemjs = __webpack_require__(6);
-/* harmony default export */ __webpack_exports__["default"] = (itemjs);
+var itemsjs = __webpack_require__(6);
+/* harmony default export */ __webpack_exports__["default"] = (itemsjs);
 
 /***/ }),
 /* 6 */
