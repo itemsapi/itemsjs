@@ -1,5 +1,5 @@
+import _ from 'lodash';
 var service = require('./lib');
-var _ = require('./../vendor/lodash');
 var helpers = require('./helpers');
 var Fulltext = require('./fulltext');
 

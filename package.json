@@ -8,20 +8,18 @@
     "build": "nwb build-web-module && rm -rf dist && mv umd dist",
     "clean": "nwb clean-module",
     "test": "jest",
-    "lodash": "lodash include=some,forEach,map,mapKeys,mapValues,every,includes,intersection,filter,keys,flatten,transform,orderBy -o lib/lodash.js -p",
     "prepublish": "npm run build"
   },
   "author": "Matt Rzepa",
   "license": "Apache-2.0",
   "dependencies": {
     "lodash": "^4.17.4",
-    "lodash-cli": "^4.17.4",
     "lunr": "^1.0.0"
   },
   "devDependencies": {
+    "babel-plugin-lodash": "^3.3.4",
     "expect": "^1.20.2",
     "jest": "^23.5.0",
-    "lodash-cli": "^4.17.4",
     "nwb": "^0.23.0",
     "should": "^11.2.1",
     "sinon": "^2.1.0"
@@ -49,6 +47,8 @@
   },
   "homepage": "https://github.com/itemsapi/itemsjs#readme",
   "babel": {
-    "presets": ["env"]
+    "presets": [
+      "env"
+    ]
   }
 }

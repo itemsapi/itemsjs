@@ -1,4 +1,4 @@
-var _ = require('./../vendor/lodash');
+import _ from 'lodash';
 var helpers = require('./helpers');
 var Fulltext = require('./fulltext');
 

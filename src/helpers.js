@@ -1,4 +1,4 @@
-var _ = require('./../vendor/lodash');
+import _ from 'lodash';
 
 module.exports.includes = function(items, filters) {
   return !filters || _.every(filters, (val) => {

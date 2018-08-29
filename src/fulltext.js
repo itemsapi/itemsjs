@@ -1,4 +1,4 @@
-var _ = require('./../vendor/lodash');
+import _ from 'lodash';
 var lunr = require('lunr');
 
 /**

@@ -1,5 +1,8 @@
 module.exports = {
   type: 'web-module',
+  babel: {
+    "plugins": ["lodash"],
+  },
   npm: {
     esModules: true,
     umd: {
