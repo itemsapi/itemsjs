@@ -826,7 +826,7 @@ return /******/ (function(modules) { // webpackBootstrap
   }).call(exports, __webpack_require__, exports, module),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))) : me ? ((me.exports = A)._ = A, Ae._ = A) : de._ = A;
 }).call(this);
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(7), __webpack_require__(8)(module)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(8), __webpack_require__(9)(module)))
 
 /***/ }),
 /* 1 */
@@ -989,7 +989,7 @@ module.exports.check_empty_field = check_empty_field;
 /***/ (function(module, exports, __webpack_require__) {
 
 var _ = __webpack_require__(0);
-var lunr = __webpack_require__(9);
+var lunr = __webpack_require__(10);
 
 /**
  * responsible for making full text searching on items
@@ -1055,9 +1055,18 @@ module.exports = __webpack_require__(5);
 
 /***/ }),
 /* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var itemjs = __webpack_require__(6);
+/* harmony default export */ __webpack_exports__["default"] = (itemjs);
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var service = __webpack_require__(6);
+var service = __webpack_require__(7);
 var _ = __webpack_require__(0);
 var helpers = __webpack_require__(2);
 var Fulltext = __webpack_require__(3);
@@ -1122,7 +1131,7 @@ module.exports = function itemsjs(items, configuration) {
 };
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _ = __webpack_require__(0);
@@ -1479,7 +1488,7 @@ module.exports.similar = function (items, id, options) {
 };
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 var g;
@@ -1505,7 +1514,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -1533,7 +1542,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
