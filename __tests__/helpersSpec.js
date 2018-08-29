@@ -1,7 +1,7 @@
 'use strict';
 
-var assert = require('assert');
-var helpers = require('./../src/helpers');
+import assert from 'assert';
+import * as helpers from './../src/helpers';
 
 describe('helpers', function() {
 

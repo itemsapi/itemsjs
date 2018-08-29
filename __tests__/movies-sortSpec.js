@@ -1,11 +1,12 @@
 'use strict';
 
-var should = require('should');
-var expect = require('expect');
-var assert = require('assert');
-var sinon = require('sinon')
-var service = require('./../src/lib');
-var _ = require('lodash');
+import should from 'should';
+import expect from 'expect';
+import assert from 'assert';
+import sinon from 'sinon';
+import * as service from './../src/lib';
+import _ from 'lodash';
+import ItemsJS from '../src';
 
 describe('itemjs tests with movies fixture', function() {
 
@@ -24,7 +25,7 @@ describe('itemjs tests with movies fixture', function() {
 
   it('makes search', function test(done) {
 
-    var itemsjs = require('./../src/index')(items, {
+    var itemsjs = ItemsJS(items, {
       aggregations: {
         tags: {},
         genres: {}

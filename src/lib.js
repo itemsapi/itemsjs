@@ -1,11 +1,11 @@
-var _ = require('./../lib/lodash');
-var helpers = require('./helpers');
-var Fulltext = require('./fulltext');
+import _ from 'lodash';
+import * as helpers from './helpers';
+import Fulltext from './fulltext';
 
 /**
  * search by filters
  */
-module.exports.search = function(items, input, configuration, fulltext) {
+export function search(items, input, configuration, fulltext) {
 
   input = input || {};
 
@@ -76,7 +76,7 @@ module.exports.search = function(items, input, configuration, fulltext) {
  * returns list of elements in aggregation
  * useful for autocomplete or list all aggregation options
  */
-module.exports.aggregation = function(items, input, aggregations) {
+export function aggregation(items, input, aggregations) {
 
   var per_page = input.per_page || 10;
   var page = input.page || 1;
@@ -110,7 +110,7 @@ module.exports.aggregation = function(items, input, aggregations) {
 /**
  * return items by sort
  */
-module.exports.sorted_items = function(items, sort, sortings) {
+export function sorted_items(items, sort, sortings) {
 
   if (sortings[sort] && sortings[sort].field) {
 
@@ -127,7 +127,7 @@ module.exports.sorted_items = function(items, sort, sortings) {
 /**
  * return items which pass filters (aggregations)
  */
-module.exports.items_by_aggregations = function(items, aggregations) {
+export function items_by_aggregations(items, aggregations) {
 
   return _.filter(items, (item) => {
     return module.exports.filterable_item(item, aggregations);
@@ -142,7 +142,7 @@ module.exports.items_by_aggregations = function(items, aggregations) {
  * @TODO
  * consider caching aggregations results in startup time
  */
-module.exports.aggregations = function(items, aggregations) {
+export function aggregations(items, aggregations) {
 
   var position = 0;
   return _.mapValues((aggregations), (val, key) => {
@@ -157,14 +157,13 @@ module.exports.aggregations = function(items, aggregations) {
   })
 }
 
-
 /**
  * checks if item is passing aggregations - if it's filtered or not
  * @TODO should accept filters (user input) as the parameter
  * and not user params merged with global config
  * should be is_filterable_item
  */
-module.exports.filterable_item = function(item, aggregations) {
+export function filterable_item(item, aggregations) {
 
   var keys = _.keys(aggregations)
 
@@ -191,7 +190,7 @@ module.exports.filterable_item = function(item, aggregations) {
 /*
  * returns array of item key values only if they are passing aggregations criteria
  */
-module.exports.bucket_field = function(item, aggregations, key) {
+export function bucket_field(item, aggregations, key) {
 
   var keys = _.keys(aggregations);
 
@@ -247,14 +246,11 @@ module.exports.bucket_field = function(item, aggregations, key) {
   return [];
 }
 
-
-
-
 /*
  * fields count for one item based on aggregation options
  * returns buckets objects
  */
-module.exports.bucket = function(item, aggregations) {
+export function bucket(item, aggregations) {
 
   return _.mapValues((aggregations), (val, key) => {
 
@@ -268,7 +264,7 @@ module.exports.bucket = function(item, aggregations) {
  * @TODO it should be more lower level and should not be dependent directly on user configuration
  * should be able to sort buckets alphabetically, by count and by asc or desc
  */
-module.exports.buckets = function(items, field, agg, aggregations) {
+export function buckets(items, field, agg, aggregations) {
 
   var buckets = _.transform(items, function(result, item) {
 
@@ -315,7 +311,7 @@ module.exports.buckets = function(items, field, agg, aggregations) {
  * returns list of elements in aggregation
  * useful for autocomplete or list all aggregation options
  */
-module.exports.similar = function(items, id, options) {
+export function similar(items, id, options) {
 
   var result = [];
   var per_page = options.per_page || 10;

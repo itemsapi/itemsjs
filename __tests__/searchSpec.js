@@ -1,9 +1,9 @@
 'use strict';
 
-var should = require('should');
-var expect = require('expect');
-var assert = require('assert');
-var service = require('./../src/lib');
+import should from 'should';
+import expect from 'expect';
+import assert from 'assert';
+import * as service from './../src/lib';
 
 describe('aggregations', function() {
 

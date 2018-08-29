@@ -1,5 +1,5 @@
-var _ = require('./../lib/lodash');
-var lunr = require('lunr');
+import _ from 'lodash';
+import lunr from 'lunr';
 
 /**
  * responsible for making full text searching on items
@@ -51,4 +51,4 @@ Fulltext.prototype = {
   }
 }
 
-module.exports = Fulltext;
+export default Fulltext;

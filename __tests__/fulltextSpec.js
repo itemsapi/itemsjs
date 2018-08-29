@@ -1,8 +1,8 @@
 'use strict';
 
-var assert = require('assert');
-var Fulltext = require('./../src/fulltext');
-var _ = require('lodash');
+import assert from 'assert';
+import Fulltext from './../src/fulltext';
+import _ from 'lodash';
 
 describe('fulltext', function() {
 

@@ -1,9 +1,9 @@
-var service = require('./lib');
-var _ = require('./../lib/lodash');
-var helpers = require('./helpers');
-var Fulltext = require('./fulltext');
+import * as service from './lib';
+import _ from 'lodash';
+import * as helpers from './helpers';
+import Fulltext from './fulltext';
 
-module.exports = function itemsjs(items, configuration) {
+export default function itemsjs(items, configuration) {
 
   configuration = configuration || {};
 
@@ -60,4 +60,4 @@ module.exports = function itemsjs(items, configuration) {
       fulltext = new Fulltext(items, configuration);
     }
   }
-}
+};

@@ -1,6 +1,6 @@
-var _ = require('./../lib/lodash');
+import _ from 'lodash';
 
-module.exports.includes = function(items, filters) {
+export function includes(items, filters) {
   return !filters || _.every(filters, (val) => {
     return _.includes(items, val);
   });
@@ -9,7 +9,7 @@ module.exports.includes = function(items, filters) {
 /**
  * not sure if mathematically correct
  */
-module.exports.includes_any = function(items, filters) {
+export function includes_any(items, filters) {
 
   //return !filters || (_.isArray(filters) && !filters.length) || _.some(filters, (val) => {
   return !filters || (filters instanceof Array && filters.length === 0) || _.some(filters, (val) => {
@@ -21,14 +21,14 @@ module.exports.includes_any = function(items, filters) {
 /**
  * if included particular elements (not array)
  */
-module.exports.includes_any_element = function(items, filters) {
+export function includes_any_element(items, filters) {
 
   return _.some(filters, (val) => {
     return _.includes(items, val);
   });
 }
 
-module.exports.intersection = function(a, b) {
+export function intersection(a, b) {
   if (!b) {
     return a;
   }
@@ -44,7 +44,7 @@ var clone = function(val) {
   }
 }
 
-module.exports.mergeAggregations = function(aggregations, input) {
+export function mergeAggregations(aggregations, input) {
 
   return _.mapValues(clone(aggregations), (val, key) => {
 
@@ -132,12 +132,12 @@ var check_empty_field = function(set, filters) {
   return false;
 }*/
 
-module.exports.is_conjunctive_agg = is_conjunctive_agg;
-module.exports.is_disjunctive_agg = is_disjunctive_agg;
-module.exports.is_not_filters_agg = is_not_filters_agg;
-module.exports.is_empty_agg = is_empty_agg;
+export {is_conjunctive_agg};
 
-module.exports.conjunctive_field = conjunctive_field;
-module.exports.disjunctive_field = disjunctive_field;
-module.exports.not_filters_field = not_filters_field;
-module.exports.check_empty_field = check_empty_field;
+export {is_disjunctive_agg};
+export {is_not_filters_agg};
+export {is_empty_agg};
+export {conjunctive_field};
+export {disjunctive_field};
+export {not_filters_field};
+export {check_empty_field};
