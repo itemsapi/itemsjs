@@ -3,6 +3,7 @@
 var should = require('should');
 var expect = require('expect');
 var assert = require('assert');
+var ItemsJS = require('../src/index');
 
 describe('itemjs general tests', function() {
 
@@ -20,7 +21,7 @@ describe('itemjs general tests', function() {
     actors: ['e']
   }]
 
-  var itemsjs = require('./../dist/itemsjs')(items);
+  var itemsjs = ItemsJS(items);
 
   it('makes search', function test(done) {
     var result = itemsjs.search();
@@ -50,7 +51,7 @@ describe('itemjs general tests', function() {
 
   it('makes search with aggregation filters', function test(done) {
 
-    var itemsjs = require('./../dist/itemsjs')(items, {
+    var itemsjs = ItemsJS(items, {
       aggregations: {
         tags: {},
         actors: {}
@@ -86,7 +87,7 @@ describe('itemjs general tests', function() {
   });
 
   it('makes aggregations when configuration supplied', function test(done) {
-    var itemsjs = require('./../dist/itemsjs')(items, {
+    var itemsjs = ItemsJS(items, {
       aggregations: {
         tags: {
           type: 'terms',
@@ -114,7 +115,7 @@ describe('itemjs general tests', function() {
       tags: 'a',
     }];
 
-    var itemsjs = require('./../dist/itemsjs')(items, {
+    var itemsjs = ItemsJS(items, {
       aggregations: {
         tags: {
           type: 'terms',
@@ -140,7 +141,7 @@ describe('itemjs general tests', function() {
       name: 'movie3',
     }];
 
-    var itemsjs = require('./../dist/itemsjs')(items, {
+    var itemsjs = ItemsJS(items, {
       aggregations: {
         tags: {
           type: 'terms',
@@ -168,7 +169,7 @@ describe('itemjs general tests', function() {
       name: 'movie3',
     }];
 
-    var itemsjs = require('./../dist/itemsjs')(items, {
+    var itemsjs = ItemsJS(items, {
       searchableFields: ['name', 'tags']
     });
     var result = itemsjs.search({

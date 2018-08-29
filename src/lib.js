@@ -1,4 +1,4 @@
-var _ = require('./../lib/lodash');
+import _ from 'lodash';
 var helpers = require('./helpers');
 var Fulltext = require('./fulltext');
 
