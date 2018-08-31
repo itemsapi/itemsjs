@@ -1,10 +1,11 @@
 'use strict';
 
-var should = require('should');
-var expect = require('expect');
-var assert = require('assert');
-var sinon = require('sinon')
-var service = require('./../src/lib');
+import should from 'should';
+import expect from 'expect';
+import assert from 'assert';
+import sinon from 'sinon';
+import * as service from './../src/lib';
+import ItemsJS from '../src';
 
 describe('itemjs tests with movies fixture', function() {
 
@@ -14,7 +15,7 @@ describe('itemjs tests with movies fixture', function() {
 
     it('makes search', function test(done) {
 
-      var itemsjs = require('./../src/index')(items, {
+      var itemsjs = ItemsJS(items, {
         aggregations: {
           tags: {},
           genres: {}
@@ -80,7 +81,7 @@ describe('itemjs tests with movies fixture', function() {
 
     it('makes search with disjunctive filters', function test(done) {
 
-      var itemsjs = require('./../src/index')(items, {
+      var itemsjs = ItemsJS(items, {
         aggregations: {
           tags: {
             size: 500
@@ -152,7 +153,7 @@ describe('itemjs tests with movies fixture', function() {
 
   it('makes search with not filters', function test(done) {
 
-    var itemsjs = require('./../src/index')(items, {
+    var itemsjs = ItemsJS(items, {
       aggregations: {
         tags: {
         },
@@ -217,7 +218,7 @@ describe('itemjs tests with movies fixture', function() {
 
   it('makes search with is_empty aggregation type', function test(done) {
 
-    var itemsjs = require('./../src/index')(items, {
+    var itemsjs = ItemsJS(items, {
       aggregations: {
         tags: {
         },
@@ -248,7 +249,7 @@ describe('itemjs tests with movies fixture', function() {
   describe('search with facets sorting', function() {
 
     it('makes search and returns sorted facets', function test(done) {
-      var itemsjs = require('./../src/index')(items, {
+      var itemsjs = ItemsJS(items, {
         aggregations: {
           tags: {
             sort: 'term',
@@ -260,7 +261,7 @@ describe('itemjs tests with movies fixture', function() {
       var result = itemsjs.search();
       assert.equal(result.data.aggregations.tags.buckets[0].key, 'wrongful imprisonment');
 
-      var itemsjs = require('./../src/index')(items, {
+      var itemsjs = ItemsJS(items, {
         aggregations: {
           tags: {
             sort: 'term',
@@ -271,7 +272,7 @@ describe('itemjs tests with movies fixture', function() {
       var result = itemsjs.search();
       assert.equal(result.data.aggregations.tags.buckets[0].key, '1950s');
 
-      var itemsjs = require('./../src/index')(items, {
+      var itemsjs = ItemsJS(items, {
         aggregations: {
           tags: {
             order: 'desc'
@@ -286,7 +287,7 @@ describe('itemjs tests with movies fixture', function() {
 
   describe('aggregation', function() {
 
-    var itemsjs = require('./../src/index')(items, {
+    var itemsjs = ItemsJS(items, {
       aggregations: {
         tags: {},
         genres: {}

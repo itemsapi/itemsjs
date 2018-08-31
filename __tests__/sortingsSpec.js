@@ -1,11 +1,11 @@
 'use strict';
 
-var should = require('should');
-var expect = require('expect');
-var assert = require('assert');
-var service = require('./../src/lib');
-var sinon = require('sinon')
-var _ = require('lodash');
+import should from 'should';
+import expect from 'expect';
+import assert from 'assert';
+import * as service from './../src/lib';
+import sinon from 'sinon';
+import _ from 'lodash';
 
 describe('aggregations', function() {
 

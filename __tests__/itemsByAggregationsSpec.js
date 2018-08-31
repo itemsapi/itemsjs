@@ -1,11 +1,11 @@
 'use strict';
 
-var should = require('should');
-var expect = require('expect');
-var assert = require('assert');
-var sinon = require('sinon')
-var service = require('./../src/lib');
-var helpers = require('./../src/helpers');
+import should from 'should';
+import expect from 'expect';
+import assert from 'assert';
+import sinon from 'sinon';
+import * as service from './../src/lib';
+import * as helpers from './../src/helpers';
 
 describe('bucket', function() {
 

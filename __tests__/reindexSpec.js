@@ -1,8 +1,9 @@
 'use strict';
 
-var should = require('should');
-var expect = require('expect');
-var assert = require('assert');
+import should from 'should';
+import expect from 'expect';
+import assert from 'assert';
+import ItemsJS from '../src';
 
 describe('itemjs general tests', function() {
 
@@ -21,7 +22,7 @@ describe('itemjs general tests', function() {
     actors: ['e']
   }]
 
-  var itemsjs = require('./../src/index')(items, {
+  var itemsjs = ItemsJS(items, {
     searchableFields: ['name']
   });
 
