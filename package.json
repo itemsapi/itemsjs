@@ -10,7 +10,8 @@
     "dist": "npm run browserify && npm run minify",
     "lodash": "lodash include=some,forEach,map,mapKeys,mapValues,every,includes,intersection,filter,keys,flatten,transform,orderBy -o lib/lodash.js -p",
     "prepublishOnly": "npm run build:cjs",
-    "build:cjs": "babel src -d lib"
+    "build:cjs": "babel src -d lib",
+    "build": "npm run build:cjs && npm run dist"
   },
   "author": "Matt Rzepa",
   "license": "Apache-2.0",
