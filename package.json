@@ -29,6 +29,7 @@
     "browserify": "^14.3.0",
     "expect": "^1.20.2",
     "lodash-cli": "^4.17.4",
+    "mocha": "^5.2.0",
     "should": "^11.2.1",
     "sinon": "^2.1.0"
   },
