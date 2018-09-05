@@ -3,6 +3,8 @@
 Full text, faceted, dependency free search engine in javascript. 
 Created to perform fast search on small json dataset (up to 1000 elements).
 
+test test
+
 ## Demo
 
 ![](https://media.giphy.com/media/1xOcvGeYJPPFZxSpHy/giphy.gif) 
