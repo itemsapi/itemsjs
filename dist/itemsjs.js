@@ -2352,10 +2352,15 @@ module.exports.search = function (items, input, configuration, fulltext) {
     search_time = new Date().getTime() - search_start_time;
   }
   /**
-   * making a prefiltering after search and before faceting
-   * after search because search is very fast
+   * making a items filtering after search and before faceting
+   * after search because search is very fast (faster than O(n) while filtering is O(n) and faceting is like O(n x m))
    * the goal is to make a library more customizable for developers
    */
+
+
+  if (input.filter instanceof Function) {
+    items = items.filter(input.filter);
+  } // @deprecated
 
 
   if (input.prefilter instanceof Function) {

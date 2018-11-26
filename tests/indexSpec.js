@@ -8,15 +8,18 @@ describe('itemjs general tests', function() {
 
   var items = [{
     name: 'movie1',
+    rating: 8,
     tags: ['a', 'b', 'c', 'd'],
     actors: ['a', 'b']
   }, {
     id: 10,
     name: 'movie2',
+    rating: 9,
     tags: ['a', 'e', 'f'],
     actors: ['a', 'b']
   }, {
     name: 'movie3',
+    rating: 9,
     tags: ['a', 'c'],
     actors: ['e']
   }]
@@ -76,6 +79,16 @@ describe('itemjs general tests', function() {
     var result = itemsjs.search({
       per_page: 1,
       page: 3
+    });
+    assert.equal(result.data.items.length, 1);
+    done();
+  });
+
+  it('makes search with filtering', function test(done) {
+    var result = itemsjs.search({
+      filter: function(item) {
+        return item.rating === 8;
+      }
     });
     assert.equal(result.data.items.length, 1);
     done();

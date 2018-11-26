@@ -154,9 +154,22 @@ Responsible for defining global configuration. Look for full example here - [con
   
   * **<code>filters</code>** filtering items based on specific aggregations i.e. {tags: ['drama' , 'historical']}  
 
+### itemsjs.filter(item)
+
+It's making items filtering. The way of working is similar to [JS native filter function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) 
+Example: 
+
+```js
+itemsjs.filter(item) {
+  return item.rating >= 8 && item.reviews_count >= 200;
+}
+```
+
+
 ### itemsjs.prefilter(items)
 
-It is making items prefiltering before search or aggregation, i.e.:
+It is a function for narrowing items down in custom way i.e. with filter or slice. 
+Example: 
 
 ```js
 itemsjs.prefilter(items) {
@@ -202,7 +215,6 @@ It's used in case you need to reindex the whole data
 #### `data`
 
 An array of objects.
-  
 
 ## Credit
 
