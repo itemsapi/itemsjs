@@ -154,30 +154,9 @@ Responsible for defining global configuration. Look for full example here - [con
   
   * **<code>filters</code>** filtering items based on specific aggregations i.e. {tags: ['drama' , 'historical']}  
 
-### itemsjs.filter(item)
+  * **<code>filter</code>** function responsible for items filtering. The way of working is similar to [JS native filter function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter). [See example](/docs/configuration.md)
 
-It's making items filtering. The way of working is similar to [JS native filter function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) 
-Example: 
-
-```js
-itemsjs.filter(item) {
-  return item.rating >= 8 && item.reviews_count >= 200;
-}
-```
-
-
-### itemsjs.prefilter(items)
-
-It is a function for narrowing items down in custom way i.e. with filter or slice. 
-Example: 
-
-```js
-itemsjs.prefilter(items) {
-  return items.filter(item => {
-    return item.price > 100;
-  });
-}
-```
+  * **<code>prefilter</code>** function which narrows items down in custom way i.e. with filter or slice. [See example](/docs/configuration.md)
 
 ### itemsjs.aggregation(options)
 

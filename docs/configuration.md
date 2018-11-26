@@ -1,5 +1,7 @@
 # ItemsJS search configuration
 
+## Configuration
+
 ```js
 var itemsjs = require('itemsjs')(data, {
   sortings: {
@@ -29,5 +31,49 @@ var itemsjs = require('itemsjs')(data, {
     }
   },
   searchableFields: ['name', 'tags']
+});
+```
+
+## Searching
+
+```js
+// aggregation
+var movies = itemsjs.search({
+  per_page: 1,
+  sort: 'name_asc',
+  filters: {
+    tags: ['1980s']
+  }
+})
+```
+
+```js
+// full text search
+var movies = itemsjs.search({
+  per_page: 1,
+  sort: 'name_asc',
+  filters: {
+    tags: ['1980s']
+  }
+})
+```
+
+```js
+var result = itemsjs.search({
+  query: 'shoes',
+  filter: function(item) {
+    return item.rating >= 8 && item.reviews_count >= 200;
+  }
+});
+```
+
+```js
+var result = itemsjs.search({
+  query: 'shoes',
+  prefilter: function(items) {
+    return items.filter(item => {
+      return item.price > 100;
+    });
+  }
 });
 ```
