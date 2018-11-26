@@ -9,22 +9,35 @@ describe('aggregations', function() {
 
   var items = [{
     name: 'movie1',
+    rating: 10,
     tags: ['a', 'b', 'c', 'd'],
     actors: ['a', 'b']
   }, {
     name: 'movie2',
+    rating: 9,
     tags: ['a', 'e', 'f'],
     actors: ['a', 'b']
   }, {
     name: 'movie3',
+    rating: 8,
     tags: ['a', 'c'],
     actors: ['e']
   }]
 
-
   it('makes search', function test(done) {
     var result = service.search(items);
     assert.equal(result.data.items.length, 3);
+    done();
+  });
+
+  it('makes search with filtering', function test(done) {
+    var result = service.search(items, {
+      filter: function(v) {
+        return v.rating >= 9;
+      }
+    });
+
+    assert.equal(result.data.items.length, 2);
     done();
   });
 
