@@ -2452,8 +2452,12 @@ module.exports.aggregation = function (items, input, aggregations) {
 
 
 module.exports.sorted_items = function (items, sort, sortings) {
-  if (sortings[sort] && sortings[sort].field) {
-    return _.orderBy(items, [sortings[sort].field], [sortings[sort].order || 'asc']);
+  if (sortings && sortings[sort]) {
+    sort = sortings[sort];
+  }
+
+  if (sort.field) {
+    return _.orderBy(items, sort.field, sort.order || 'asc');
   }
 
   return items;
