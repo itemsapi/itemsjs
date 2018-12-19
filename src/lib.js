@@ -115,13 +115,15 @@ module.exports.aggregation = function(items, input, aggregations) {
  * return items by sort
  */
 module.exports.sorted_items = function(items, sort, sortings) {
+  if (sortings && sortings[sort]) {
+    sort = sortings[sort];
+  }
 
-  if (sortings[sort] && sortings[sort].field) {
-
+  if (sort.field) {
     return _.orderBy(
       items,
-      [sortings[sort].field],
-      [sortings[sort].order || 'asc']
+      sort.field,
+      sort.order || 'asc'
     );
   }
 

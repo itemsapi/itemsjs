@@ -10,6 +10,11 @@ var itemsjs = require('itemsjs')(data, {
       field: 'year',
       // possible values asc or desc
       order: 'asc'
+    },
+    year_name_asc: {
+      // Multiple criteria possible
+      field: ['date', 'name'],
+      order: ['asc', 'asc']
     }
   },
   aggregations: {
@@ -51,7 +56,11 @@ var movies = itemsjs.search({
 // full text search
 var movies = itemsjs.search({
   per_page: 1,
-  sort: 'name_asc',
+  sort: {
+    // Custom sort not defined in configuration
+    field: 'year',
+    order: 'asc'
+  },
   filters: {
     tags: ['1980s']
   }
