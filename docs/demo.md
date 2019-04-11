@@ -7,4 +7,6 @@ Example animation provided by [@darkrubyist](https://github.com/darkrubyist):
 Search engine for movies provided by [@cigolpl](https://github.com/cigolpl):
 https://jsfiddle.net/cigol/0ef9qeos/5/. It's using very basic Vue.
 
+Same as above but with pagination [@bellerophons-pegasus](https://github.com/bellerophons-pegasus) https://jsfiddle.net/3ybkqa05/2/
+
 Search engine for movies provided by [@paulvanbladel](https://github.com/paulvanbladel): https://github.com/paulvanbladel/ItemsJs-Vue-Demo. It's using Quasar framework and Vue.
