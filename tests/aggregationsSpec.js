@@ -425,7 +425,6 @@ describe('aggregations', function() {
 
     assert.equal(result.tags.buckets.length, 5);
     assert.equal(result.actors.buckets.length, 10);
-    console.log("TEST", result.actors.buckets)
     assert.notEqual(result.actors.buckets.find(e => e.key === "Morgan Freeman") , undefined);
     assert.equal(result.actors.buckets[0].key, "Morgan Freeman");
 
