@@ -277,4 +277,24 @@ describe('aggregations', function() {
     done();
   });
 
+  it('returns aggregations with multi array filtering, selected on top', function test(done) {
+    var movies = require('./fixtures/movies_agg_selected.json')
+
+    var result = service.aggregations(movies, {
+      actors: {
+        filters: ['Morgan Freeman']
+      },
+      tags: {
+        filters: ['falling into a well']
+      }
+    })
+
+    assert.equal(result.tags.buckets.length, 5);
+    assert.equal(result.actors.buckets.length, 10);
+    assert.notEqual(result.actors.buckets.find(e => e.key === "Morgan Freeman") , undefined);
+    assert.equal(result.actors.buckets[0].key, "Morgan Freeman");
+
+    done();
+  });
+
 });
