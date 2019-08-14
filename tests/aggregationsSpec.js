@@ -6,6 +6,8 @@ var assert = require('assert');
 var service = require('./../src/lib');
 var sinon = require('sinon')
 
+var movies = require('./fixtures/movies_agg_selected.json')
+
 describe('aggregations', function() {
 
   var items = [{
@@ -278,8 +280,6 @@ describe('aggregations', function() {
   });
 
   it('returns aggregations with multi array filtering, selected on top', function test(done) {
-    var movies = require('./fixtures/movies_agg_selected.json')
-
     var result = service.aggregations(movies, {
       actors: {
         filters: ['Morgan Freeman']
@@ -293,6 +293,25 @@ describe('aggregations', function() {
     assert.equal(result.actors.buckets.length, 10);
     assert.notEqual(result.actors.buckets.find(e => e.key === "Morgan Freeman") , undefined);
     assert.equal(result.actors.buckets[0].key, "Morgan Freeman");
+
+    done();
+  });
+
+  it('returns aggregations with multi array filtering, two selected on top', function test(done) {
+    var result = service.aggregations(movies, {
+      actors: {
+        filters: ['Morgan Freeman', "Colin McFarlane"]
+      },
+      tags: {
+        filters: ['falling into a well']
+      }
+    })
+
+    assert.equal(result.tags.buckets.length, 5);
+    assert.equal(result.actors.buckets.length, 10);
+    assert.notEqual(result.actors.buckets.find(e => e.key === "Morgan Freeman") , undefined);
+    assert.equal(result.actors.buckets[0].key, "Colin McFarlane");
+    assert.equal(result.actors.buckets[1].key, "Morgan Freeman");
 
     done();
   });
