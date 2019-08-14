@@ -305,7 +305,7 @@ module.exports.buckets = function(items, field, agg, aggregations) {
     return {
       key: key,
       doc_count: val,
-      selected: helpers.includes_any_element(key, agg.filters)
+      selected: _.includes(agg.filters, key)
     };
   });
 
