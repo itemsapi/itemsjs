@@ -22,142 +22,6 @@ describe('aggregations', function() {
     actors: ['e']
   }]
 
-  var moreItems = [{
-    name: 'movie1',
-    tags: ['a', 'b', 'c', 'd'],
-    actors: ['a', 'b', 'm']
-  }, {
-    "tags": [
-      "social decay",
-      "well",
-      "deception",
-      "falling down a well",
-      "falling into a well"
-    ],
-    "actors": [
-      "Christian Bale",
-      "Michael Caine",
-      "Liam Neeson",
-      "Katie Holmes",
-      "Gary Oldman",
-      "Cillian Murphy",
-      "Tom Wilkinson",
-      "Rutger Hauer",
-      "Ken Watanabe",
-      "Mark Boone Junior",
-      "Linus Roache",
-      "Morgan Freeman",
-      "Larry Holden",
-      "Gerard Murphy",
-      "Colin McFarlane"
-    ],
-    "name": "Batman Begins",
-  }, {
-    name: 'The Dark Knight',
-    "tags": [
-      "dc comics",
-      "moral dilemma",
-      "psychopath",
-      "false confession",
-      "star died before release"
-    ],
-    actors: [
-      "Christian Bale",
-      "Michael Caine",
-      "Liam Neeson",
-      "Katie Holmes",
-      "Gary Oldman",
-      "Cillian Murphy",
-      "Tom Wilkinson",
-      "Rutger Hauer",
-      "Ken Watanabe",
-      "Mark Boone Junior",
-      "Linus Roache",
-      "Morgan Freeman",
-      "Larry Holden",
-      "Gerard Murphy",
-      "Colin McFarlane"
-  ]
-  }, {
-    name: 'The Shawshank Redemption',
-    tags: [
-      "prison",
-      "wrongful imprisonment",
-      "escape from prison",
-      "prison cell search",
-      "first person narration"
-    ],
-    actors: [
-      "Tim Robbins",
-      "Morgan Freeman",
-      "Bob Gunton",
-      "William Sadler",
-      "Clancy Brown",
-      "Gil Bellows",
-      "Mark Rolston",
-      "James Whitmore",
-      "Jeffrey DeMunn",
-      "Larry Brandenburg",
-      "Neil Giuntoli",
-      "Brian Libby",
-      "David Proval",
-      "Joseph Ragno",
-      "Jude Ciccolella"
-    ]
-  }, {
-    "name": "Se7en",
-    "tags": [
-      "detective",
-      "serial killer",
-      "seven deadly sins",
-      "police partner",
-      "human monster"
-    ],
-    "actors": [
-      "Morgan Freeman",
-      "Andrew Kevin Walker",
-      "Kevin Spacey",
-      "Daniel Zacapa",
-      "Brad Pitt",
-      "Gwyneth Paltrow",
-      "John Cassini",
-      "Bob Mack",
-      "Peter Crombie",
-      "Reg E. Cathey",
-      "R. Lee Ermey",
-      "George Christy",
-      "Endre Hules",
-      "Hawthorne James",
-      "William Davidson"
-    ],
-  }, {
-    "tags": [
-      "female villain",
-      "mysterious woman",
-      "suspense",
-      "written by director",
-      "woman fights a man"
-    ],
-    "actors": [
-      "Christian Bale",
-      "Gary Oldman",
-      "Tom Hardy",
-      "Joseph Gordon-Levitt",
-      "Anne Hathaway",
-      "Marion Cotillard",
-      "Morgan Freeman",
-      "Michael Caine",
-      "Matthew Modine",
-      "Alon Aboutboul",
-      "Ben Mendelsohn",
-      "Burn Gorman",
-      "Daniel Sunjata",
-      "Aidan Gillen",
-      "Sam Kennard"
-    ],
-    "name": "The Dark Knight Rises",
-  }]
-
   it('returns buckets for two fields (tags, actors)', function test(done) {
     var result = service.aggregations(items, {
       tags: {
@@ -414,7 +278,9 @@ describe('aggregations', function() {
   });
 
   it('returns aggregations with multi array filtering, selected on top', function test(done) {
-    var result = service.aggregations(moreItems, {
+    var movies = require('./fixtures/movies_agg_selected.json')
+
+    var result = service.aggregations(movies, {
       actors: {
         filters: ['Morgan Freeman']
       },
