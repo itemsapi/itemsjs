@@ -304,14 +304,15 @@ module.exports.buckets = function(items, field, agg, aggregations) {
   buckets = _.map(buckets, (val, key) => {
     return {
       key: key,
-      doc_count: val
+      doc_count: val,
+      selected: helpers.includes_any_element(key, agg.filters)
     };
-  })
+  });
 
   if (agg.sort === 'term') {
-    buckets = _.orderBy(buckets, ['key'], [agg.order || 'asc']);
+    buckets = _.orderBy(buckets, ['selected', 'key'], ['desc', agg.order || 'asc']);
   } else {
-    buckets = _.orderBy(buckets, ['doc_count', 'key'], [agg.order || 'desc', 'asc']);
+    buckets = _.orderBy(buckets, ['selected', 'doc_count', 'key'], ['desc', agg.order || 'desc', 'asc']);
   }
 
   return buckets;
