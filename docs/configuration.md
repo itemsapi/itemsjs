@@ -35,7 +35,9 @@ var itemsjs = require('itemsjs')(data, {
       size: 5
     }
   },
-  searchableFields: ['name', 'tags']
+  searchableFields: ['name', 'tags'],
+  removeStemmer: false, // Default false
+  removeStopWordFilter: false // Default false
 });
 ```
 
@@ -84,13 +86,5 @@ var result = itemsjs.search({
       return item.price > 100;
     });
   }
-});
-```
-
-```js
-var result = itemsjs.search({
-  query: 'shoes',
-  removeStemmer: true,
-  removeStopWordFilter: true
 });
 ```
