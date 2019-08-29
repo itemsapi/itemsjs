@@ -86,3 +86,11 @@ var result = itemsjs.search({
   }
 });
 ```
+
+```js
+var result = itemsjs.search({
+  query: 'shoes',
+  removeStemmer: true,
+  removeStopWordFilter: true
+});
+```

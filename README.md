@@ -157,6 +157,10 @@ Responsible for defining global configuration. Look for full example here - [con
   * **<code>filter</code>** function responsible for items filtering. The way of working is similar to js [native filter function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter). [See example](/docs/configuration.md)
 
   * **<code>prefilter</code>** function which narrows items down in custom way i.e. with filter or slice. [See example](/docs/configuration.md)
+  
+  * **<code>removeStemmer</code>** set to `true` if you want to remove the [stemmer functionality of lunr](https://github.com/olivernn/lunr.js/issues/328).
+
+  * **<code>removeStopWordFilter</code>** set to `true` if you want to remove the [stopWordFilter functionality of lunr](https://github.com/olivernn/lunr.js/issues/233).
 
 ### itemsjs.aggregation(options)
 

@@ -20,6 +20,18 @@ var Fulltext = function(items, config) {
       self.field(field);
     });
     this.ref('id');
+
+    /**
+     * Remove the stemmer and/or stopWordFilter from the pipeline 
+     * stemmer: https://github.com/olivernn/lunr.js/issues/328
+     * stopWordFilter: https://github.com/olivernn/lunr.js/issues/233
+     */
+    if (config.removeStemmer) {
+      this.pipeline.remove(lunr.stemmer)
+    }
+    if (config.removeStopWordFilter) {
+      this.pipeline.remove(lunr.stopWordFilter)
+    }
   })
   //var items2 = _.clone(items)
   var i = 1;
