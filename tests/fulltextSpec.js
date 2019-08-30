@@ -17,6 +17,11 @@ describe('fulltext', function() {
     tags: ['running', 'vietnam'],
   }];
 
+  var specialItems = [
+    {"name": "elation"},
+    {"name": "source"}
+ ]
+
   it('checks search', function test(done) {
 
     var fulltext = new Fulltext(items);
@@ -44,4 +49,26 @@ describe('fulltext', function() {
     done();
   });
 
+
+  it('makes search stepping through characters', function test(done) {
+    var fulltext = new Fulltext(specialItems, {
+      searchableFields: ['name'],
+      isExactSearch: true
+    });
+    assert.equal(fulltext.search('e').length, 1);
+    assert.equal(fulltext.search('el').length, 1);
+    assert.equal(fulltext.search('ela').length, 1);
+    assert.equal(fulltext.search('elat').length, 1);
+    assert.equal(fulltext.search('elati').length, 1); // Does not appear when stemmer is present
+    assert.equal(fulltext.search('elatio').length, 1);
+    assert.equal(fulltext.search('elation').length, 1);
+    assert.equal(fulltext.search('s').length, 1);
+    assert.equal(fulltext.search('so').length, 1); // Filtered by stopWordFilter
+    assert.equal(fulltext.search('sou').length, 1);
+    assert.equal(fulltext.search('sour').length, 1);
+    assert.equal(fulltext.search('sourc').length, 1);
+    assert.equal(fulltext.search('source').length, 1);
+
+    done();
+  });
 });
