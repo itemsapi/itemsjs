@@ -36,8 +36,7 @@ var itemsjs = require('itemsjs')(data, {
     }
   },
   searchableFields: ['name', 'tags'],
-  removeStemmer: false, // Default false
-  removeStopWordFilter: false // Default false
+  isExactSearch: true // Default false
 });
 ```
 

@@ -158,9 +158,7 @@ Responsible for defining global configuration. Look for full example here - [con
 
   * **<code>prefilter</code>** function which narrows items down in custom way i.e. with filter or slice. [See example](/docs/configuration.md)
   
-  * **<code>removeStemmer</code>** set to `true` if you want to remove the [stemmer functionality of lunr](https://github.com/olivernn/lunr.js/issues/328).
-
-  * **<code>removeStopWordFilter</code>** set to `true` if you want to remove the [stopWordFilter functionality of lunr](https://github.com/olivernn/lunr.js/issues/233).
+  * **<code>isExactSearch</code>** set to `true` if you want to always show exact search matches. See [lunr stemmer](https://github.com/olivernn/lunr.js/issues/328) and [lunr stopWordFilter](https://github.com/olivernn/lunr.js/issues/233).
 
 ### itemsjs.aggregation(options)
 

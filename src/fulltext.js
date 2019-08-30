@@ -22,14 +22,12 @@ var Fulltext = function(items, config) {
     this.ref('id');
 
     /**
-     * Remove the stemmer and/or stopWordFilter from the pipeline 
+     * Remove the stemmer and stopWordFilter from the pipeline 
      * stemmer: https://github.com/olivernn/lunr.js/issues/328
      * stopWordFilter: https://github.com/olivernn/lunr.js/issues/233
      */
-    if (config.removeStemmer) {
+    if (config.isExactSearch) {
       this.pipeline.remove(lunr.stemmer)
-    }
-    if (config.removeStopWordFilter) {
       this.pipeline.remove(lunr.stopWordFilter)
     }
   })
