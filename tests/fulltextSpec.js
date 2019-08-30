@@ -53,8 +53,7 @@ describe('fulltext', function() {
   it('makes search stepping through characters', function test(done) {
     var fulltext = new Fulltext(specialItems, {
       searchableFields: ['name'],
-      removeStemmer: true,
-      removeStopWordFilter: true
+      isExactSearch: true
     });
     assert.equal(fulltext.search('e').length, 1);
     assert.equal(fulltext.search('el').length, 1);
