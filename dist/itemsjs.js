@@ -2089,6 +2089,16 @@ var Fulltext = function Fulltext(items, config) {
     });
 
     this.ref('id');
+    /**
+     * Remove the stemmer and stopWordFilter from the pipeline 
+     * stemmer: https://github.com/olivernn/lunr.js/issues/328
+     * stopWordFilter: https://github.com/olivernn/lunr.js/issues/233
+     */
+
+    if (config.isExactSearch) {
+      this.pipeline.remove(lunr.stemmer);
+      this.pipeline.remove(lunr.stopWordFilter);
+    }
   }); //var items2 = _.clone(items)
 
   var i = 1;
@@ -2627,14 +2637,15 @@ module.exports.buckets = function (items, field, agg, aggregations) {
   buckets = _.map(buckets, function (val, key) {
     return {
       key: key,
-      doc_count: val
+      doc_count: val,
+      selected: _.includes(agg.filters, key)
     };
   });
 
   if (agg.sort === 'term') {
-    buckets = _.orderBy(buckets, ['key'], [agg.order || 'asc']);
+    buckets = _.orderBy(buckets, ['selected', 'key'], ['desc', agg.order || 'asc']);
   } else {
-    buckets = _.orderBy(buckets, ['doc_count', 'key'], [agg.order || 'desc', 'asc']);
+    buckets = _.orderBy(buckets, ['selected', 'doc_count', 'key'], ['desc', agg.order || 'desc', 'asc']);
   }
 
   return buckets;
