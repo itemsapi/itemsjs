@@ -2,7 +2,11 @@ var _ = require('./../vendor/lodash');
 
 module.exports.includes = function(items, filters) {
   return !filters || _.every(filters, (val) => {
-    return _.includes(items, val);
+    // Do not match substring when using filters
+    if (typeof(items) === 'string' || items instanceof String)
+      return val === items
+    else
+      return _.includes(items, val); // If collection is a string, it's checked for a substring of value
   });
 }
 
@@ -13,8 +17,11 @@ module.exports.includes_any = function(items, filters) {
 
   //return !filters || (_.isArray(filters) && !filters.length) || _.some(filters, (val) => {
   return !filters || (filters instanceof Array && filters.length === 0) || _.some(filters, (val) => {
-
-    return _.includes(items, val);
+    // Do not match substring when using filters
+    if (typeof(items) === 'string' || items instanceof String)
+      return val === items
+    else
+      return _.includes(items, val); // If collection is a string, it's checked for a substring of value
   });
 }
 
@@ -24,7 +31,11 @@ module.exports.includes_any = function(items, filters) {
 module.exports.includes_any_element = function(items, filters) {
 
   return _.some(filters, (val) => {
-    return _.includes(items, val);
+    // Do not match substring when using filters
+    if (typeof(items) === 'string' || items instanceof String)
+      return val === items
+    else
+      return _.includes(items, val); // If collection is a string, it's checked for a substring of value
   });
 }
 

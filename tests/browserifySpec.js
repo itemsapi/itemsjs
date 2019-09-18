@@ -20,6 +20,17 @@ describe('itemjs general tests', function() {
     actors: ['e']
   }]
 
+  var similarItems = [{
+    name: 'movie1',
+    tags: 'Another tag'
+  }, {
+    name: 'movie2',
+    tags: 'Another'
+  }, {
+    name: 'movie3',
+    tags: 'Another tag'
+  }]
+
   var itemsjs = require('./../dist/itemsjs')(items);
 
   it('makes search', function test(done) {
@@ -82,6 +93,41 @@ describe('itemjs general tests', function() {
 
     var result = itemsjs.search();
     assert.equal(result.data.items.length, 3);
+    done();
+  });
+
+  it('makes search with aggregation filters with single value object', function test(done) {
+
+    var itemsjs = require('./../dist/itemsjs')(similarItems, {
+      aggregations: {
+        tags: {}
+      },
+    });
+
+    var result = itemsjs.search();
+    assert.equal(result.data.items.length, 3);
+    assert.equal(result.data.aggregations.tags.buckets[0].doc_count, 2); // Another tag
+    assert.equal(result.data.aggregations.tags.buckets[1].doc_count, 1); // Another
+
+    var result = itemsjs.search({
+      query: '',
+      filters: {
+        name: [],
+        tags: ['Another tag']
+      },
+      per_page: Infinity
+    });
+    assert.equal(result.data.aggregations.tags.buckets[0].doc_count, result.data.items.length);
+    assert.equal(result.data.items.length, 2);
+
+    var result = itemsjs.search({
+      filters: {
+        tags: ['Another']
+      }
+    });
+    assert.equal(result.data.aggregations.tags.buckets[0].doc_count, result.data.items.length);
+    assert.equal(result.data.items.length, 1);
+
     done();
   });
 
