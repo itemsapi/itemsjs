@@ -52,6 +52,15 @@ itemsjs = itemsjs(data, configuration);
 itemsjs.search()
 ```
 
+Gulp task:
+
+```javascript
+function itemjs() {
+  return src('node_modules/itemsjs/dist/itemsjs.min.js')
+      .pipe(dest('source/javascripts/'));
+}; // Will copy to source/javascripts/itemsjs.min.js
+```
+
 ## Example
 
 ```bash
