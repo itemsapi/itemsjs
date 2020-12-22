@@ -1,4 +1,10 @@
-# ItemsJS - search engine in javascript 
+![npm version](https://img.shields.io/npm/v/itemsjs)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/itemsapi/itemsjs)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/itemsapi/itemsjs?label=package.json)
+[![jsdelivr hit](https://data.jsdelivr.com/v1/package/npm/itemsjs/badge)](https://www.jsdelivr.com/package/npm/itemsjs)
+[![GitHub license](https://img.shields.io/github/license/itemsapi/itemsjs)](https://github.com/itemsapi/itemsjs/blob/master/LICENSE)
+
+# ItemsJS - search engine in javascript
 
 Full text, faceted, dependency free search engine in javascript. 
 Created to perform fast search on small json dataset (up to 1000 elements).
@@ -39,11 +45,15 @@ npm install itemsjs
 ```
 
 ```html
-<!-- use the latest release -->
+<!-- CDN -->
+<!-- unpkg: use the latest release -->
 <script src="https://unpkg.com/itemsjs@latest/dist/itemsjs.min.js"></script>
-<!-- or use the specify version -->
-<script src="https://unpkg.com/itemsjs@1.0.37/dist/itemsjs.min.js"></script>
-<!-- or use it locally -->
+<!-- unpkg: use a specific version -->
+<script src="https://unpkg.com/itemsjs@1.0.49/dist/itemsjs.min.js"></script>
+<!-- jsdelivr: use a specific version -->
+<script src="https://cdn.jsdelivr.net/npm/itemsjs@1.0.49/dist/itemsjs.min.js"></script>
+
+<!-- locally -->
 <script src="/node_modules/itemsjs/dist/itemsjs.js"></script>
 ```
 
