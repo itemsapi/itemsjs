@@ -6,12 +6,12 @@
 
 # ItemsJS - search engine in javascript
 
-Full text, faceted, dependency free search engine in javascript. 
+Full text, faceted, dependency free search engine in javascript.
 Created to perform fast search on small json dataset (up to 1000 elements).
 
 ## Demo
 
-![](https://media.giphy.com/media/1xOcvGeYJPPFZxSpHy/giphy.gif) 
+![demo](https://media.giphy.com/media/1xOcvGeYJPPFZxSpHy/giphy.gif)
 
 (by @darkrubyist)
 
@@ -36,6 +36,7 @@ npm install itemsjs
 const itemsjs = require('itemsjs')(data, configuration);
 const items = itemsjs.search();
 ```
+
 ### Client side
 
 or using from the client side:
@@ -130,7 +131,6 @@ Test that with :
 node search.js
 ```
 
-
 ## API
 
 ### var itemsjs = ItemsJS(data, [configuration])
@@ -143,32 +143,31 @@ The first `data` argument is an array of objects.
 
 Responsible for defining global configuration. Look for full example here - [configuration](/docs/configuration.md)
 
-  * **<code>aggregations</code>** filters configuration i.e. for `tags`, `actors`, `colors`, etc. Responsible for generating facets.
+- **`aggregations`** filters configuration i.e. for `tags`, `actors`, `colors`, etc. Responsible for generating facets.
 
-  * **<code>sortings</code>** you can configure different sortings like `tags_asc`, `tags_desc` with options and later use it with one key.
+- **`sortings`** you can configure different sortings like `tags_asc`, `tags_desc` with options and later use it with one key.
 
-  * **<code>searchableFields</code>** an array of searchable fields.
-
+- **`searchableFields`** an array of searchable fields.
 
 ### itemsjs.search(options)
 
 #### `options`
 
-  * **<code>per_page</code>** amount of items per page.
+- **`per_page`** amount of items per page.
 
-  * **<code>page</code>** page number - used for pagination.
+- **`page`** page number - used for pagination.
 
-  * **<code>query</code>** used for full text search.
+- **`query`** used for full text search.
 
-  * **<code>sort</code>** used for sorting. one of `sortings` key
+- **`sort`** used for sorting. one of `sortings` key
   
-  * **<code>filters</code>** filtering items based on specific aggregations i.e. {tags: ['drama' , 'historical']}  
+- **`filters`** filtering items based on specific aggregations i.e. {tags: ['drama' , 'historical']}  
 
-  * **<code>filter</code>** function responsible for items filtering. The way of working is similar to js [native filter function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter). [See example](/docs/configuration.md)
+- **`filter`** function responsible for items filtering. The way of working is similar to js [native filter function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter). [See example](/docs/configuration.md)
 
-  * **<code>prefilter</code>** function which narrows items down in custom way i.e. with filter or slice. [See example](/docs/configuration.md)
+- **`prefilter`** function which narrows items down in custom way i.e. with filter or slice. [See example](/docs/configuration.md)
   
-  * **<code>isExactSearch</code>** set to `true` if you want to always show exact search matches. See [lunr stemmer](https://github.com/olivernn/lunr.js/issues/328) and [lunr stopWordFilter](https://github.com/olivernn/lunr.js/issues/233).
+- **`isExactSearch`** set to `true` if you want to always show exact search matches. See [lunr stemmer](https://github.com/olivernn/lunr.js/issues/328) and [lunr stopWordFilter](https://github.com/olivernn/lunr.js/issues/233).
 
 ### itemsjs.aggregation(options)
 
@@ -176,13 +175,10 @@ It returns full list of filters for specific aggregation
 
 #### `options`
 
-  * **<code>name</code>** aggregation name
-
-  * **<code>per_page</code>** filters per page
-
-  * **<code>page</code>** page number
-
-  * **<code>query</code>** used for quering filters. It's not full text search
+- **`name`** aggregation name
+- **`per_page`** filters per page
+- **`page`** page number
+- **`query`** used for quering filters. It's not full text search
 
 ### itemsjs.similar(id, options)
 
@@ -190,13 +186,10 @@ It returns similar items to item for given id
 
 #### `options`
 
-  * **<code>field</code>** field name for computing similarity (i.e. tags, actors, colors)
-
-  * **<code>minimum</code>** what is the minimum intersection between field of based item and similar item to show them in the result
-
-  * **<code>per_page</code>** filters per page
-
-  * **<code>page</code>** page number
+- **`field`** field name for computing similarity (i.e. tags, actors, colors)
+- **`minimum`** what is the minimum intersection between field of based item and similar item to show them in the result
+- **`per_page`** filters per page
+- **`page`** page number
 
   
 ### itemsjs.reindex(data)
