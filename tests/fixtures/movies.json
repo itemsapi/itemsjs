@@ -1,0 +1,902 @@
+[
+  {
+    "name": "The Shawshank Redemption",
+    "year": 1994,
+    "rating": 9.3,
+    "votes": 1790841,
+    "description": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+    "storyline": "Chronicles the experiences of a formerly successful banker as a prisoner in the gloomy jailhouse of Shawshank after being found guilty of a crime he did not commit. The film portrays the man's unique way of dealing with his new, torturous life; along the way he befriends a number of fellow prisoners, most notably a wise long-term inmate named Red. Written by J-S-Golden",
+    "director": [
+      "Frank Darabont"
+    ],
+    "actors": [
+      "Tim Robbins",
+      "Morgan Freeman",
+      "Bob Gunton",
+      "William Sadler",
+      "Clancy Brown",
+      "Gil Bellows",
+      "Mark Rolston",
+      "James Whitmore",
+      "Jeffrey DeMunn",
+      "Larry Brandenburg",
+      "Neil Giuntoli",
+      "Brian Libby",
+      "David Proval",
+      "Joseph Ragno",
+      "Jude Ciccolella"
+    ],
+    "genres": [
+      "Crime",
+      "Drama"
+    ],
+    "tags": [
+      "prison",
+      "wrongful imprisonment",
+      "escape from prison",
+      "prison cell search",
+      "first person narration"
+    ],
+    "country": [
+      "USA"
+    ],
+    "runtime": 142,
+    "reviews_count": 4446
+  },
+  {
+    "name": "The Godfather",
+    "year": 1972,
+    "rating": 9.2,
+    "votes": 1222640,
+    "description": "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.",
+    "storyline": "When the aging head of a famous crime family decides to transfer his position to one of his subalterns, a series of unfortunate events start happening to the family, and a war begins between all the well-known families leading to insolence, deportation, murder and revenge, and ends with the favorable successor being finally chosen. Written by J. S. Golden",
+    "director": [
+      "Francis Ford Coppola"
+    ],
+    "actors": [
+      "Marlon Brando",
+      "Al Pacino",
+      "James Caan",
+      "Richard S. Castellano",
+      "Robert Duvall",
+      "Sterling Hayden",
+      "John Marley",
+      "Richard Conte",
+      "Al Lettieri",
+      "Diane Keaton",
+      "Abe Vigoda",
+      "Talia Shire",
+      "Gianni Russo",
+      "John Cazale",
+      "Rudy Bond"
+    ],
+    "genres": [
+      "Crime",
+      "Drama"
+    ],
+    "tags": [
+      "mafia",
+      "crime family",
+      "patriarch",
+      "rise to power",
+      "organized crime"
+    ],
+    "country": [
+      "USA"
+    ],
+    "runtime": 175,
+    "reviews_count": 2368
+  },
+  {
+    "name": "The Dark Knight",
+    "year": 2008,
+    "rating": 9,
+    "votes": 1771687,
+    "description": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, the Dark Knight must come to terms with one of the greatest psychological tests of his ability to fight injustice.",
+    "storyline": "Set within a year after the events of Batman Begins, Batman, Lieutenant James Gordon, and new district attorney Harvey Dent successfully begin to round up the criminals that plague Gotham City until a mysterious and sadistic criminal mastermind known only as the Joker appears in Gotham, creating a new wave of chaos. Batman's struggle against the Joker becomes deeply personal, forcing him to \"confront everything he believes\" and improve his technology to stop him. A love triangle develops between Bruce Wayne, Dent and Rachel Dawes. Written by Leon Lombardi",
+    "director": [
+      "Christopher Nolan"
+    ],
+    "actors": [
+      "Christian Bale",
+      "Heath Ledger",
+      "Aaron Eckhart",
+      "Michael Caine",
+      "Maggie Gyllenhaal",
+      "Gary Oldman",
+      "Morgan Freeman",
+      "Monique Gabriela Curnen",
+      "Ron Dean",
+      "Cillian Murphy",
+      "Chin Han",
+      "Nestor Carbonell",
+      "Eric Roberts",
+      "Ritchie Coster",
+      "Anthony Michael Hall"
+    ],
+    "genres": [
+      "Action",
+      "Crime",
+      "Drama",
+      "Thriller"
+    ],
+    "tags": [
+      "dc comics",
+      "moral dilemma",
+      "psychopath",
+      "false confession",
+      "star died before release"
+    ],
+    "country": [
+      "USA",
+      "UK"
+    ],
+    "runtime": 152,
+    "reviews_count": 4845
+  },
+  {
+    "name": "The Godfather: Part II",
+    "year": 1974,
+    "rating": 9,
+    "votes": 840848,
+    "description": "The early life and career of Vito Corleone in 1920s New York is portrayed while his son, Michael, expands and tightens his grip on the family crime syndicate.",
+    "storyline": "The continuing saga of the Corleone crime family tells the story of a young Vito Corleone growing up in Sicily and in 1910s New York; and follows Michael Corleone in the 1950s as he attempts to expand the family business into Las Vegas, Hollywood and Cuba. Written by Keith Loh &lt;loh@sfu.ca&gt;",
+    "director": [
+      "Francis Ford Coppola"
+    ],
+    "actors": [
+      "Al Pacino",
+      "Robert Duvall",
+      "Diane Keaton",
+      "Robert De Niro",
+      "John Cazale",
+      "Talia Shire",
+      "Lee Strasberg",
+      "Michael V. Gazzo",
+      "G.D. Spradlin",
+      "Richard Bright",
+      "Gastone Moschin",
+      "Tom Rosqui",
+      "Bruno Kirby",
+      "Frank Sivero",
+      "Francesca De Sapio"
+    ],
+    "genres": [
+      "Crime",
+      "Drama"
+    ],
+    "tags": [
+      "revenge",
+      "corrupt politician",
+      "mafia",
+      "bloody body of child",
+      "1950s"
+    ],
+    "country": [
+      "USA"
+    ],
+    "runtime": 202,
+    "reviews_count": 672
+  },
+  {
+    "name": "Pulp Fiction",
+    "year": 1994,
+    "rating": 8.9,
+    "votes": 1401771,
+    "description": "The lives of two mob hit men, a boxer, a gangster's wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",
+    "storyline": "Jules Winnfield (Samuel L. Jackson) and Vincent Vega (John Travolta) are two hit men who are out to retrieve a suitcase stolen from their employer, mob boss Marsellus Wallace (Ving Rhames). Wallace has also asked Vincent to take his wife Mia (Uma Thurman) out a few days later when Wallace himself will be out of town. Butch Coolidge (Bruce Willis) is an aging boxer who is paid by Wallace to lose his fight. The lives of these seemingly unrelated people are woven together comprising of a series of funny, bizarre and uncalled-for incidents. Written by Soumitra",
+    "director": [
+      "Quentin Tarantino"
+    ],
+    "actors": [
+      "Tim Roth",
+      "Amanda Plummer",
+      "Laura Lovelace",
+      "John Travolta",
+      "Samuel L. Jackson",
+      "Phil LaMarr",
+      "Frank Whaley",
+      "Burr Steers",
+      "Bruce Willis",
+      "Ving Rhames",
+      "Paul Calderon",
+      "Bronagh Gallagher",
+      "Rosanna Arquette",
+      "Eric Stoltz",
+      "Uma Thurman"
+    ],
+    "genres": [
+      "Crime",
+      "Drama"
+    ],
+    "tags": [
+      "nonlinear timeline",
+      "neo noir",
+      "cunnilingus",
+      "oral sex",
+      "black comedy"
+    ],
+    "country": [
+      "USA"
+    ],
+    "runtime": 154,
+    "reviews_count": 2270
+  },
+  {
+    "name": "Schindler's List",
+    "year": 1993,
+    "rating": 8.9,
+    "votes": 918352,
+    "description": "In German-occupied Poland during World War II, Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazi Germans.",
+    "storyline": "Oskar Schindler is a vainglorious and greedy German businessman who becomes an unlikely humanitarian amid the barbaric German Nazi reign when he feels compelled to turn his factory into a refuge for Jews. Based on the true story of Oskar Schindler who managed to save about 1100 Jews from being gassed at the Auschwitz concentration camp, it is a testament to the good in all of us. Written by Harald Mayr &lt;marvin@bike.augusta.de&gt;",
+    "director": [
+      "Steven Spielberg"
+    ],
+    "actors": [
+      "Liam Neeson",
+      "Ben Kingsley",
+      "Ralph Fiennes",
+      "Caroline Goodall",
+      "Jonathan Sagall",
+      "Embeth Davidtz",
+      "Malgorzata Gebel",
+      "Shmuel Levy",
+      "Mark Ivanir",
+      "Béatrice Macola",
+      "Andrzej Seweryn",
+      "Friedrich von Thun",
+      "Krzysztof Luft",
+      "Harry Nehring",
+      "Norbert Weisser"
+    ],
+    "genres": [
+      "Biography",
+      "Drama",
+      "History"
+    ],
+    "tags": [
+      "jew",
+      "nazi",
+      "jewish",
+      "german",
+      "holocaust"
+    ],
+    "country": [
+      "USA"
+    ],
+    "runtime": 195,
+    "reviews_count": 1316
+  },
+  {
+    "name": "The Lord of the Rings: The Return of the King",
+    "year": 2003,
+    "rating": 8.9,
+    "votes": 1284975,
+    "description": "Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.",
+    "storyline": "The final confrontation between the forces of good and evil fighting for control of the future of Middle-earth. Hobbits Frodo and Sam reach Mordor in their quest to destroy the \"one ring\", while Aragorn leads the forces of good against Sauron's evil army at the stone city of Minas Tirith. Written by Jwelch5742",
+    "director": [
+      "Peter Jackson"
+    ],
+    "actors": [
+      "Noel Appleby",
+      "Ali Astin",
+      "Sean Astin",
+      "David Aston",
+      "John Bach",
+      "Sean Bean",
+      "Cate Blanchett",
+      "Orlando Bloom",
+      "Billy Boyd",
+      "Sadwyn Brophy",
+      "Alistair Browning",
+      "Marton Csokas",
+      "Richard Edge",
+      "Jason Fitch",
+      "Bernard Hill"
+    ],
+    "genres": [
+      "Adventure",
+      "Drama",
+      "Fantasy"
+    ],
+    "tags": [
+      "orc",
+      "epic",
+      "ring",
+      "battle",
+      "middle earth"
+    ],
+    "country": [
+      "USA",
+      "New Zealand"
+    ],
+    "runtime": 201,
+    "reviews_count": 3223
+  },
+  {
+    "name": "12 Angry Men",
+    "year": 1957,
+    "rating": 8.9,
+    "votes": 483220,
+    "description": "A jury holdout attempts to prevent a miscarriage of justice by forcing his colleagues to reconsider the evidence.",
+    "storyline": "The defense and the prosecution have rested and the jury is filing into the jury room to decide if a young man is guilty or innocent of murdering his father. What begins as an open-and-shut case of murder soon becomes a detective story that presents a succession of clues creating doubt, and a mini-drama of each of the jurors' prejudices and preconceptions about the trial, the accused, and each other. Based on the play, all of the action takes place on the stage of the jury room. Written by pjk &lt;PETESID@VNET.IBM.COM&gt;",
+    "director": [
+      "Sidney Lumet"
+    ],
+    "actors": [
+      "Martin Balsam",
+      "John Fiedler",
+      "Lee J. Cobb",
+      "E.G. Marshall",
+      "Jack Klugman",
+      "Edward Binns",
+      "Jack Warden",
+      "Henry Fonda",
+      "Joseph Sweeney",
+      "Ed Begley",
+      "George Voskovec",
+      "Robert Webber"
+    ],
+    "genres": [
+      "Crime",
+      "Drama"
+    ],
+    "tags": [
+      "murder",
+      "jury",
+      "dialogue driven",
+      "justice",
+      "judicial system"
+    ],
+    "country": [
+      "USA"
+    ],
+    "runtime": 96,
+    "reviews_count": 973
+  },
+  {
+    "name": "The Good, the Bad and the Ugly",
+    "year": 1966,
+    "rating": 8.9,
+    "votes": 531727,
+    "description": "A bounty hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery.",
+    "storyline": "Blondie (The Good) is a professional gunslinger who is out trying to earn a few dollars. Angel Eyes (The Bad) is a hit man who always commits to a task and sees it through, as long as he is paid to do so. And Tuco (The Ugly) is a wanted outlaw trying to take care of his own hide. Tuco and Blondie share a partnership together making money off Tuco's bounty, but when Blondie unties the partnership, Tuco tries to hunt down Blondie. When Blondie and Tuco come across a horse carriage loaded with dead bodies, they soon learn from the only survivor (Bill Carson) that he and a few other men have buried a stash of gold in a cemetery. Unfortunately Carson dies and Tuco only finds out the name of the cemetery, while Blondie finds out the name on the grave. Now the two must keep each other alive in order to find the gold. Angel Eyes (who had been looking for Bill Carson) discovers that Tuco and Blondie met with Carson and knows they know the location of the gold. All he needs is for the two to ... Written by Jeremy Thomson",
+    "director": [
+      "Sergio Leone"
+    ],
+    "actors": [
+      "Eli Wallach",
+      "Clint Eastwood",
+      "Lee Van Cleef",
+      "Aldo Giuffrè",
+      "Luigi Pistilli",
+      "Rada Rassimov",
+      "Enzo Petito",
+      "Claudio Scarchilli",
+      "John Bartha",
+      "Livio Lorenzon",
+      "Antonio Casale",
+      "Sandro Scarchilli",
+      "Benito Stefanelli",
+      "Angelo Novi",
+      "Antonio Casas"
+    ],
+    "genres": [
+      "Western"
+    ],
+    "tags": [
+      "spaghetti western",
+      "civil war",
+      "hitman",
+      "outlaw",
+      "shootout"
+    ],
+    "country": [
+      "Italy",
+      "Spain",
+      "West Germany",
+      "USA"
+    ],
+    "runtime": 161,
+    "reviews_count": 808
+  },
+  {
+    "name": "Dangal",
+    "year": 2016,
+    "rating": 8.9,
+    "votes": 40674,
+    "description": "Former wrestler Mahavir Singh Phogat and his two wrestler daughters struggle towards glory at the Commonwealth Games in the face of societal oppression.",
+    "storyline": "Biopic of Mahavir Singh Phogat, who taught wrestling to his daughters Babita Kumari and Geeta Phogat. Geeta Phogat was India's first female wrestler to win at the 2010 Commonwealth Games, where she won the gold medal (55 kg) while her sister Babita Kumari won the silver (52 kg). Written by Dibyayan_Chakravorty",
+    "director": [
+      "Nitesh Tiwari"
+    ],
+    "actors": [
+      "Aamir Khan",
+      "Sakshi Tanwar",
+      "Fatima Sana Shaikh",
+      "Sanya Malhotra",
+      "Aparshakti Khurana",
+      "Zaira Wasim",
+      "Suhani Bhatnagar",
+      "Ritwik Sahore",
+      "Girish Kulkarni",
+      "Anurag Arora",
+      "Mahesh Balraj",
+      "Vivan Bhatena",
+      "Anmol Charan",
+      "Badrul Islam",
+      "Jagbir"
+    ],
+    "genres": [
+      "Action",
+      "Biography",
+      "Drama",
+      "Sport"
+    ],
+    "tags": [
+      "wrestler",
+      "commonwealth games",
+      "wrestling",
+      "2000s",
+      "female empowerment"
+    ],
+    "country": [
+      "India"
+    ],
+    "runtime": 161,
+    "reviews_count": 203
+  },
+  {
+    "name": "Inception",
+    "year": 2010,
+    "rating": 8.8,
+    "votes": 1563391,
+    "description": "A thief, who steals corporate secrets through use of dream-sharing technology, is given the inverse task of planting an idea into the mind of a CEO.",
+    "storyline": "Dom Cobb is a skilled thief, the absolute best in the dangerous art of extraction, stealing valuable secrets from deep within the subconscious during the dream state, when the mind is at its most vulnerable. Cobb's rare ability has made him a coveted player in this treacherous new world of corporate espionage, but it has also made him an international fugitive and cost him everything he has ever loved. Now Cobb is being offered a chance at redemption. One last job could give him his life back but only if he can accomplish the impossible - inception. Instead of the perfect heist, Cobb and his team of specialists have to pull off the reverse: their task is not to steal an idea but to plant one. If they succeed, it could be the perfect crime. But no amount of careful planning or expertise can prepare the team for the dangerous enemy that seems to predict their every move. An enemy that only Cobb could have seen coming. Written by Warner Bros. Pictures",
+    "director": [
+      "Christopher Nolan"
+    ],
+    "actors": [
+      "Leonardo DiCaprio",
+      "Joseph Gordon-Levitt",
+      "Ellen Page",
+      "Tom Hardy",
+      "Ken Watanabe",
+      "Dileep Rao",
+      "Cillian Murphy",
+      "Tom Berenger",
+      "Marion Cotillard",
+      "Pete Postlethwaite",
+      "Michael Caine",
+      "Lukas Haas",
+      "Tai-Li Lee",
+      "Claire Geare",
+      "Magnus Nolan"
+    ],
+    "genres": [
+      "Action",
+      "Adventure",
+      "Sci-Fi",
+      "Thriller"
+    ],
+    "tags": [
+      "dream",
+      "subconscious",
+      "ambiguous ending",
+      "thief",
+      "architecture"
+    ],
+    "country": [
+      "USA",
+      "UK"
+    ],
+    "runtime": 148,
+    "reviews_count": 2867
+  },
+  {
+    "name": "The Lord of the Rings: The Fellowship of the Ring",
+    "year": 2001,
+    "rating": 8.8,
+    "votes": 1306557,
+    "description": "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle Earth from the Dark Lord Sauron.",
+    "storyline": "An ancient Ring thought lost for centuries has been found, and through a strange twist in fate has been given to a small Hobbit named Frodo. When Gandalf discovers the Ring is in fact the One Ring of the Dark Lord Sauron, Frodo must make an epic quest to the Cracks of Doom in order to destroy it! However he does not go alone. He is joined by Gandalf, Legolas the elf, Gimli the Dwarf, Aragorn, Boromir and his three Hobbit friends Merry, Pippin and Samwise. Through mountains, snow, darkness, forests, rivers and plains, facing evil and danger at every corner the Fellowship of the Ring must go. Their quest to destroy the One Ring is the only hope for the end of the Dark Lords reign! Written by Paul Twomey &lt;toomsp@hotmail.com&gt;",
+    "director": [
+      "Peter Jackson"
+    ],
+    "actors": [
+      "Alan Howard",
+      "Noel Appleby",
+      "Sean Astin",
+      "Sala Baker",
+      "Sean Bean",
+      "Cate Blanchett",
+      "Orlando Bloom",
+      "Billy Boyd",
+      "Marton Csokas",
+      "Megan Edwards",
+      "Michael Elsworth",
+      "Mark Ferguson",
+      "Ian Holm",
+      "Christopher Lee",
+      "Lawrence Makoare"
+    ],
+    "genres": [
+      "Adventure",
+      "Drama",
+      "Fantasy"
+    ],
+    "tags": [
+      "ring",
+      "quest",
+      "hobbit",
+      "elf",
+      "orc"
+    ],
+    "country": [
+      "New Zealand",
+      "USA"
+    ],
+    "runtime": 178,
+    "reviews_count": 5082
+  },
+  {
+    "name": "Forrest Gump",
+    "year": 1994,
+    "rating": 8.8,
+    "votes": 1340357,
+    "description": "Forrest Gump, while not intelligent, has accidentally been present at many historic moments, but his true love, Jenny Curran, eludes him.",
+    "storyline": "Forrest Gump is a simple man with a low I.Q. but good intentions. He is running through childhood with his best and only friend Jenny. His 'mama' teaches him the ways of life and leaves him to choose his destiny. Forrest joins the army for service in Vietnam, finding new friends called Dan and Bubba, he wins medals, creates a famous shrimp fishing fleet, inspires people to jog, starts a ping-pong craze, creates the smiley, writes bumper stickers and songs, donates to people and meets the president several times. However, this is all irrelevant to Forrest who can only think of his childhood sweetheart Jenny Curran, who has messed up her life. Although in the end all he wants to prove is that anyone can love anyone. Written by aliw135",
+    "director": [
+      "Robert Zemeckis"
+    ],
+    "actors": [
+      "Tom Hanks",
+      "Rebecca Williams",
+      "Sally Field",
+      "Michael Conner Humphreys",
+      "Harold G. Herthum",
+      "George Kelly",
+      "Bob Penny",
+      "John Randall",
+      "Sam Anderson",
+      "Margo Moorer",
+      "Ione M. Telech",
+      "Christine Seabrook",
+      "John Worsham",
+      "Peter Dobson",
+      "Siobhan Fallon Hogan"
+    ],
+    "genres": [
+      "Comedy",
+      "Drama",
+      "Romance"
+    ],
+    "tags": [
+      "vietnam war",
+      "amputee",
+      "war hero",
+      "vietnam",
+      "mother"
+    ],
+    "country": [
+      "USA"
+    ],
+    "runtime": 142,
+    "reviews_count": 1470
+  },
+  {
+    "name": "Fight Club",
+    "year": 1999,
+    "rating": 8.8,
+    "votes": 1432871,
+    "description": "An insomniac office worker, looking for a way to change his life, crosses paths with a devil-may-care soap maker, forming an underground fight club that evolves into something much, much more.",
+    "storyline": "A nameless first person narrator (Edward Norton) attends support groups in attempt to subdue his emotional state and relieve his insomniac state. When he meets Marla (Helena Bonham Carter), another fake attendee of support groups, his life seems to become a little more bearable. However when he associates himself with Tyler (Brad Pitt) he is dragged into an underground fight club and soap making scheme. Together the two men spiral out of control and engage in competitive rivalry for love and power. When the narrator is exposed to the hidden agenda of Tyler's fight club, he must accept the awful truth that Tyler may not be who he says he is. Written by Rhiannon",
+    "director": [
+      "David Fincher"
+    ],
+    "actors": [
+      "Edward Norton",
+      "Brad Pitt",
+      "Meat Loaf",
+      "Zach Grenier",
+      "Richmond Arquette",
+      "David Andrews",
+      "George Maguire",
+      "Eugenie Bondurant",
+      "Helena Bonham Carter",
+      "Christina Cabot",
+      "Sydney 'Big Dawg' Colston",
+      "Rachel Singer",
+      "Christie Cronenweth",
+      "Tim DeZarn",
+      "Ezra Buzzington"
+    ],
+    "genres": [
+      "Drama"
+    ],
+    "tags": [
+      "surprise ending",
+      "fighting",
+      "multiple personality disorder",
+      "dark humor",
+      "anti establishment"
+    ],
+    "country": [
+      "USA",
+      "Germany"
+    ],
+    "runtime": 139,
+    "reviews_count": 3026
+  },
+  {
+    "name": "Star Wars: Episode V - The Empire Strikes Back",
+    "year": 1980,
+    "rating": 8.8,
+    "votes": 894025,
+    "description": "After the rebels have been brutally overpowered by the Empire on their newly established base, Luke Skywalker takes advanced Jedi training with Master Yoda, while his friends are pursued by Darth Vader as part of his plan to capture Luke.",
+    "storyline": "Luke Skywalker, Han Solo, Princess Leia and Chewbacca face attack by the Imperial forces and its AT-AT walkers on the ice planet Hoth. While Han and Leia escape in the Millennium Falcon, Luke travels to Dagobah in search of Yoda. Only with the Jedi master's help will Luke survive when the dark side of the Force beckons him into the ultimate duel with Darth Vader. Written by Jwelch5742",
+    "director": [
+      "Irvin Kershner"
+    ],
+    "actors": [
+      "Mark Hamill",
+      "Harrison Ford",
+      "Carrie Fisher",
+      "Billy Dee Williams",
+      "Anthony Daniels",
+      "David Prowse",
+      "Peter Mayhew",
+      "Kenny Baker",
+      "Frank Oz",
+      "Alec Guinness",
+      "Jeremy Bulloch",
+      "John Hollis",
+      "Jack Purvis",
+      "Des Webb",
+      "Clive Revill"
+    ],
+    "genres": [
+      "Action",
+      "Adventure",
+      "Fantasy",
+      "Sci-Fi"
+    ],
+    "tags": [
+      "rescue",
+      "famous twist",
+      "rebel",
+      "duel",
+      "snowy landscape"
+    ],
+    "country": [
+      "USA"
+    ],
+    "runtime": 124,
+    "reviews_count": 921
+  },
+  {
+    "name": "The Matrix",
+    "year": 1999,
+    "rating": 8.7,
+    "votes": 1289337,
+    "description": "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
+    "storyline": "Thomas A. Anderson is a man living two lives. By day he is an average computer programmer and by night a hacker known as Neo. Neo has always questioned his reality, but the truth is far beyond his imagination. Neo finds himself targeted by the police when he is contacted by Morpheus, a legendary computer hacker branded a terrorist by the government. Morpheus awakens Neo to the real world, a ravaged wasteland where most of humanity have been captured by a race of machines that live off of the humans' body heat and electrochemical energy and who imprison their minds within an artificial reality known as the Matrix. As a rebel against the machines, Neo must return to the Matrix and confront the agents: super-powerful computer programs devoted to snuffing out Neo and the entire human rebellion. Written by redcommander27",
+    "director": [
+      "Lana Wachowski (as The Wachowski Brothers)",
+      "Lilly Wachowski (as The Wachowski Brothers)"
+    ],
+    "actors": [
+      "Keanu Reeves",
+      "Laurence Fishburne",
+      "Carrie-Anne Moss",
+      "Hugo Weaving",
+      "Gloria Foster",
+      "Joe Pantoliano",
+      "Marcus Chong",
+      "Julian Arahanga",
+      "Matt Doran",
+      "Belinda McClory",
+      "Anthony Ray Parker",
+      "Paul Goddard",
+      "Robert Taylor",
+      "David Aston",
+      "Marc Aden Gray"
+    ],
+    "genres": [
+      "Action",
+      "Sci-Fi"
+    ],
+    "tags": [
+      "artificial reality",
+      "simulated reality",
+      "questioning reality",
+      "post apocalypse",
+      "computer"
+    ],
+    "country": [
+      "USA"
+    ],
+    "runtime": 136,
+    "reviews_count": 3693
+  },
+  {
+    "name": "Star Wars: Episode IV - A New Hope",
+    "year": 1977,
+    "rating": 8.7,
+    "votes": 967342,
+    "description": "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a wookiee and two droids to save the galaxy from the Empire's world-destroying battle-station, while also attempting to rescue Princess Leia from the evil Darth Vader.",
+    "storyline": "The Imperial Forces, under orders from cruel Darth Vader, hold Princess Leia hostage in their efforts to quell the rebellion against the Galactic Empire. Luke Skywalker and Han Solo, captain of the Millennium Falcon, work together with the companionable droid duo R2-D2 and C-3PO to rescue the beautiful princess, help the Rebel Alliance and restore freedom and justice to the Galaxy. Written by Jwelch5742",
+    "director": [
+      "George Lucas"
+    ],
+    "actors": [
+      "Mark Hamill",
+      "Harrison Ford",
+      "Carrie Fisher",
+      "Peter Cushing",
+      "Alec Guinness",
+      "Anthony Daniels",
+      "Kenny Baker",
+      "Peter Mayhew",
+      "David Prowse",
+      "Phil Brown",
+      "Shelagh Fraser",
+      "Jack Purvis",
+      "Alex McCrindle",
+      "Eddie Byrne",
+      "Drewe Henley"
+    ],
+    "genres": [
+      "Action",
+      "Adventure",
+      "Fantasy",
+      "Sci-Fi"
+    ],
+    "tags": [
+      "rebellion",
+      "empire",
+      "galactic war",
+      "princess",
+      "droid"
+    ],
+    "country": [
+      "USA"
+    ],
+    "runtime": 121,
+    "reviews_count": 1500
+  },
+  {
+    "name": "Goodfellas",
+    "year": 1990,
+    "rating": 8.7,
+    "votes": 772125,
+    "description": "Henry Hill and his friends work their way up through the mob hierarchy.",
+    "storyline": "Henry Hill might be a small time gangster, who may have taken part in a robbery with Jimmy Conway and Tommy De Vito, two other gangsters who might have set their sights a bit higher. His two partners could kill off everyone else involved in the robbery, and slowly start to think about climbing up through the hierarchy of the Mob. Henry, however, might be badly affected by his partners' success, but will he consider stooping low enough to bring about the downfall of Jimmy and Tommy? Written by Colin Tinto &lt;cst@imdb.com&gt;",
+    "director": [
+      "Martin Scorsese"
+    ],
+    "actors": [
+      "Robert De Niro",
+      "Ray Liotta",
+      "Joe Pesci",
+      "Lorraine Bracco",
+      "Paul Sorvino",
+      "Frank Sivero",
+      "Tony Darrow",
+      "Mike Starr",
+      "Frank Vincent",
+      "Chuck Low",
+      "Frank DiLeo",
+      "Henny Youngman",
+      "Gina Mastrogiacomo",
+      "Catherine Scorsese",
+      "Charles Scorsese"
+    ],
+    "genres": [
+      "Biography",
+      "Crime",
+      "Drama"
+    ],
+    "tags": [
+      "gangster",
+      "organized crime",
+      "mafia",
+      "rise and fall",
+      "cold blooded murder"
+    ],
+    "country": [
+      "USA"
+    ],
+    "runtime": 146,
+    "reviews_count": 1016
+  },
+  {
+    "name": "One Flew Over the Cuckoo's Nest",
+    "year": 1975,
+    "rating": 8.7,
+    "votes": 717570,
+    "description": "A criminal pleads insanity after getting into trouble again and once in the mental institution rebels against the oppressive nurse and rallies up the scared patients.",
+    "storyline": "McMurphy has a criminal past and has once again gotten himself into trouble and is sentenced by the court. To escape labor duties in prison, McMurphy pleads insanity and is sent to a ward for the mentally unstable. Once here, McMurphy both endures and stands witness to the abuse and degradation of the oppressive Nurse Ratched, who gains superiority and power through the flaws of the other inmates. McMurphy and the other inmates band together to make a rebellious stance against the atrocious Nurse. Written by Jacob Oberfrank",
+    "director": [
+      "Milos Forman"
+    ],
+    "actors": [
+      "Michael Berryman",
+      "Peter Brocco",
+      "Dean R. Brooks",
+      "Alonzo Brown",
+      "Scatman Crothers",
+      "Mwako Cumbuka",
+      "Danny DeVito",
+      "William Duell",
+      "Josip Elic",
+      "Lan Fendors",
+      "Louise Fletcher",
+      "Nathan George",
+      "Ken Kenny",
+      "Mel Lambert",
+      "Sydney Lassick"
+    ],
+    "genres": [
+      "Drama"
+    ],
+    "tags": [
+      "mental institution",
+      "1960s",
+      "nurse",
+      "escape",
+      "sadistic psychopath"
+    ],
+    "country": [
+      "USA"
+    ],
+    "runtime": 133,
+    "reviews_count": 778
+  },
+  {
+    "name": "The Lord of the Rings: The Two Towers",
+    "year": 2002,
+    "rating": 8.7,
+    "votes": 1164414,
+    "description": "While Frodo and Sam edge closer to Mordor with the help of the shifty Gollum, the divided fellowship makes a stand against Sauron's new ally, Saruman, and his hordes of Isengard.",
+    "storyline": "While Frodo and Sam, now accompanied by a new guide, continue their hopeless journey towards the land of shadow to destroy the One Ring, each member of the broken fellowship plays their part in the battle against the evil wizard Saruman and his armies of Isengard.",
+    "director": [
+      "Peter Jackson"
+    ],
+    "actors": [
+      "Bruce Allpress",
+      "Sean Astin",
+      "John Bach",
+      "Sala Baker",
+      "Cate Blanchett",
+      "Orlando Bloom",
+      "Billy Boyd",
+      "Jed Brophy",
+      "Sam Comery",
+      "Brad Dourif",
+      "Calum Gittins",
+      "Bernard Hill",
+      "Bruce Hopkins",
+      "Paris Howe Strewe",
+      "Christopher Lee"
+    ],
+    "genres": [
+      "Adventure",
+      "Drama",
+      "Fantasy"
+    ],
+    "tags": [
+      "middle earth",
+      "epic",
+      "ring",
+      "wizard",
+      "evil wizard"
+    ],
+    "country": [
+      "USA",
+      "New Zealand"
+    ],
+    "runtime": 179,
+    "reviews_count": 2424
+  }
+]
