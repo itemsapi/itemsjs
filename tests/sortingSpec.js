@@ -1,15 +1,12 @@
 'use strict';
 
-var should = require('should');
-var expect = require('expect');
-var assert = require('assert');
-var service = require('./../src/lib');
-var sinon = require('sinon')
-var _ = require('lodash');
+const assert = require('assert');
+const service = require('./../src/lib');
+const _ = require('lodash');
 
 describe('aggregations', function() {
 
-  var items = [{
+  const items = [{
     name: 'movie1',
     date: '2018-12-03',
   }, {
@@ -21,11 +18,11 @@ describe('aggregations', function() {
   }, {
     name: 'movie2',
     date: '2018-12-01',
-  }]
+  }];
 
   it('makes items sorting', function test(done) {
 
-    var sortings = {
+    const sortings = {
       name_asc: {
         field: 'name',
         order: 'asc'
@@ -38,22 +35,23 @@ describe('aggregations', function() {
         field: ['date', 'name'],
         order: ['asc', 'asc']
       }
-    }
+    };
 
-    var result = service.sorted_items(items, 'name_asc', sortings);
+    let result = service.sorted_items(items, 'name_asc', sortings);
     assert.deepEqual(_.map(result, 'name'), ['movie1', 'movie2', 'movie3', 'movie7']);
 
-    var result = service.sorted_items(items, 'name_desc', sortings);
+    result = service.sorted_items(items, 'name_desc', sortings);
     assert.deepEqual(_.map(result, 'name'), ['movie1', 'movie2', 'movie3', 'movie7'].reverse());
 
-    var result = service.sorted_items(items, 'date_asc', sortings);
+    result = service.sorted_items(items, 'date_asc', sortings);
     assert.deepEqual(_.map(result, 'name'), ['movie2', 'movie7', 'movie3', 'movie1']);
 
-    var customSort = {
+    const customSort = {
       field: ['date', 'name'],
       order: ['desc', 'desc']
-    }
-    var result = service.sorted_items(items, customSort);
+    };
+
+    result = service.sorted_items(items, customSort);
     assert.deepEqual(_.map(result, 'name'), ['movie1', 'movie3', 'movie7', 'movie2']);
     done();
   });

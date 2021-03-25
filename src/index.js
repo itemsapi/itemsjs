@@ -1,15 +1,22 @@
-var service = require('./lib');
-var _ = require('./../vendor/lodash');
-var helpers = require('./helpers');
-var Fulltext = require('./fulltext');
+const service = require('./lib');
+const helpers = require('./helpers');
+const Fulltext = require('./fulltext');
+const Facets = require('./facets');
 
 module.exports = function itemsjs(items, configuration) {
 
   configuration = configuration || {};
 
+
+  // upsert id to items
+  // throw error in tests if id does not exists
+
   // responsible for full text search over the items
   // it makes inverted index and it is very fast
-  var fulltext = new Fulltext(items, configuration);
+  let fulltext = new Fulltext(items, configuration);
+
+  // index facets
+  const facets = new Facets(items, configuration.aggregations);
 
   return {
     /**
@@ -27,7 +34,7 @@ module.exports = function itemsjs(items, configuration) {
        */
       input.aggregations = helpers.mergeAggregations(configuration.aggregations, input);
 
-      return service.search(items, input, configuration, fulltext);
+      return service.search(items, input, configuration, fulltext, facets);
     },
 
     /**
@@ -59,5 +66,5 @@ module.exports = function itemsjs(items, configuration) {
       items = newItems;
       fulltext = new Fulltext(items, configuration);
     }
-  }
-}
+  };
+};

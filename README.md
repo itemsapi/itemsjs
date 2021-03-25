@@ -173,8 +173,6 @@ Responsible for defining global configuration. Look for full example here - [con
 - **`filters`** filtering items based on specific aggregations i.e. {tags: ['drama' , 'historical']}  
 
 - **`filter`** function responsible for items filtering. The way of working is similar to js [native filter function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter). [See example](/docs/configuration.md)
-
-- **`prefilter`** function which narrows items down in custom way i.e. with filter or slice. [See example](/docs/configuration.md)
   
 - **`isExactSearch`** set to `true` if you want to always show exact search matches. See [lunr stemmer](https://github.com/olivernn/lunr.js/issues/328) and [lunr stopWordFilter](https://github.com/olivernn/lunr.js/issues/233).
 
