@@ -2,13 +2,13 @@
 
 The short list of projects using Itemsjs for powering faceted search:
 
-- Amazon - https://aws-startup-response.github.io/
+- Amazon - https://aws-startup-response.github.io (startups)
 
 - Hermes - https://finance.hermes.com/en/search (documents)
 
-- UNDP - https://www.undp-capacitydevelopment-health.org/en/library/ (publications)
+- UNDP - https://www.undp-capacitydevelopment-health.org/en/library (publications)
 
-- Royal Botanic Garden Edinburgh - https://chileanendemics.rbge.org.uk/search - 
+- Royal Botanic Garden Edinburgh - https://chileanendemics.rbge.org.uk/search (plants) 
 
 - Carnegie Mellon University - https://dig.Cmu.edu/publications (publications)
 
