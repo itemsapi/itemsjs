@@ -7,7 +7,7 @@
 # ItemsJS - search engine in javascript
 
 Full text, faceted, dependency free search engine in javascript.
-Created to perform fast search on small json dataset (up to 1000 elements).
+Created to perform fast search on json dataset (up to 100K items).
 
 ## Demo
 
@@ -16,6 +16,13 @@ Created to perform fast search on small json dataset (up to 1000 elements).
 (by @darkrubyist)
 
 [See another demo examples](/docs/demo.md)
+
+## Use cases
+
+Itemsjs is being used mostly for data classification of companies, products, publications, documents, jobs or plants
+
+The solution has been implemented by people from Amazon, Hermes, Apple, Microsoft, James Cook University, Carnegie Mellon University and more.
+You can find a list of real implementations - [here](/docs/who-use-it.md) 
 
 ## Features
 
