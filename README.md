@@ -30,6 +30,7 @@ You can find a list of real implementations - [here](/docs/who-use-it.md)
 - full text
 - pagination
 - no dependencies (only javascript)
+- working on backend and frontend
 
 ## Getting Started
 
