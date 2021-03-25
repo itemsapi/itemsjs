@@ -33,43 +33,55 @@ const findex = function(items, config) {
 
   items = _.map(items, item => {
 
-    item['id'] = id;
-    ++id;
+    if (!item['id']) {
+      item['id'] = id;
+      ++id;
+    }
 
     return item;
   });
+
+
+  // replace chain with forEach
 
   _.chain(items)
     .map(item => {
 
       fields.forEach(field => {
 
-        if (!item || !item[field]) {
+        //if (!item || !item[field]) {
+        if (!item) {
           return;
         }
 
-        if (!Array.isArray(item[field])) {
-          item[field] = [item[field]];
+        if (!facets['data'][field]) {
+          facets['data'][field] = {};
         }
 
-        item[field].forEach(v => {
+        if (Array.isArray(item[field])) {
+          item[field].forEach(v => {
 
-          if (!item[field]) {
-            return;
-          }
+            if (!item[field]) {
+              return;
+            }
 
-          if (!facets['data'][field]) {
-            facets['data'][field] = {};
-          }
+            if (!facets['data'][field][v]) {
+              facets['data'][field][v] = [];
+            }
+
+            facets['data'][field][v].push(parseInt(item.id));
+          });
+
+        } else {
+
+          const v = item[field];
 
           if (!facets['data'][field][v]) {
             facets['data'][field][v] = [];
           }
 
           facets['data'][field][v].push(parseInt(item.id));
-        });
-
-
+        }
 
       });
 
@@ -78,7 +90,6 @@ const findex = function(items, config) {
     .value();
 
   facets['data'] = _.mapValues(facets['data'], function(values, field) {
-
 
     if (!facets['bits_data'][field]) {
       facets['bits_data'][field] = {};

@@ -1,4 +1,4 @@
-# Who use it
+# Who uses it
 
 The short list of projects using Itemsjs for powering faceted search:
 

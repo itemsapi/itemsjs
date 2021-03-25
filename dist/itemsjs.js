@@ -20053,36 +20053,46 @@ var findex = function findex(items, config) {
   var fields = _.keys(config);
 
   items = _.map(items, function (item) {
-    item['id'] = id;
-    ++id;
+    if (!item['id']) {
+      item['id'] = id;
+      ++id;
+    }
+
     return item;
-  });
+  }); // replace chain with forEach
 
   _.chain(items).map(function (item) {
     fields.forEach(function (field) {
-      if (!item || !item[field]) {
+      //if (!item || !item[field]) {
+      if (!item) {
         return;
       }
 
-      if (!Array.isArray(item[field])) {
-        item[field] = [item[field]];
+      if (!facets['data'][field]) {
+        facets['data'][field] = {};
       }
 
-      item[field].forEach(function (v) {
-        if (!item[field]) {
-          return;
-        }
+      if (Array.isArray(item[field])) {
+        item[field].forEach(function (v) {
+          if (!item[field]) {
+            return;
+          }
 
-        if (!facets['data'][field]) {
-          facets['data'][field] = {};
-        }
+          if (!facets['data'][field][v]) {
+            facets['data'][field][v] = [];
+          }
+
+          facets['data'][field][v].push(parseInt(item.id));
+        });
+      } else {
+        var v = item[field];
 
         if (!facets['data'][field][v]) {
           facets['data'][field][v] = [];
         }
 
         facets['data'][field][v].push(parseInt(item.id));
-      });
+      }
     });
     return item;
   }).value();
