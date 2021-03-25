@@ -1,80 +1,142 @@
 'use strict';
 
-var should = require('should');
-var expect = require('expect');
-var assert = require('assert');
-var service = require('./../src/lib');
+const assert = require('assert');
+const items = require('./fixtures/items.json');
+let itemsjs = require('./../src/index')();
 
-describe('aggregations', function() {
+describe('search', function() {
 
-  var items = [{
-    name: 'movie1',
-    rating: 10,
-    tags: ['a', 'b', 'c', 'd'],
-    actors: ['a', 'b']
-  }, {
-    name: 'movie2',
-    rating: 9,
-    tags: ['a', 'e', 'f'],
-    actors: ['a', 'b']
-  }, {
-    name: 'movie3',
-    rating: 8,
-    tags: ['a', 'c'],
-    actors: ['e']
-  }]
+  const configuration = {
+    searchableFields: ['name', 'category', 'actors', 'name'],
+    aggregations: {
+      tags: {
+        title: 'Tags',
+        conjunction: true,
+      },
+      actors: {
+        title: 'Actors',
+        conjunction: true,
+      },
+      category: {
+        title: 'Category',
+        conjunction: true,
+      }
+    }
+  };
 
-  it('makes search', function test(done) {
-    var result = service.search(items);
-    assert.equal(result.data.items.length, 3);
+  it('index is empty so cannot search', function test(done) {
+
+    try {
+      itemsjs.search();
+    } catch (err) {
+      assert.equal(err.message, 'index first then search');
+    }
+
     done();
   });
 
-  it('makes search with filtering', function test(done) {
-    var result = service.search(items, {
-      filter: function(v) {
-        return v.rating >= 9;
+  it('searches with two filters', function test(done) {
+
+    const itemsjs = require('./../index')(items, configuration);
+
+    const result = itemsjs.search({
+      filters: {
+        tags: ['a'],
+        category: ['drama']
       }
     });
 
     assert.equal(result.data.items.length, 2);
+    assert.equal(result.data.aggregations.tags.buckets[0].doc_count, 2);
+
     done();
   });
 
-  it('makes search with pagination', function test(done) {
-    var result = service.search(items, {
-      per_page: 1
-    });
-    assert.equal(result.data.items.length, 1);
+  it('searches with filter and query', function test(done) {
 
-    var result = service.search(items, {
-      per_page: 1,
-      page: 4
-    });
-    assert.equal(result.data.items.length, 0);
+    const itemsjs = require('./../index')(items, configuration);
 
-    var result = service.search(items, {
-      per_page: 1,
-      page: 3
+    const result = itemsjs.search({
+      filters: {
+        tags: ['a'],
+      },
+      query: 'comedy'
     });
-    assert.equal(result.data.items.length, 1);
+
+    assert.equal(result.data.items.length, 2);
+    assert.equal(result.data.aggregations.tags.buckets[0].doc_count, 2);
+    assert.equal(result.data.aggregations.category.buckets[0].key, 'comedy');
+    assert.equal(result.data.aggregations.category.buckets[0].doc_count, 2);
+
     done();
   });
 
 
-  it('makes search with aggregations', function test(done) {
+  it('makes search with empty filters', function test(done) {
 
-    var result = service.search(items, {
-      aggregations: {
-        tags: {
-          filters: ['e', 'f'],
-        }
+    const itemsjs = require('./../index')(items, configuration);
+
+    const result = itemsjs.search({
+      filters: {
       }
     });
-    assert.equal(result.data.items.length, 1);
-    done();
 
+    assert.equal(result.data.items.length, 4);
+
+    done();
   });
 
+  it('makes search with not filters', function test(done) {
 
+    const itemsjs = require('./../index')(items, configuration);
+
+    const result = itemsjs.search({
+      not_filters: {
+        tags: ['c']
+      }
+    });
+
+    assert.equal(result.data.items.length, 1);
+
+    done();
+  });
+
+  it('makes search with many not filters', function test(done) {
+
+    const itemsjs = require('./../index')(items, configuration);
+
+    const result = itemsjs.search({
+      not_filters: {
+        tags: ['c', 'e']
+      }
+    });
+
+    assert.equal(result.data.items.length, 0);
+
+    done();
+  });
+});
+
+
+describe('no configuration', function() {
+
+  const configuration = {
+    aggregations: {
+    }
+  };
+
+  before(function(done) {
+    itemsjs = require('./../index')(items, configuration);
+    done();
+  });
+
+  it('searches with two filters', function test(done) {
+
+    const result = itemsjs.search({
+    });
+
+    assert.equal(result.data.items.length, 4);
+
+    done();
+  });
 });

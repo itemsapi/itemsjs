@@ -1,61 +1,242 @@
-var _ = require('./../vendor/lodash');
+const _ = require('./../vendor/lodash');
+const FastBitSet = require('fastbitset');
 
-module.exports.includes = function(items, filters) {
-  return !filters || _.every(filters, (val) => {
-    // Do not match substring when using filters
-    if (typeof(items) === 'string' || items instanceof String)
-      return val === items
-    else
-      return _.includes(items, val); // If collection is a string, it's checked for a substring of value
-  });
-}
-
-/**
- * not sure if mathematically correct
- */
-module.exports.includes_any = function(items, filters) {
-
-  //return !filters || (_.isArray(filters) && !filters.length) || _.some(filters, (val) => {
-  return !filters || (filters instanceof Array && filters.length === 0) || _.some(filters, (val) => {
-    // Do not match substring when using filters
-    if (typeof(items) === 'string' || items instanceof String)
-      return val === items
-    else
-      return _.includes(items, val); // If collection is a string, it's checked for a substring of value
-  });
-}
-
-/**
- * if included particular elements (not array)
- */
-module.exports.includes_any_element = function(items, filters) {
-
-  return _.some(filters, (val) => {
-    // Do not match substring when using filters
-    if (typeof(items) === 'string' || items instanceof String)
-      return val === items
-    else
-      return _.includes(items, val); // If collection is a string, it's checked for a substring of value
-  });
-}
-
-module.exports.intersection = function(a, b) {
-  if (!b) {
-    return a;
-  }
-  return _.intersection(a, _.flatten(b));
-}
-
-var clone = function(val) {
+const clone = function(val) {
 
   try {
     return JSON.parse(JSON.stringify(val));
   } catch (e) {
     return val;
   }
-}
+};
 
-module.exports.mergeAggregations = function(aggregations, input) {
+const humanize = function (str) {
+
+  return str
+    .replace(/^[\s_]+|[\s_]+$/g, '')
+    .replace(/[_\s]+/g, ' ')
+    .replace(/^[a-z]/, function(m) {
+      return m.toUpperCase();
+    });
+};
+
+const findex = function(items, config) {
+
+  const facets = {
+    data: {},
+    bits_data: {},
+    bits_data_temp: {},
+  };
+
+  let id = 1;
+  const fields = _.keys(config);
+
+  items = _.map(items, item => {
+
+    item['id'] = id;
+    ++id;
+
+    return item;
+  });
+
+  _.chain(items)
+    .map(item => {
+
+      fields.forEach(field => {
+
+        if (!item || !item[field]) {
+          return;
+        }
+
+        if (!Array.isArray(item[field])) {
+          item[field] = [item[field]];
+        }
+
+        item[field].forEach(v => {
+
+          if (!item[field]) {
+            return;
+          }
+
+          if (!facets['data'][field]) {
+            facets['data'][field] = {};
+          }
+
+          if (!facets['data'][field][v]) {
+            facets['data'][field][v] = [];
+          }
+
+          facets['data'][field][v].push(parseInt(item.id));
+        });
+
+
+
+      });
+
+      return item;
+    })
+    .value();
+
+  facets['data'] = _.mapValues(facets['data'], function(values, field) {
+
+
+    if (!facets['bits_data'][field]) {
+      facets['bits_data'][field] = {};
+      facets['bits_data_temp'][field] = {};
+    }
+
+    //console.log(values);
+    return _.mapValues(values, function(indexes, filter) {
+
+      const sorted_indexes = _.sortBy(indexes);
+      facets['bits_data'][field][filter] = new FastBitSet(sorted_indexes);
+      return sorted_indexes;
+    });
+  });
+
+  return facets;
+};
+
+/**
+ * it calculates new indexes for each facet group
+ * @TODO config should be in filters data already
+ */
+const combination = function(facets_data, input, config) {
+
+  const output = {};
+
+  const filters_array = _.map(input.filters, function(filter, key) {
+    return {
+      key: key,
+      values: filter,
+      conjunction: config[key].conjunction !== false,
+    };
+  });
+
+  filters_array.sort(function(a, b) {
+    return a.conjunction > b.conjunction ? 1 : -1;
+  });
+
+  // @TODO we could forEach here only by list of keys
+  // @TODO we don't need full  facets_data. filters_data should be enough
+  _.mapValues(facets_data, function(values, key) {
+
+    _.map(filters_array, function(object) {
+
+      const filters = object.values;
+      const field = object.key;
+
+      filters.forEach(filter => {
+
+        let result;
+
+        if ((config[key].conjunction === false && key !== field) || config[key].conjunction !== false) {
+
+          if (!output[key]) {
+            result = facets_data[field][filter];
+          } else {
+            if (config[field].conjunction !== false) {
+              result = output[key].new_intersection(facets_data[field][filter]);
+            } else {
+              result = output[key].new_union(facets_data[field][filter]);
+            }
+          }
+        }
+
+        if (result) {
+          output[key] = result;
+        }
+      });
+    });
+  });
+
+  return output;
+};
+
+/**
+ * calculates ids for facets
+ * if there is no facet input then return null to not save resources for OR calculation
+ * null means facets haven't crossed searched items
+ */
+const facets_ids = function(facets_data, filters) {
+
+  let output = new FastBitSet([]);
+  let i = 0;
+
+  _.mapValues(filters, function(filters, field) {
+
+    //console.log(facets_data);
+
+    filters.forEach(filter => {
+
+      ++i;
+      //output = RoaringBitmap32.or(output, facets_data[field][filter]);
+
+      //console.log(facets_data[field][filter]);
+
+      output = output.new_union(facets_data[field][filter]);
+    });
+  });
+
+  if (i === 0) {
+    return null;
+  }
+
+  return output;
+};
+
+const getBuckets = function(data, input, aggregations) {
+
+  let position = 1;
+
+  return _.mapValues(data['bits_data_temp'], (v, k) => {
+
+    let order;
+    let sort;
+    let size;
+
+    if (aggregations[k]) {
+      order = aggregations[k].order;
+      sort = aggregations[k].sort;
+      size = aggregations[k].size;
+    }
+
+    let buckets = _.chain(v)
+      .toPairs().map(v2 => {
+
+        let filters = [];
+
+        if (input && input.filters && input.filters[k]) {
+          filters = input.filters[k];
+        }
+
+        return {
+          key: v2[0],
+          doc_count: v2[1].array().length,
+          selected: filters.indexOf(v2[0]) !== -1
+        };
+      })
+      .value();
+
+    if (sort === 'term') {
+      buckets = _.orderBy(buckets, ['selected', 'key'], ['desc', order || 'asc']);
+    } else {
+      buckets = _.orderBy(buckets, ['selected', 'doc_count', 'key'], ['desc', order || 'desc', 'asc']);
+    }
+
+    buckets = buckets.slice(0, size || 10);
+
+    return {
+      name: k,
+      title: humanize(k),
+      position: position++,
+      buckets: buckets
+    };
+
+  });
+};
+
+const mergeAggregations = function(aggregations, input) {
 
   return _.mapValues(clone(aggregations), (val, key) => {
 
@@ -63,14 +244,14 @@ module.exports.mergeAggregations = function(aggregations, input) {
       val.field = key;
     }
 
-    var filters = [];
+    let filters = [];
     if (input.filters && input.filters[key]) {
       filters = input.filters[key];
     }
 
     val.filters = filters;
 
-    var not_filters = [];
+    let not_filters = [];
     if (input.not_filters && input.not_filters[key]) {
       not_filters = input.not_filters[key];
     }
@@ -84,71 +265,12 @@ module.exports.mergeAggregations = function(aggregations, input) {
 
     return val;
   });
-}
+};
 
-/**
- * should be moved to the new facet class
- */
-var is_conjunctive_agg = function(aggregation) {
-  return aggregation.conjunction !== false;
-}
-
-var is_disjunctive_agg = function(aggregation) {
-  return aggregation.conjunction === false;
-}
-
-var is_not_filters_agg = function(aggregation) {
-  return aggregation.not_filters instanceof Array && aggregation.not_filters.length > 0;
-}
-
-var is_empty_agg = function(aggregation) {
-  return aggregation.type === 'is_empty';
-}
-
-var conjunctive_field = function(set, filters) {
-  return module.exports.includes(set, filters);
-}
-
-var disjunctive_field = function(set, filters) {
-  return module.exports.includes_any(set, filters);
-}
-
-var not_filters_field = function(set, filters) {
-  return !module.exports.includes_any_element(set, filters);
-}
-
-var check_empty_field = function(set, filters) {
-
-  var output = ['not_empty'];
-
-  if (set === '' || set === undefined || set === null || (set instanceof Array && set.length === 0)) {
-
-    //return true;
-    output = ['empty'];
-  }
-
-  // check also if filters is not empty array
-  if (filters && !module.exports.includes(output, filters)) {
-    return false;
-  }
-
-  return output;
-}
-
-/*var empty_field = function(set, filters) {
-  if (set === undefined || set === null || (set instanceof Array && set.length === 0)) {
-    return true;
-  }
-
-  return false;
-}*/
-
-module.exports.is_conjunctive_agg = is_conjunctive_agg;
-module.exports.is_disjunctive_agg = is_disjunctive_agg;
-module.exports.is_not_filters_agg = is_not_filters_agg;
-module.exports.is_empty_agg = is_empty_agg;
-
-module.exports.conjunctive_field = conjunctive_field;
-module.exports.disjunctive_field = disjunctive_field;
-module.exports.not_filters_field = not_filters_field;
-module.exports.check_empty_field = check_empty_field;
+module.exports.facets_ids = facets_ids;
+module.exports.humanize = humanize;
+module.exports.combination = combination;
+module.exports.index = findex;
+module.exports.getBuckets = getBuckets;
+module.exports.getFacets = getBuckets;
+module.exports.mergeAggregations = mergeAggregations;

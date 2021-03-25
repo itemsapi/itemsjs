@@ -1,12 +1,11 @@
 'use strict';
 
-var assert = require('assert');
-var Fulltext = require('./../src/fulltext');
-var _ = require('lodash');
+const assert = require('assert');
+const Fulltext = require('./../src/fulltext');
 
 describe('fulltext', function() {
 
-  var items = [{
+  const items = [{
     name: 'Godfather',
     tags: ['mafia', 'crime'],
   }, {
@@ -17,14 +16,14 @@ describe('fulltext', function() {
     tags: ['running', 'vietnam'],
   }];
 
-  var specialItems = [
-    {"name": "elation"},
-    {"name": "source"}
- ]
+  const specialItems = [
+    {'name': 'elation'},
+    {'name': 'source'}
+  ];
 
   it('checks search', function test(done) {
 
-    var fulltext = new Fulltext(items);
+    const fulltext = new Fulltext(items);
     assert.equal(fulltext.search('club').length, 1);
     assert.equal(fulltext.search('gump').length, 1);
     assert.equal(fulltext.search('forrest gump').length, 1);
@@ -39,7 +38,7 @@ describe('fulltext', function() {
 
   it('checks search on another fields', function test(done) {
 
-    var fulltext = new Fulltext(items, {
+    const fulltext = new Fulltext(items, {
       searchableFields: ['name', 'tags']
     });
     assert.equal(fulltext.search('vietnam').length, 1);
@@ -51,7 +50,7 @@ describe('fulltext', function() {
 
 
   it('makes search stepping through characters', function test(done) {
-    var fulltext = new Fulltext(specialItems, {
+    const fulltext = new Fulltext(specialItems, {
       searchableFields: ['name'],
       isExactSearch: true
     });
@@ -68,6 +67,17 @@ describe('fulltext', function() {
     assert.equal(fulltext.search('sour').length, 1);
     assert.equal(fulltext.search('sourc').length, 1);
     assert.equal(fulltext.search('source').length, 1);
+
+    done();
+  });
+
+
+  it('returns internal ids', function test(done) {
+
+    const fulltext = new Fulltext(items);
+    assert.deepEqual(fulltext.internal_ids(), [1, 2, 3]);
+    assert.deepEqual(fulltext.bits_ids().array(), [1, 2, 3]);
+    assert.deepEqual(fulltext.get_item(1).name, 'Godfather');
 
     done();
   });

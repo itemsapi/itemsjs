@@ -1,21 +1,24 @@
 {
   "name": "itemsjs",
-  "version": "1.0.49",
+  "version": "2.0.0-alpha.1",
   "description": "Created to perform fast search on small json dataset (up to 1000 elements).",
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha tests/*",
+    "lint": "eslint \"**/*.js\" --ext js",
+    "lint:fix": "eslint \"**/*.js\" --ext js --fix",
     "browserify": "browserify index.js -v -s itemsjs -o dist/itemsjs.js",
     "minify": "minify dist/itemsjs.js -o dist/itemsjs.min.js",
     "dist": "npm run browserify && npm run minify",
-    "lodash": "lodash include=some,forEach,map,mapKeys,mapValues,every,includes,intersection,filter,keys,flatten,transform,orderBy -o lib/lodash.js -p",
+    "lodash": "lodash include=map,mapKeys,mapValues,intersection,chain,sortBy,toPairs,orderBy -o vendor/lodash.js -p",
     "prepublishOnly": "npm run build",
     "build:cjs": "babel src -d lib",
     "build": "npm run build:cjs && npm run dist"
   },
-  "author": "Matt Rzepa",
+  "author": "Mateusz Rzepa",
   "license": "Apache-2.0",
   "dependencies": {
+    "fastbitset": "^0.4.0",
     "lodash": "^4.17.4",
     "lunr": "^1.0.0"
   },
@@ -26,11 +29,10 @@
     "babel-minify": "^0.2.0",
     "babelify": "^9.0.0",
     "browserify": "^14.3.0",
+    "eslint": "^7.22.0",
     "expect": "^1.20.2",
     "lodash-cli": "^4.17.4",
-    "mocha": "^5.2.0",
-    "should": "^11.2.1",
-    "sinon": "^2.1.0"
+    "mocha": "^5.2.0"
   },
   "browserify": {
     "transform": [
@@ -49,13 +51,11 @@
   "keywords": [
     "full",
     "text",
+    "fulltext",
     "search",
-    "faceted",
-    "search",
+    "faceted search",
     "javascript",
-    "search",
-    "engine",
-    "json"
+    "search engine"
   ],
   "bugs": {
     "url": "https://github.com/itemsapi/itemsjs/issues"
