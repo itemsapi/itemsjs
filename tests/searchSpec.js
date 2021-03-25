@@ -17,6 +17,14 @@ describe('search', function() {
         title: 'Actors',
         conjunction: true,
       },
+      year: {
+        title: 'Year',
+        conjunction: true,
+      },
+      in_cinema: {
+        title: 'Is played in Cinema',
+        conjunction: true,
+      },
       category: {
         title: 'Category',
         conjunction: true,
@@ -32,6 +40,30 @@ describe('search', function() {
       assert.equal(err.message, 'index first then search');
     }
 
+    done();
+  });
+
+  it('searches no params', function test(done) {
+
+    const itemsjs = require('./../index')(items, configuration);
+
+    const result = itemsjs.search({
+    });
+
+    assert.equal(result.data.items.length, 4);
+    assert.deepEqual(result.data.items[0].category, 'drama');
+    assert.deepEqual(result.data.items[0].year, 1995);
+    assert.deepEqual(result.data.items[0].in_cinema, false);
+
+
+    assert.deepEqual(result.data.items[0].in_cinema, false);
+    assert.equal(result.data.aggregations.in_cinema.buckets[0].doc_count, 3);
+    assert.equal(result.data.aggregations.in_cinema.buckets[1].doc_count, 1);
+    assert.equal(result.data.aggregations.in_cinema.buckets.length, 2);
+
+    //console.log(result.data.aggregations.category);
+    //console.log(result.data.aggregations.in_cinema);
+    //console.log(result.data.aggregations.year);
     done();
   });
 

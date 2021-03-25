@@ -4,6 +4,8 @@
     "name": "movie1",
     "tags": ["a", "b", "c", "d"],
     "actors": ["john", "alex"],
+    "year": 1995,
+    "in_cinema": false,
     "category": "drama"
   },
   {
@@ -11,6 +13,8 @@
     "name": "movie2",
     "tags": ["a", "e", "f"],
     "actors": ["john", "brad"],
+    "year": 1996,
+    "in_cinema": false,
     "category": "comedy"
   },
   {
@@ -18,6 +22,8 @@
     "name": "movie3",
     "tags": ["a", "c"],
     "actors": ["jeff"],
+    "year": 1994,
+    "in_cinema": false,
     "category": "comedy"
   },
   {
@@ -25,6 +31,8 @@
     "name": "movie4",
     "tags": ["c", "a", "z"],
     "actors": ["jean"],
+    "year": 1993,
+    "in_cinema": true,
     "category": "drama"
   }
 ]
