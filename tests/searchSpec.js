@@ -139,4 +139,24 @@ describe('no configuration', function() {
 
     done();
   });
+
+  it('searches with filter', function test(done) {
+
+    const itemsjs = require('./../index')(items, configuration);
+
+    let result = itemsjs.search({
+      filter: function() {
+        return false;
+      }
+    });
+
+    assert.equal(result.data.items.length, 0);
+
+    result = itemsjs.search({
+    });
+
+    assert.equal(result.data.items.length, 4);
+    done();
+  });
+
 });

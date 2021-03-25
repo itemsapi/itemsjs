@@ -34,6 +34,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
     items = items.filter(input.filter);
     query_ids = new FastBitSet(items.map(v => v.id));
   }
+
   filter_time = new Date().getTime() - filter_time;
 
   let facets_time = new Date().getTime();
@@ -44,7 +45,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
 
   let _ids_bitmap = fulltext.bits_ids();
 
-  if (input.query) {
+  if (input.query || input.filter instanceof Function) {
     _ids_bitmap = query_ids;
   }
 
@@ -176,6 +177,47 @@ module.exports.similar = function(items, id, options) {
     },
     data: {
       items: sorted_items.slice((page - 1) * per_page, page * per_page),
+    }
+  };
+};
+
+
+/**
+ * returns list of elements in specific facet
+ * useful for autocomplete or list all aggregation options
+ */
+module.exports.aggregation = function (items, input, configuration, fulltext, facets) {
+  const per_page = input.per_page || 10;
+  const page = input.page || 1;
+
+  //console.log(configuration);
+  //console.log(input);
+  if (input.name && (!configuration.aggregations || !configuration.aggregations[input.name])) {
+    throw new Error('Please define aggregation "'.concat(input.name, '" in config'));
+  }
+
+  const search_input = helpers.clone(input);
+
+  search_input.page = 1;
+  search_input.per_page = 0;
+
+  if (!input.name) {
+    throw new Error('field name is required');
+  }
+
+  configuration.aggregations[input.name].size = 10000;
+
+  const result = module.exports.search(items, search_input, configuration, fulltext, facets);
+  const buckets = result.data.aggregations[input.name].buckets;
+
+  return {
+    pagination: {
+      per_page: per_page,
+      page: page,
+      total: buckets.length
+    },
+    data: {
+      buckets: buckets.slice((page - 1) * per_page, page * per_page)
     }
   };
 };

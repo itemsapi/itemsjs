@@ -54,8 +54,7 @@ module.exports = function itemsjs(items, configuration) {
      * page
      */
     aggregation: function(input) {
-
-      return service.aggregation(items, input, configuration.aggregations);
+      return service.aggregation(items, input, configuration, fulltext, facets);
     },
 
     /**

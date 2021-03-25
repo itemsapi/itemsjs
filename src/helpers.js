@@ -268,6 +268,7 @@ const mergeAggregations = function(aggregations, input) {
 };
 
 module.exports.facets_ids = facets_ids;
+module.exports.clone = clone;
 module.exports.humanize = humanize;
 module.exports.combination = combination;
 module.exports.index = findex;
