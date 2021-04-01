@@ -23,7 +23,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
     items = fulltext.search(input.query);
     search_time = new Date().getTime() - search_start_time;
 
-    query_ids = new FastBitSet(items.map(v => v.id));
+    query_ids = new FastBitSet(items.map(v => v._id));
   }
 
   /**
@@ -32,7 +32,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
   let filter_time = new Date().getTime();
   if (input.filter instanceof Function) {
     items = items.filter(input.filter);
-    query_ids = new FastBitSet(items.map(v => v.id));
+    query_ids = new FastBitSet(items.map(v => v._id));
   }
 
   filter_time = new Date().getTime() - filter_time;
@@ -67,8 +67,8 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
   const new_items_indexes = filtered_indexes.slice((page - 1) * per_page, page * per_page);
   let new_items;
 
-  new_items = new_items_indexes.map(id => {
-    return fulltext.get_item(id);
+  new_items = new_items_indexes.map(_id => {
+    return fulltext.get_item(_id);
   });
 
   /**

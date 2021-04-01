@@ -28,14 +28,14 @@ const findex = function(items, config) {
     bits_data_temp: {},
   };
 
-  let id = 1;
+  let i = 1;
   const fields = _.keys(config);
 
   items = _.map(items, item => {
 
-    if (!item['id']) {
-      item['id'] = id;
-      ++id;
+    if (!item['_id']) {
+      item['_id'] = i;
+      ++i;
     }
 
     return item;
@@ -69,10 +69,10 @@ const findex = function(items, config) {
               facets['data'][field][v] = [];
             }
 
-            facets['data'][field][v].push(parseInt(item.id));
+            facets['data'][field][v].push(parseInt(item._id));
           });
 
-        } else {
+        } else if (typeof item[field] !== 'undefined') {
 
           const v = item[field];
 
@@ -80,7 +80,7 @@ const findex = function(items, config) {
             facets['data'][field][v] = [];
           }
 
-          facets['data'][field][v].push(parseInt(item.id));
+          facets['data'][field][v].push(parseInt(item._id));
         }
 
       });

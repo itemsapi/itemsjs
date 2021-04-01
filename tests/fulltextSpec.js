@@ -16,6 +16,20 @@ describe('fulltext', function() {
     tags: ['running', 'vietnam'],
   }];
 
+  const items_with_ids = [{
+    id: 10,
+    name: 'Godfather',
+    tags: ['mafia', 'crime'],
+  }, {
+    id: 20,
+    name: 'Fight club',
+    tags: ['dark humor', 'anti establishment'],
+  }, {
+    id: 30,
+    name: 'Forrest Gump',
+    tags: ['running', 'vietnam'],
+  }];
+
   const specialItems = [
     {'name': 'elation'},
     {'name': 'source'}
@@ -29,7 +43,24 @@ describe('fulltext', function() {
     assert.equal(fulltext.search('forrest gump').length, 1);
     assert.equal(fulltext.search('forrest GUMP').length, 1);
     assert.equal(fulltext.search('gump')[0].name, 'Forrest Gump');
-    assert.equal(fulltext.search('gump')[0].id, 3);
+    assert.equal(fulltext.search('gump')[0]._id, 3);
+    assert.equal(fulltext.search('gump')[0].id, undefined);
+    assert.equal(fulltext.search('titanic').length, 0);
+    assert.equal(fulltext.search().length, 3);
+
+    done();
+  });
+
+  it('checks search with defined id\'s', function test(done) {
+
+    const fulltext = new Fulltext(items_with_ids);
+    assert.equal(fulltext.search('club').length, 1);
+    assert.equal(fulltext.search('gump').length, 1);
+    assert.equal(fulltext.search('forrest gump').length, 1);
+    assert.equal(fulltext.search('forrest GUMP').length, 1);
+    assert.equal(fulltext.search('gump')[0].name, 'Forrest Gump');
+    assert.equal(fulltext.search('gump')[0]._id, 3);
+    assert.equal(fulltext.search('gump')[0].id, 30);
     assert.equal(fulltext.search('titanic').length, 0);
     assert.equal(fulltext.search().length, 3);
 

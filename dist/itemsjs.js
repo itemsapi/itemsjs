@@ -19951,7 +19951,7 @@ var Fulltext = function Fulltext(items, config) {
       self.field(field);
     });
 
-    this.ref('id');
+    this.ref('_id');
     /**
      * Remove the stemmer and stopWordFilter from the pipeline
      * stemmer: https://github.com/olivernn/lunr.js/issues/328
@@ -19974,20 +19974,14 @@ var Fulltext = function Fulltext(items, config) {
     _this._ids.push(i);
 
     item._id = i;
-
-    if (!item.id) {
-      item.id = i;
-    }
-
-    ++i;
+    ++i; //console.log(item);
 
     _this.idx.add(item);
-  }); //this._bits_ids = new RoaringBitmap32(this._ids);
-
+  });
 
   this._bits_ids = new FastBitSet(this._ids);
   this.store = _.mapKeys(items, function (doc) {
-    return doc.id;
+    return doc._id;
   });
 };
 
@@ -20002,8 +19996,8 @@ Fulltext.prototype = {
 
     return this._bits_ids;
   },
-  get_item: function get_item(id) {
-    return this._items_map[id];
+  get_item: function get_item(_id) {
+    return this._items_map[_id];
   },
   search: function search(query) {
     var _this2 = this;
@@ -20013,8 +20007,7 @@ Fulltext.prototype = {
     }
 
     return _.map(this.idx.search(query), function (val) {
-      var item = _this2.store[val.ref]; //delete item.id;
-
+      var item = _this2.store[val.ref];
       return item;
     });
   }
@@ -20048,14 +20041,14 @@ var findex = function findex(items, config) {
     bits_data: {},
     bits_data_temp: {}
   };
-  var id = 1;
+  var i = 1;
 
   var fields = _.keys(config);
 
   items = _.map(items, function (item) {
-    if (!item['id']) {
-      item['id'] = id;
-      ++id;
+    if (!item['_id']) {
+      item['_id'] = i;
+      ++i;
     }
 
     return item;
@@ -20082,16 +20075,16 @@ var findex = function findex(items, config) {
             facets['data'][field][v] = [];
           }
 
-          facets['data'][field][v].push(parseInt(item.id));
+          facets['data'][field][v].push(parseInt(item._id));
         });
-      } else {
+      } else if (typeof item[field] !== 'undefined') {
         var v = item[field];
 
         if (!facets['data'][field][v]) {
           facets['data'][field][v] = [];
         }
 
-        facets['data'][field][v].push(parseInt(item.id));
+        facets['data'][field][v].push(parseInt(item._id));
       }
     });
     return item;
@@ -20365,7 +20358,7 @@ module.exports.search = function (items, input, configuration, fulltext, facets)
     items = fulltext.search(input.query);
     search_time = new Date().getTime() - search_start_time;
     query_ids = new FastBitSet(items.map(function (v) {
-      return v.id;
+      return v._id;
     }));
   }
   /**
@@ -20378,7 +20371,7 @@ module.exports.search = function (items, input, configuration, fulltext, facets)
   if (input.filter instanceof Function) {
     items = items.filter(input.filter);
     query_ids = new FastBitSet(items.map(function (v) {
-      return v.id;
+      return v._id;
     }));
   }
 
@@ -20410,8 +20403,8 @@ module.exports.search = function (items, input, configuration, fulltext, facets)
   var filtered_indexes = filtered_indexes_bitmap.array();
   var new_items_indexes = filtered_indexes.slice((page - 1) * per_page, page * per_page);
   var new_items;
-  new_items = new_items_indexes.map(function (id) {
-    return fulltext.get_item(id);
+  new_items = new_items_indexes.map(function (_id) {
+    return fulltext.get_item(_id);
   });
   /**
    * sorting items

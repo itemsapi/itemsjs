@@ -20,7 +20,7 @@ const Fulltext = function(items, config) {
     _.forEach(config.searchableFields, function(field) {
       self.field(field);
     });
-    this.ref('id');
+    this.ref('_id');
 
     /**
      * Remove the stemmer and stopWordFilter from the pipeline
@@ -38,24 +38,20 @@ const Fulltext = function(items, config) {
   this._ids = [];
 
   _.map(items, (item) => {
-
     this._items_map[i] = item;
     this._ids.push(i);
     item._id = i;
-
-    if (!item.id) {
-      item.id = i;
-    }
-
     ++i;
+
+    //console.log(item);
+
     this.idx.add(item);
   });
 
-  //this._bits_ids = new RoaringBitmap32(this._ids);
   this._bits_ids = new FastBitSet(this._ids);
 
   this.store = _.mapKeys(items, (doc) => {
-    return doc.id;
+    return doc._id;
   });
 };
 
@@ -74,8 +70,8 @@ Fulltext.prototype = {
     return this._bits_ids;
   },
 
-  get_item: function(id) {
-    return this._items_map[id];
+  get_item: function(_id) {
+    return this._items_map[_id];
   },
 
   search: function(query) {
@@ -84,7 +80,6 @@ Fulltext.prototype = {
     }
     return _.map(this.idx.search(query), (val) => {
       const item = this.store[val.ref];
-      //delete item.id;
       return item;
     });
   }
