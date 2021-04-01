@@ -10,7 +10,7 @@ The short list of projects using Itemsjs for powering faceted search:
 
 - Royal Botanic Garden Edinburgh - https://chileanendemics.rbge.org.uk/search (plants) 
 
-- Carnegie Mellon University - https://dig.Cmu.edu/publications (publications)
+- Carnegie Mellon University - https://dig.cmu.edu/publications (publications)
 
 - James Cook University - https://pacelf.github.io/#/documents (documents)
 
