@@ -12,11 +12,15 @@ const Facets = function(items, config) {
   this.config = config;
   this.facets = helpers.index(items, config);
 
+  this._items_map = {};
   this._ids = [];
 
   let i = 1;
   _.map(items, (item) => {
-    this._ids.push(i++);
+    this._ids.push(i);
+    this._items_map[i] = item;
+    item._id = i;
+    ++i;
   });
   this._bits_ids = new FastBitSet(this._ids);
 };
@@ -38,10 +42,8 @@ Facets.prototype = {
     return this.facets;
   },
 
-  reindex: function() {
-    this.facets = helpers.index(this.items, this.config);
-
-    return this.facets;
+  get_item: function(_id) {
+    return this._items_map[_id];
   },
 
   /*

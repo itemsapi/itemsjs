@@ -17,29 +17,17 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
   let query_ids;
   // all ids bitmap
   let filtered_indexes_bitmap = facets.bits_ids();
+  let _ids;
 
   if (input._ids) {
     query_ids = new FastBitSet(input._ids);
-  } else if (input.query) {
+  } else if (input.query || input.filter) {
 
     const search_start_time = new Date().getTime();
-    items = fulltext.search(input.query);
+    _ids = fulltext.search(input.query, input.filter);
     search_time = new Date().getTime() - search_start_time;
-    query_ids = new FastBitSet(items.map(v => v._id));
+    query_ids = new FastBitSet(_ids);
   }
-
-  /**
-   * making a items filtering after search and before faceting
-   */
-  let filter_time = new Date().getTime();
-
-  // @TODO make it optional
-  if (input.filter instanceof Function) {
-    items = items.filter(input.filter);
-    query_ids = new FastBitSet(items.map(v => v._id));
-  }
-
-  filter_time = new Date().getTime() - filter_time;
 
   let facets_time = new Date().getTime();
   const facet_result = facets.search(input, {
@@ -48,6 +36,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
   facets_time = new Date().getTime() - facets_time;
 
   if (input._ids || input.query || input.filter instanceof Function) {
+  //if (query_ids) {
     filtered_indexes_bitmap = query_ids;
   }
 
@@ -67,7 +56,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
   let new_items;
 
   new_items = new_items_indexes.map(_id => {
-    return fulltext.get_item(_id);
+    return facets.get_item(_id);
   });
 
   /**
@@ -93,7 +82,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
     timings: {
       total: total_time,
       facets: facets_time,
-      filter: filter_time,
+      //filter: filter_time,
       search: search_time,
       sorting: sorting_time
     },
