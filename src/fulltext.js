@@ -32,7 +32,7 @@ const Fulltext = function(items, config) {
       this.pipeline.remove(lunr.stopWordFilter);
     }
   });
-  //var items2 = _.clone(items)
+
   let i = 1;
   this._items_map = {};
   this._ids = [];
@@ -43,12 +43,8 @@ const Fulltext = function(items, config) {
     item._id = i;
     ++i;
 
-    //console.log(item);
-
     this.idx.add(item);
   });
-
-  this._bits_ids = new FastBitSet(this._ids);
 
   this.store = _.mapKeys(items, (doc) => {
     return doc._id;
@@ -59,15 +55,6 @@ Fulltext.prototype = {
 
   internal_ids: function() {
     return this._ids;
-  },
-
-  bits_ids: function(ids) {
-
-    if (ids) {
-      return new FastBitSet(ids);
-    }
-
-    return this._bits_ids;
   },
 
   get_item: function(_id) {

@@ -20,7 +20,8 @@
   "dependencies": {
     "fastbitset": "^0.4.0",
     "lodash": "^4.17.4",
-    "lunr": "^1.0.0"
+    "lunr": "^1.0.0",
+    "minisearch": "^3.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",

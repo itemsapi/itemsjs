@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const helpers = require('./helpers');
+const FastBitSet = require('fastbitset');
 
 /**
  * responsible for making faceted search
@@ -10,12 +11,27 @@ const Facets = function(items, config) {
   this.items = items;
   this.config = config;
   this.facets = helpers.index(items, config);
+
+  this._ids = [];
+
+  let i = 1;
+  _.map(items, (item) => {
+    this._ids.push(i++);
+  });
+  this._bits_ids = new FastBitSet(this._ids);
 };
 
 Facets.prototype = {
 
   items: function() {
     return this.items;
+  },
+
+  bits_ids: function(ids) {
+    if (ids) {
+      return new FastBitSet(ids);
+    }
+    return this._bits_ids;
   },
 
   index: function() {

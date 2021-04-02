@@ -2,6 +2,7 @@ const service = require('./lib');
 const helpers = require('./helpers');
 const Fulltext = require('./fulltext');
 const Facets = require('./facets');
+const Storage = require('./storage');
 
 module.exports = function itemsjs(items, configuration) {
 
@@ -13,10 +14,12 @@ module.exports = function itemsjs(items, configuration) {
 
   // responsible for full text search over the items
   // it makes inverted index and it is very fast
+  // @todo should be optional
   let fulltext = new Fulltext(items, configuration);
 
   // index facets
-  const facets = new Facets(items, configuration.aggregations);
+  let facets = new Facets(items, configuration.aggregations);
+  let storage = new Storage(items);
 
   return {
     /**
@@ -64,6 +67,7 @@ module.exports = function itemsjs(items, configuration) {
     reindex: function(newItems) {
       items = newItems;
       fulltext = new Fulltext(items, configuration);
+      facets = new Facets(items, configuration.aggregations);
     }
   };
 };

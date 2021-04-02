@@ -2,6 +2,7 @@
 
 const assert = require('assert');
 const items = require('./fixtures/items.json');
+const movies = require('./fixtures/movies.json');
 let itemsjs = require('./../src/index')();
 
 describe('search', function() {
@@ -191,4 +192,36 @@ describe('no configuration', function() {
     done();
   });
 
+});
+
+describe('custom fulltext integration', function() {
+
+  const configuration = {
+    aggregations: {
+      tags: {},
+      year: {}
+    }
+  };
+
+  let i = 1;
+  const temp_movies = movies.map(v => {
+
+    v._id = i++;
+    return v;
+  });
+
+  before(function(done) {
+    itemsjs = require('./../index')(movies, configuration);
+    done();
+  });
+
+  it('makes faceted search after separated quasi fulltext', function test(done) {
+
+    const result = itemsjs.search({
+      _ids: temp_movies.map(v => v._id).slice(0, 1)
+    });
+
+    assert.equal(result.data.items.length, 1);
+    done();
+  });
 });
