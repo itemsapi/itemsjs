@@ -12,6 +12,10 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
   const per_page = parseInt(input.per_page || 12);
   const page = parseInt(input.page || 1);
 
+  if (configuration.native_search_enabled === false && (input.query || input.filter)) {
+    throw new Error('"query" and "filter" options are not working once native search is disabled');
+  }
+
   let search_time = 0;
   const total_time_start = new Date().getTime();
   let query_ids;
@@ -21,7 +25,12 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
 
   if (input._ids) {
     query_ids = new FastBitSet(input._ids);
-  } else if (input.query || input.filter) {
+    _ids = input._ids;
+  } else if (input.ids) {
+    _ids = facets.internal_ids_from_ids_map(input.ids);
+    //console.log(_ids);
+    query_ids = new FastBitSet(_ids);
+  } else if (fulltext && (input.query || input.filter)) {
 
     const search_start_time = new Date().getTime();
     _ids = fulltext.search(input.query, input.filter);
@@ -35,8 +44,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
   });
   facets_time = new Date().getTime() - facets_time;
 
-  if (input._ids || input.query || input.filter instanceof Function) {
-  //if (query_ids) {
+  if (query_ids) {
     filtered_indexes_bitmap = query_ids;
   }
 
@@ -50,24 +58,36 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
 
   // new filters to items
   // -------------------------------------
-  const filtered_indexes = filtered_indexes_bitmap.array();
+  let filtered_indexes = filtered_indexes_bitmap.array();
 
-  const new_items_indexes = filtered_indexes.slice((page - 1) * per_page, page * per_page);
-  let new_items;
-
-  new_items = new_items_indexes.map(_id => {
+  let filtered_items = filtered_indexes.map(_id => {
     return facets.get_item(_id);
   });
 
   /**
    * sorting items
    */
+  const sorting_start_time = new Date().getTime();
   let sorting_time = 0;
   if (input.sort) {
-    const sorting_start_time = new Date().getTime();
-    new_items = module.exports.sorted_items(new_items, input.sort, configuration.sortings);
-    sorting_time = new Date().getTime() - sorting_start_time;
+    filtered_items = module.exports.sorted_items(filtered_items, input.sort, configuration.sortings);
+  } else {
+
+    if (_ids) {
+
+      filtered_indexes = _ids.filter(v => {
+        return filtered_indexes_bitmap.has(v);
+      });
+
+      filtered_items_indexes = filtered_indexes.slice((page - 1) * per_page, page * per_page);
+      filtered_items = filtered_items_indexes.map(_id => {
+        return facets.get_item(_id);
+      });
+    }
   }
+  // pagination
+  filtered_items = filtered_items.slice((page - 1) * per_page, page * per_page);
+  sorting_time = new Date().getTime() - sorting_start_time;
 
   const total_time = new Date().getTime() - total_time_start;
 
@@ -87,7 +107,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
       sorting: sorting_time
     },
     data: {
-      items: new_items,
+      items: filtered_items,
       //aggregations: aggregations,
       aggregations: helpers.getBuckets(facet_result, input, configuration.aggregations),
     }
@@ -178,8 +198,6 @@ module.exports.aggregation = function (items, input, configuration, fulltext, fa
   const per_page = input.per_page || 10;
   const page = input.page || 1;
 
-  //console.log(configuration);
-  //console.log(input);
   if (input.name && (!configuration.aggregations || !configuration.aggregations[input.name])) {
     throw new Error('Please define aggregation "'.concat(input.name, '" in config'));
   }

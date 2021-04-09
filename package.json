@@ -10,7 +10,7 @@
     "browserify": "browserify index.js -v -s itemsjs -o dist/itemsjs.js",
     "minify": "minify dist/itemsjs.js -o dist/itemsjs.min.js",
     "dist": "npm run browserify && npm run minify",
-    "lodash": "lodash include=map,mapKeys,forEach,mapValues,intersection,chain,sortBy,toPairs,orderBy -o vendor/lodash.js -p",
+    "lodash": "lodash include=map,mapKeys,clone,forEach,filter,mapValues,intersection,chain,sortBy,toPairs,orderBy -o vendor/lodash.js -p",
     "prepublishOnly": "npm run build",
     "build:cjs": "babel src -d lib",
     "build": "npm run build:cjs && npm run dist"

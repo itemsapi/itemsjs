@@ -12,10 +12,10 @@ module.exports = function itemsjs(items, configuration) {
   // upsert id to items
   // throw error in tests if id does not exists
 
-  // responsible for full text search over the items
-  // it makes inverted index and it is very fast
-  // @todo should be optional
-  let fulltext = new Fulltext(items, configuration);
+  let fulltext;
+  if (configuration.native_search_enabled !== false) {
+    fulltext = new Fulltext(items, configuration);
+  }
 
   // index facets
   let facets = new Facets(items, configuration.aggregations);
