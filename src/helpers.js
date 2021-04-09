@@ -181,10 +181,6 @@ const facets_ids = function(facets_data, filters) {
     filters.forEach(filter => {
 
       ++i;
-      //output = RoaringBitmap32.or(output, facets_data[field][filter]);
-
-      //console.log(facets_data[field][filter]);
-
       output = output.new_union(facets_data[field][filter]);
     });
   });

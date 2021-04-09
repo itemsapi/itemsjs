@@ -2,6 +2,7 @@
 
 const assert = require('assert');
 const items = require('./fixtures/items.json');
+const movies = require('./fixtures/movies.json');
 let itemsjs = require('./../src/index')();
 
 describe('search', function() {
@@ -147,8 +148,24 @@ describe('search', function() {
 
     done();
   });
-});
 
+  it('throws an error if name does not exist', function test(done) {
+
+    const itemsjs = require('./../index')(items, {
+      native_search_enabled: false
+    });
+
+    try {
+      itemsjs.search({
+        query: 'xxx'
+      });
+    } catch (err) {
+      assert.equal(err.message, '"query" and "filter" options are not working once native search is disabled');
+    }
+
+    done();
+  });
+});
 
 describe('no configuration', function() {
 
@@ -191,4 +208,66 @@ describe('no configuration', function() {
     done();
   });
 
+});
+
+describe('custom fulltext integration', function() {
+
+  const configuration = {
+    aggregations: {
+      tags: {},
+      year: {}
+    }
+  };
+
+  before(function(done) {
+    itemsjs = require('./../index')(movies, configuration);
+    done();
+  });
+
+  it('makes faceted search after separated quasi fulltext with _ids', function test(done) {
+
+    let i = 1;
+    const temp_movies = movies.map(v => {
+
+      v._id = i++;
+      return v;
+    });
+
+    const result = itemsjs.search({
+      _ids: temp_movies.map(v => v._id).slice(0, 1)
+    });
+
+    assert.equal(result.data.items.length, 1);
+    done();
+  });
+
+  it('makes faceted search after separated quasi fulltext with ids', function test(done) {
+
+    let i = 10;
+    const temp_movies = movies.map(v => {
+
+      v.id = i;
+      i += 10;
+      return v;
+    });
+
+    itemsjs = require('./../index')(temp_movies, configuration);
+
+    let result = itemsjs.search({
+      ids: temp_movies.map(v => v.id).slice(0, 1)
+    });
+
+    assert.equal(result.data.items[0].id, 10);
+    assert.equal(result.data.items[0]._id, 1);
+    assert.equal(result.data.items.length, 1);
+
+    result = itemsjs.search({
+      ids: [50, 20]
+    });
+
+    assert.equal(result.data.items[0].id, 50);
+    assert.equal(result.data.items[0]._id, 5);
+    assert.equal(result.data.items.length, 2);
+    done();
+  });
 });

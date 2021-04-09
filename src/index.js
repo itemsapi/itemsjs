@@ -2,6 +2,7 @@ const service = require('./lib');
 const helpers = require('./helpers');
 const Fulltext = require('./fulltext');
 const Facets = require('./facets');
+const Storage = require('./storage');
 
 module.exports = function itemsjs(items, configuration) {
 
@@ -11,12 +12,14 @@ module.exports = function itemsjs(items, configuration) {
   // upsert id to items
   // throw error in tests if id does not exists
 
-  // responsible for full text search over the items
-  // it makes inverted index and it is very fast
-  let fulltext = new Fulltext(items, configuration);
+  let fulltext;
+  if (configuration.native_search_enabled !== false) {
+    fulltext = new Fulltext(items, configuration);
+  }
 
   // index facets
-  const facets = new Facets(items, configuration.aggregations);
+  let facets = new Facets(items, configuration.aggregations);
+  let storage = new Storage(items);
 
   return {
     /**
@@ -64,6 +67,7 @@ module.exports = function itemsjs(items, configuration) {
     reindex: function(newItems) {
       items = newItems;
       fulltext = new Fulltext(items, configuration);
+      facets = new Facets(items, configuration.aggregations);
     }
   };
 };

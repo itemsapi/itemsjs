@@ -1,4 +1,4 @@
-const _ = require('lodash');
+const _ = require('./../vendor/lodash');
 const lunr = require('lunr');
 const FastBitSet = require('fastbitset');
 
@@ -32,23 +32,15 @@ const Fulltext = function(items, config) {
       this.pipeline.remove(lunr.stopWordFilter);
     }
   });
-  //var items2 = _.clone(items)
+
   let i = 1;
-  this._items_map = {};
-  this._ids = [];
 
   _.map(items, (item) => {
-    this._items_map[i] = item;
-    this._ids.push(i);
     item._id = i;
     ++i;
 
-    //console.log(item);
-
     this.idx.add(item);
   });
-
-  this._bits_ids = new FastBitSet(this._ids);
 
   this.store = _.mapKeys(items, (doc) => {
     return doc._id;
@@ -57,31 +49,31 @@ const Fulltext = function(items, config) {
 
 Fulltext.prototype = {
 
-  internal_ids: function() {
-    return this._ids;
+  search_full: function(query, filter) {
+    return this.search(query, filter).map(v => {
+      return this.store[v];
+    })
   },
 
-  bits_ids: function(ids) {
-
-    if (ids) {
-      return new FastBitSet(ids);
+  search: function(query, filter) {
+    if (!query && !filter) {
+      return this.items ? this.items.map(v => v._id) : [];
     }
 
-    return this._bits_ids;
-  },
+    let items;
 
-  get_item: function(_id) {
-    return this._items_map[_id];
-  },
-
-  search: function(query) {
-    if (!query) {
-      return this.items || [];
+    if (query) {
+      items = _.map(this.idx.search(query), (val) => {
+        const item = this.store[val.ref];
+        return item;
+      });
     }
-    return _.map(this.idx.search(query), (val) => {
-      const item = this.store[val.ref];
-      return item;
-    });
+
+    if (filter instanceof Function) {
+      items = (items || this.items).filter(filter);
+    }
+
+    return items.map(v => v._id);
   }
 };
 
