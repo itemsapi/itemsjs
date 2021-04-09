@@ -149,6 +149,22 @@ Test that with :
 node search.js
 ```
 
+## Integrations
+
+If native full text search is not enough than you can integrate with external full text search.
+
+How it works:
+
+- each item of your data needs to have `id` field
+- index data once in your search and itemsjs
+- make search in your custom search and provide `ids` data into itemsjs
+- done!
+
+Examples:
+
+- [Integration with MiniSearch](/docs/minisearch-integration.md)
+- [Integration with Lunr2.x](/docs/lunr2-integration.md)
+
 ## API
 
 ### var itemsjs = ItemsJS(data, [configuration])
