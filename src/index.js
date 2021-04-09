@@ -2,7 +2,6 @@ const service = require('./lib');
 const helpers = require('./helpers');
 const Fulltext = require('./fulltext');
 const Facets = require('./facets');
-const Storage = require('./storage');
 
 module.exports = function itemsjs(items, configuration) {
 
@@ -19,7 +18,6 @@ module.exports = function itemsjs(items, configuration) {
 
   // index facets
   let facets = new Facets(items, configuration.aggregations);
-  let storage = new Storage(items);
 
   return {
     /**

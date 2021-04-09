@@ -1,6 +1,5 @@
 const _ = require('./../vendor/lodash');
 const lunr = require('lunr');
-const FastBitSet = require('fastbitset');
 
 /**
  * responsible for making full text searching on items
@@ -52,7 +51,7 @@ Fulltext.prototype = {
   search_full: function(query, filter) {
     return this.search(query, filter).map(v => {
       return this.store[v];
-    })
+    });
   },
 
   search: function(query, filter) {

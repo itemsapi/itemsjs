@@ -2,7 +2,7 @@
 
 ```js
 const MiniSearch = require('minisearch');
-const ItemsJS = require('./../../itemsjs/src/index');
+const ItemsJS = require('itemsjs');
 
 const data = [{
   id: 1,

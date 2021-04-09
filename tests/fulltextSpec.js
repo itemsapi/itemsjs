@@ -103,12 +103,12 @@ describe('fulltext', function() {
   });
 
 
-  it('returns internal ids', function test(done) {
+  xit('returns internal ids', function test(done) {
 
     const fulltext = new Fulltext(items);
-    //assert.deepEqual(fulltext.internal_ids(), [1, 2, 3]);
-    //assert.deepEqual(fulltext.bits_ids().array(), [1, 2, 3]);
-    //assert.deepEqual(fulltext.get_item(1).name, 'Godfather');
+    assert.deepEqual(fulltext.internal_ids(), [1, 2, 3]);
+    assert.deepEqual(fulltext.bits_ids().array(), [1, 2, 3]);
+    assert.deepEqual(fulltext.get_item(1).name, 'Godfather');
 
     done();
   });

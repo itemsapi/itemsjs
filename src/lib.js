@@ -79,7 +79,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
         return filtered_indexes_bitmap.has(v);
       });
 
-      filtered_items_indexes = filtered_indexes.slice((page - 1) * per_page, page * per_page);
+      const filtered_items_indexes = filtered_indexes.slice((page - 1) * per_page, page * per_page);
       filtered_items = filtered_items_indexes.map(_id => {
         return facets.get_item(_id);
       });
