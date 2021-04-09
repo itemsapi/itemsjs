@@ -31,6 +31,7 @@ You can find a list of real implementations - [here](/docs/who-use-it.md)
 - pagination
 - no dependencies (only javascript)
 - working on backend and frontend
+- working with custom full text search
 
 ## Getting Started
 
@@ -166,6 +167,8 @@ Responsible for defining global configuration. Look for full example here - [con
 
 - **`searchableFields`** an array of searchable fields.
 
+- **`native_search_enabled`** if native full text search is enabled (true | false. It's enabled by default)
+
 ### itemsjs.search(options)
 
 #### `options`
@@ -214,7 +217,3 @@ It's used in case you need to reindex the whole data
 #### `data`
 
 An array of objects.
-
-## Credit
-
-- [Lunr.js](https://github.com/olivernn/lunr.js) for providing full text search.
