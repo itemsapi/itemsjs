@@ -20204,9 +20204,7 @@ var facets_ids = function facets_ids(facets_data, filters) {
   _.mapValues(filters, function (filters, field) {
     //console.log(facets_data);
     filters.forEach(function (filter) {
-      ++i; //output = RoaringBitmap32.or(output, facets_data[field][filter]);
-      //console.log(facets_data[field][filter]);
-
+      ++i;
       output = output.new_union(facets_data[field][filter]);
     });
   });
