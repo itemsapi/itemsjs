@@ -151,7 +151,7 @@ node search.js
 
 ## Integrations
 
-If native full text search is not enough than you can integrate with external full text search.
+If native full text search is not enough then you can integrate with external full text search.
 
 How it works:
 
