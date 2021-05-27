@@ -40,11 +40,11 @@ describe('conjunctive search', function() {
 
   const aggregations = {
     tags: {
-      title: 'Tags',
+      //title: 'Tags',
       conjunction: true,
     },
     actors: {
-      title: 'Actors',
+      title: 'Stars',
       conjunction: true,
     },
     category: {
@@ -102,6 +102,9 @@ describe('conjunctive search', function() {
     //console.log(buckets.tags.buckets);
     assert.deepEqual(buckets.tags.buckets[0].doc_count, 3);
     assert.deepEqual(buckets.tags.buckets[0].key, 'c');
+    assert.deepEqual(buckets.tags.title, 'Tags');
+    assert.deepEqual(buckets.actors.title, 'Stars');
+    assert.deepEqual(buckets.category.title, 'Category');
 
 
 
