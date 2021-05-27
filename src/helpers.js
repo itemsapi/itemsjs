@@ -201,11 +201,13 @@ const getBuckets = function(data, input, aggregations) {
     let order;
     let sort;
     let size;
+    let title;
 
     if (aggregations[k]) {
       order = aggregations[k].order;
       sort = aggregations[k].sort;
       size = aggregations[k].size;
+      title = aggregations[k].title;
     }
 
     let buckets = _.chain(v)
@@ -235,7 +237,7 @@ const getBuckets = function(data, input, aggregations) {
 
     return {
       name: k,
-      title: humanize(k),
+      title: title || humanize(k),
       position: position++,
       buckets: buckets
     };
