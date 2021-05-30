@@ -331,30 +331,34 @@ const mergeAggregations = function(aggregations, input) {
 
 const input_to_facet_filters = function(input, config) {
 
-  const filters = [];
+  let filters = [];
 
   _.mapValues(input.filters, function(values, key) {
 
-    if (config[key].conjunction !== true) {
+    if (values && values.length) {
+      if (config[key].conjunction !== true) {
 
-      const temp = [];
-      _.mapValues(values, function(values2) {
-        temp.push([key, values2]);
-      });
+        const temp = [];
+        _.mapValues(values, function(values2) {
+          temp.push([key, values2]);
+        });
 
-      filters.push(temp);
+        filters.push(temp);
 
-    } else {
-      _.mapValues(values, function(values2) {
-        filters.push([key, values2]);
-      });
+      } else {
+        _.mapValues(values, function(values2) {
+          filters.push([key, values2]);
+        });
+      }
     }
   });
 
   _.mapValues(input.not_filters, function(values, key) {
-    _.mapValues(values, function(values2) {
-      filters.push([key, '-', values2]);
-    });
+    if (values && values.length) {
+      _.mapValues(values, function(values2) {
+        filters.push([key, '-', values2]);
+      });
+    }
   });
 
   return filters;

@@ -3083,25 +3083,29 @@ var input_to_facet_filters = function input_to_facet_filters(input, config) {
   var filters = [];
 
   _.mapValues(input.filters, function (values, key) {
-    if (config[key].conjunction !== true) {
-      var temp = [];
+    if (values && values.length) {
+      if (config[key].conjunction !== true) {
+        var temp = [];
 
-      _.mapValues(values, function (values2) {
-        temp.push([key, values2]);
-      });
+        _.mapValues(values, function (values2) {
+          temp.push([key, values2]);
+        });
 
-      filters.push(temp);
-    } else {
-      _.mapValues(values, function (values2) {
-        filters.push([key, values2]);
-      });
+        filters.push(temp);
+      } else {
+        _.mapValues(values, function (values2) {
+          filters.push([key, values2]);
+        });
+      }
     }
   });
 
   _.mapValues(input.not_filters, function (values, key) {
-    _.mapValues(values, function (values2) {
-      filters.push([key, '-', values2]);
-    });
+    if (values && values.length) {
+      _.mapValues(values, function (values2) {
+        filters.push([key, '-', values2]);
+      });
+    }
   });
 
   return filters;
