@@ -34,6 +34,26 @@ const matrix = function(facets, filters) {
     });
   });
 
+
+  let conjunctive_index;
+
+  _.mapValues(filters, function(filter) {
+
+    if (!Array.isArray(filter[0])) {
+
+      const filter_key = filter[0];
+      const filter_val = filter[1];
+
+      if (conjunctive_index && temp_facet['bits_data_temp'][filter_key][filter_val]) {
+        conjunctive_index = temp_facet['bits_data_temp'][filter_key][filter_val].new_intersection(conjunctive_index);
+      } else if (conjunctive_index && !temp_facet['bits_data_temp'][filter_key][filter_val]) {
+        conjunctive_index = new FastBitSet([]);
+      } else {
+        conjunctive_index = temp_facet['bits_data_temp'][filter_key][filter_val];
+      }
+    }
+  });
+
   _.mapValues(filters, function(filter) {
 
     if (Array.isArray(filter[0])) {
@@ -65,20 +85,7 @@ const matrix = function(facets, filters) {
 
       if (filter.length === 2) {
 
-        const filter_key = filter[0];
-        const filter_val = filter[1];
-
-        _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
-          _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
-
-            if (!temp_facet['bits_data_temp'][filter_key][filter_val]) {
-              temp_facet['bits_data_temp'][key][key2] = new FastBitSet([]);
-            } else {
-              temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data_temp'][key][key2].new_intersection(temp_facet['bits_data_temp'][filter_key][filter_val]);
-            }
-
-          });
-        });
+        // speed it up with conjuncting all filters before
 
       // negation
       } else if (filter.length === 3 && filter[1] === '-') {
@@ -98,6 +105,16 @@ const matrix = function(facets, filters) {
 
     }
   });
+
+  _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
+    _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
+
+      if (conjunctive_index) {
+        temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data_temp'][key][key2].new_intersection(conjunctive_index);
+      }
+    });
+  });
+
 
   _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
     _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
@@ -198,62 +215,6 @@ const index = function(items, fields) {
   });
 
   return facets;
-};
-
-/**
- * it calculates new indexes for each facet group
- * @TODO config should be in filters data already
- */
-const combination = function(facets_data, input, config) {
-
-  const output = {};
-
-  const filters_array = _.map(input.filters, function(filter, key) {
-    return {
-      key: key,
-      values: filter,
-      conjunction: config[key].conjunction !== false,
-    };
-  });
-
-  filters_array.sort(function(a, b) {
-    return a.conjunction > b.conjunction ? 1 : -1;
-  });
-
-  // @TODO we could forEach here only by list of keys
-  // @TODO we don't need full  facets_data. filters_data should be enough
-  _.mapValues(facets_data, function(values, key) {
-
-    _.map(filters_array, function(object) {
-
-      const filters = object.values;
-      const field = object.key;
-
-      filters.forEach(filter => {
-
-        let result;
-
-        if ((config[key].conjunction === false && key !== field) || config[key].conjunction !== false) {
-
-          if (!output[key]) {
-            result = facets_data[field][filter];
-          } else {
-            if (config[field].conjunction !== false) {
-              result = output[key].new_intersection(facets_data[field][filter]);
-            } else {
-              result = output[key].new_union(facets_data[field][filter]);
-            }
-          }
-        }
-
-        if (result) {
-          output[key] = result;
-        }
-      });
-    });
-  });
-
-  return output;
 };
 
 /**
@@ -403,7 +364,6 @@ module.exports.input_to_facet_filters = input_to_facet_filters;
 module.exports.facets_ids = facets_ids;
 module.exports.clone = clone;
 module.exports.humanize = humanize;
-module.exports.combination = combination;
 module.exports.index = index;
 module.exports.matrix = matrix;
 module.exports.getBuckets = getBuckets;
