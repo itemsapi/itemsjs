@@ -10,7 +10,7 @@ const Facets = function(items, config) {
   config = config || {};
   this.items = items;
   this.config = config;
-  this.facets = helpers.index(items, config);
+  this.facets = helpers.index(items, _.keys(config));
 
   this._items_map = {};
   this._ids = [];
@@ -73,13 +73,15 @@ Facets.prototype = {
     const config = this.config;
     data = data || {};
 
-    // clone does not make sensee here
+    // consider removing clone
     const temp_facet = _.clone(this.facets);
 
     temp_facet.not_ids = helpers.facets_ids(temp_facet['bits_data'], input.not_filters, config);
 
     const filters = helpers.input_to_facet_filters(input, config);
+
     const temp_data = helpers.matrix(this.facets, filters);
+
     temp_facet['bits_data_temp'] = temp_data['bits_data_temp'];
 
     _.mapValues(temp_facet['bits_data_temp'], function(values, key) {

@@ -45,13 +45,11 @@ const matrix = function(facets, filters) {
         const filter_key = disjunctive_filter[0];
         const filter_val = disjunctive_filter[1];
 
-        // @TODO make filter_keys unique
         filter_keys.push(filter_key);
-
         union = union.new_union(temp_facet['bits_data_temp'][filter_key][filter_val]);
       });
 
-      const filter_key = 'a';
+      filter_keys = _.uniq(filter_keys);
 
       _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
         _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
@@ -99,7 +97,7 @@ const matrix = function(facets, filters) {
       }
 
     }
-  })
+  });
 
   _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
     _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
@@ -108,12 +106,14 @@ const matrix = function(facets, filters) {
   });
 
   return temp_facet;
-}
+};
 
 /**
  * TODO change aggregations to fields
  */
-const findex = function(items, aggregations) {
+const index = function(items, fields) {
+
+  fields = fields || [];
 
   const facets = {
     data: {},
@@ -122,7 +122,6 @@ const findex = function(items, aggregations) {
   };
 
   let i = 1;
-  const fields = _.keys(aggregations);
 
   items = _.map(items, item => {
 
@@ -371,41 +370,41 @@ const mergeAggregations = function(aggregations, input) {
 
 const input_to_facet_filters = function(input, config) {
 
-  let filters = [];
+  const filters = [];
 
   _.mapValues(input.filters, function(values, key) {
 
     if (config[key].conjunction !== true) {
 
-      let temp = [];
-      _.mapValues(values, function(values2, key2) {
+      const temp = [];
+      _.mapValues(values, function(values2) {
         temp.push([key, values2]);
       });
 
       filters.push(temp);
 
     } else {
-      _.mapValues(values, function(values2, key2) {
+      _.mapValues(values, function(values2) {
         filters.push([key, values2]);
       });
     }
   });
 
   _.mapValues(input.not_filters, function(values, key) {
-    _.mapValues(values, function(values2, key2) {
+    _.mapValues(values, function(values2) {
       filters.push([key, '-', values2]);
     });
   });
 
   return filters;
-}
+};
 
 module.exports.input_to_facet_filters = input_to_facet_filters;
 module.exports.facets_ids = facets_ids;
 module.exports.clone = clone;
 module.exports.humanize = humanize;
 module.exports.combination = combination;
-module.exports.index = findex;
+module.exports.index = index;
 module.exports.matrix = matrix;
 module.exports.getBuckets = getBuckets;
 module.exports.getFacets = getBuckets;
