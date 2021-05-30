@@ -10,7 +10,7 @@ const Facets = function(items, config) {
   config = config || {};
   this.items = items;
   this.config = config;
-  this.facets = helpers.index(items, config);
+  this.facets = helpers.index(items, _.keys(config));
 
   this._items_map = {};
   this._ids = [];
@@ -73,54 +73,21 @@ Facets.prototype = {
     const config = this.config;
     data = data || {};
 
-    // clone does not make sensee here
+    // consider removing clone
     const temp_facet = _.clone(this.facets);
 
-    _.mapValues(temp_facet['bits_data'], function(values, key) {
-      _.mapValues(temp_facet['bits_data'][key], function(facet_indexes, key2) {
-        temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data'][key][key2];
-      });
-    });
+    temp_facet.not_ids = helpers.facets_ids(temp_facet['bits_data'], input.not_filters, config);
 
-    // -------------------------------
-    const combination = helpers.combination(temp_facet['bits_data_temp'], input, config);
-    // -------------------------------
+    const filters = helpers.input_to_facet_filters(input, config);
 
-    /**
-     * calculating not ids
-     */
-    temp_facet.not_ids = helpers.facets_ids(temp_facet['bits_data_temp'], input.not_filters, config);
+    const temp_data = helpers.matrix(this.facets, filters);
 
-    /**
-     * not filters calculations
-     */
-    _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
-      _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
-
-        if (temp_facet.not_ids) {
-          //var result = RoaringBitmap32.andNot(facet_indexes, temp_facet.not_ids);
-          const result = facet_indexes.new_difference(temp_facet.not_ids);
-          temp_facet['bits_data_temp'][key][key2] = result;
-        }
-      });
-    });
-    // -------------------------------
-
-    _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
-      _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
-
-        if (combination[key]) {
-          //temp_facet['bits_data_temp'][key][key2] = RoaringBitmap32.and(facet_indexes, combination[key]);
-          temp_facet['bits_data_temp'][key][key2] = facet_indexes.new_intersection(combination[key]);
-        }
-      });
-    });
+    temp_facet['bits_data_temp'] = temp_data['bits_data_temp'];
 
     _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
       _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
 
         if (data.query_ids) {
-          //temp_facet['bits_data_temp'][key][key2] = RoaringBitmap32.and(temp_facet['bits_data_temp'][key][key2], data.query_ids);
           temp_facet['bits_data_temp'][key][key2] = data.query_ids.new_intersection(temp_facet['bits_data_temp'][key][key2]);
         }
 

@@ -20,7 +20,100 @@ const humanize = function (str) {
     });
 };
 
-const findex = function(items, config) {
+/*
+ * returns facets and ids
+ */
+const matrix = function(facets, filters) {
+  const temp_facet = _.clone(facets);
+
+  filters = filters || [];
+
+  _.mapValues(temp_facet['bits_data'], function(values, key) {
+    _.mapValues(temp_facet['bits_data'][key], function(facet_indexes, key2) {
+      temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data'][key][key2];
+    });
+  });
+
+  _.mapValues(filters, function(filter) {
+
+    if (Array.isArray(filter[0])) {
+
+      let union = new FastBitSet([]);
+      let filter_keys = [];
+
+      _.mapValues(filter, function(disjunctive_filter) {
+        const filter_key = disjunctive_filter[0];
+        const filter_val = disjunctive_filter[1];
+
+        filter_keys.push(filter_key);
+        union = union.new_union(temp_facet['bits_data_temp'][filter_key][filter_val]);
+      });
+
+      filter_keys = _.uniq(filter_keys);
+
+      _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
+        _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
+
+          if (filter_keys.indexOf(key) === -1) {
+            temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data_temp'][key][key2].new_intersection(union);
+          }
+        });
+      });
+
+
+    } else {
+
+      if (filter.length === 2) {
+
+        const filter_key = filter[0];
+        const filter_val = filter[1];
+
+        _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
+          _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
+
+            if (!temp_facet['bits_data_temp'][filter_key][filter_val]) {
+              temp_facet['bits_data_temp'][key][key2] = new FastBitSet([]);
+            } else {
+              temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data_temp'][key][key2].new_intersection(temp_facet['bits_data_temp'][filter_key][filter_val]);
+            }
+
+          });
+        });
+
+      // negation
+      } else if (filter.length === 3 && filter[1] === '-') {
+
+        const filter_key = filter[0];
+        const filter_val = filter[2];
+
+        const negative_bits = temp_facet['bits_data_temp'][filter_key][filter_val].clone();
+
+        _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
+          _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
+
+            temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data_temp'][key][key2].new_difference(negative_bits);
+          });
+        });
+      }
+
+    }
+  });
+
+  _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
+    _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
+      temp_facet['data'][key][key2] = temp_facet['bits_data_temp'][key][key2].array();
+    });
+  });
+
+  return temp_facet;
+};
+
+/**
+ * TODO change aggregations to fields
+ */
+const index = function(items, fields) {
+
+  fields = fields || [];
 
   const facets = {
     data: {},
@@ -29,7 +122,6 @@ const findex = function(items, config) {
   };
 
   let i = 1;
-  const fields = _.keys(config);
 
   items = _.map(items, item => {
 
@@ -276,11 +368,44 @@ const mergeAggregations = function(aggregations, input) {
   });
 };
 
+const input_to_facet_filters = function(input, config) {
+
+  const filters = [];
+
+  _.mapValues(input.filters, function(values, key) {
+
+    if (config[key].conjunction !== true) {
+
+      const temp = [];
+      _.mapValues(values, function(values2) {
+        temp.push([key, values2]);
+      });
+
+      filters.push(temp);
+
+    } else {
+      _.mapValues(values, function(values2) {
+        filters.push([key, values2]);
+      });
+    }
+  });
+
+  _.mapValues(input.not_filters, function(values, key) {
+    _.mapValues(values, function(values2) {
+      filters.push([key, '-', values2]);
+    });
+  });
+
+  return filters;
+};
+
+module.exports.input_to_facet_filters = input_to_facet_filters;
 module.exports.facets_ids = facets_ids;
 module.exports.clone = clone;
 module.exports.humanize = humanize;
 module.exports.combination = combination;
-module.exports.index = findex;
+module.exports.index = index;
+module.exports.matrix = matrix;
 module.exports.getBuckets = getBuckets;
 module.exports.getFacets = getBuckets;
 module.exports.mergeAggregations = mergeAggregations;

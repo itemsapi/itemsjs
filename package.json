@@ -1,6 +1,6 @@
 {
   "name": "itemsjs",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Created to perform fast search on small json dataset (up to 1000 elements).",
   "main": "lib/index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "browserify": "browserify index.js -v -s itemsjs -o dist/itemsjs.js",
     "minify": "minify dist/itemsjs.js -o dist/itemsjs.min.js",
     "dist": "npm run browserify && npm run minify",
-    "lodash": "lodash include=map,mapKeys,clone,forEach,filter,mapValues,intersection,chain,sortBy,toPairs,orderBy -o vendor/lodash.js -p",
+    "lodash": "lodash include=map,mapKeys,clone,forEach,filter,mapValues,intersection,chain,sortBy,toPairs,uniq,orderBy -o vendor/lodash.js -p",
     "prepublishOnly": "npm run build",
     "build:cjs": "babel src -d lib",
     "build": "npm run build:cjs && npm run dist"
