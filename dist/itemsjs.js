@@ -3084,7 +3084,11 @@ var input_to_facet_filters = function input_to_facet_filters(input, config) {
 
   _.mapValues(input.filters, function (values, key) {
     if (values && values.length) {
-      if (config[key].conjunction !== true) {
+      if (config[key].conjunction !== false) {
+        _.mapValues(values, function (values2) {
+          filters.push([key, values2]);
+        });
+      } else {
         var temp = [];
 
         _.mapValues(values, function (values2) {
@@ -3092,10 +3096,6 @@ var input_to_facet_filters = function input_to_facet_filters(input, config) {
         });
 
         filters.push(temp);
-      } else {
-        _.mapValues(values, function (values2) {
-          filters.push([key, values2]);
-        });
       }
     }
   });
