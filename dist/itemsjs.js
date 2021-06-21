@@ -2819,6 +2819,28 @@ var humanize = function humanize(str) {
     return m.toUpperCase();
   });
 };
+
+var combination_indexes = function combination_indexes(facets, filters) {
+  var indexes = {};
+
+  _.mapValues(filters, function (filter) {
+    // filter is still array so disjunctive
+    if (Array.isArray(filter[0])) {
+      var facet_union = new FastBitSet([]);
+      var filter_keys = [];
+
+      _.mapValues(filter, function (disjunctive_filter) {
+        var filter_key = disjunctive_filter[0];
+        var filter_val = disjunctive_filter[1];
+        filter_keys.push(filter_key);
+        facet_union = facet_union.new_union(facets['bits_data'][filter_key][filter_val]);
+        indexes[filter_key] = facet_union;
+      });
+    }
+  });
+
+  return indexes;
+};
 /*
  * returns facets and ids
  */
@@ -2836,6 +2858,10 @@ var matrix = function matrix(facets, filters) {
   });
 
   var conjunctive_index;
+  var disjunctive_indexes = combination_indexes(facets, filters);
+  /**
+   * process only conjunctive filters
+   */
 
   _.mapValues(filters, function (filter) {
     if (!Array.isArray(filter[0])) {
@@ -2850,51 +2876,43 @@ var matrix = function matrix(facets, filters) {
         conjunctive_index = temp_facet['bits_data_temp'][filter_key][filter_val];
       }
     }
-  });
+  }); // cross all facets with conjunctive index
 
-  _.mapValues(filters, function (filter) {
-    if (Array.isArray(filter[0])) {
-      var union = new FastBitSet([]);
-      var filter_keys = [];
-
-      _.mapValues(filter, function (disjunctive_filter) {
-        var filter_key = disjunctive_filter[0];
-        var filter_val = disjunctive_filter[1];
-        filter_keys.push(filter_key);
-        union = union.new_union(temp_facet['bits_data_temp'][filter_key][filter_val]);
-      });
-
-      filter_keys = _.uniq(filter_keys);
-
-      _.mapValues(temp_facet['bits_data_temp'], function (values, key) {
-        _.mapValues(temp_facet['bits_data_temp'][key], function (facet_indexes, key2) {
-          if (filter_keys.indexOf(key) === -1) {
-            temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data_temp'][key][key2].new_intersection(union);
-          }
-        });
-      });
-    } else {
-      if (filter.length === 2) {// speed it up with conjuncting all filters before
-        // negation
-      } else if (filter.length === 3 && filter[1] === '-') {
-        var filter_key = filter[0];
-        var filter_val = filter[2];
-        var negative_bits = temp_facet['bits_data_temp'][filter_key][filter_val].clone();
-
-        _.mapValues(temp_facet['bits_data_temp'], function (values, key) {
-          _.mapValues(temp_facet['bits_data_temp'][key], function (facet_indexes, key2) {
-            temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data_temp'][key][key2].new_difference(negative_bits);
-          });
-        });
-      }
-    }
-  });
 
   _.mapValues(temp_facet['bits_data_temp'], function (values, key) {
     _.mapValues(temp_facet['bits_data_temp'][key], function (facet_indexes, key2) {
       if (conjunctive_index) {
         temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data_temp'][key][key2].new_intersection(conjunctive_index);
       }
+    });
+  });
+  /**
+   * process only negative filters
+   */
+
+
+  _.mapValues(filters, function (filter) {
+    if (filter.length === 3 && filter[1] === '-') {
+      var filter_key = filter[0];
+      var filter_val = filter[2];
+      var negative_bits = temp_facet['bits_data_temp'][filter_key][filter_val].clone();
+
+      _.mapValues(temp_facet['bits_data_temp'], function (values, key) {
+        _.mapValues(temp_facet['bits_data_temp'][key], function (facet_indexes, key2) {
+          temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data_temp'][key][key2].new_difference(negative_bits);
+        });
+      });
+    }
+  }); // cross all facets with disjunctive index
+
+
+  _.mapValues(temp_facet['bits_data_temp'], function (values, key) {
+    _.mapValues(temp_facet['bits_data_temp'][key], function (facet_indexes, key2) {
+      _.mapValues(disjunctive_indexes, function (disjunctive_index, disjunctive_key) {
+        if (disjunctive_key !== key) {
+          temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data_temp'][key][key2].new_intersection(disjunctive_index);
+        }
+      });
     });
   });
 
@@ -2906,10 +2924,6 @@ var matrix = function matrix(facets, filters) {
 
   return temp_facet;
 };
-/**
- * TODO change aggregations to fields
- */
-
 
 var index = function index(items, fields) {
   fields = fields || [];
@@ -3116,6 +3130,7 @@ module.exports.facets_ids = facets_ids;
 module.exports.clone = clone;
 module.exports.humanize = humanize;
 module.exports.index = index;
+module.exports.combination_indexes = combination_indexes;
 module.exports.matrix = matrix;
 module.exports.getBuckets = getBuckets;
 module.exports.getFacets = getBuckets;

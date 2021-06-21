@@ -357,14 +357,6 @@ describe('disjunctive and conjunctive search', function() {
   });
 });
 
-
-
-
-
-
-
-
-
 describe('generates facets crossed with query', function() {
 
   const aggregations = {
@@ -434,6 +426,50 @@ describe('generates facets crossed with query', function() {
 
     assert.deepEqual(result.data.aggregations.tags.buckets[0].key, 'a');
     assert.deepEqual(result.data.aggregations.tags.buckets[0].doc_count, 2);
+
+    done();
+  });
+});
+
+describe('generates symetrical disjunctive facets (SergeyRe)', function() {
+
+  const aggregations = {
+    a: {
+      conjunction: false,
+    },
+    b: {
+      conjunction: false,
+    },
+  };
+
+  const items = [
+    { a: 1, b: 3 },
+    { a: 1, b: 4 },
+    { a: 2, b: 3 },
+    { a: 2, b: 4 }
+  ]
+
+  const facets = new Facets(items, aggregations);
+  const itemsjs = require('./../index')(items, {
+    aggregations: aggregations,
+  });
+
+  it('provides symetrical result', function test(done) {
+
+      let input = {
+        filters: {
+          b: [3], a: [1]
+        }
+    };
+
+    let result = facets.search(input, {
+      test: true
+    });
+
+    assert.deepEqual(result.data.a['1'], [1]);
+    assert.deepEqual(result.data.a['2'], [3]);
+    assert.deepEqual(result.data.b['3'], [1]);
+    assert.deepEqual(result.data.b['4'], [2]);
 
     done();
   });
