@@ -38,7 +38,11 @@ describe('filtering and generating facets', function() {
 
     const data = helpers.index(items, fields);
 
-    const result = helpers.matrix(data, [['a', 2]]);
+    let result = helpers.combination_indexes(data, [[['a', 2]]]);
+    assert.deepEqual([3, 5, 8, 9], result.a.array());
+    assert.deepEqual(undefined, result.b);
+
+    result = helpers.matrix(data, [['a', 2]]);
     assert.deepEqual(result.bits_data_temp.a['1'].array(), []);
     assert.deepEqual(result.bits_data_temp.a['2'].array(), [3, 5, 8, 9]);
     assert.deepEqual(result.bits_data_temp.b['2'].array(), [9]);
@@ -80,7 +84,11 @@ describe('filtering and generating facets', function() {
 
     const data = helpers.index(items, fields);
 
-    const result = helpers.matrix(data, [[['a', 1], ['a', 2]]]);
+    let result = helpers.combination_indexes(data, [[['a', 1], ['a', 2]]]);
+    assert.deepEqual([1, 2, 3, 4, 5, 6, 7, 8, 9], result.a.array());
+    assert.deepEqual(undefined, result.b);
+
+    result = helpers.matrix(data, [[['a', 1], ['a', 2]]]);
     assert.deepEqual(result.bits_data_temp.a['1'].array(), [1, 2, 4, 6, 7]);
     assert.deepEqual(result.bits_data_temp.a['2'].array(), [3, 5, 8, 9]);
     assert.deepEqual(result.bits_data_temp.b['2'].array(), [1, 4, 6, 9]);
@@ -89,15 +97,20 @@ describe('filtering and generating facets', function() {
     done();
   });
 
-  it('checks matrix with disjunctive filters2', function test(done) {
+  it('checks matrix with disjunctive filters (ittocean case)', function test(done) {
 
     const data = helpers.index(items, fields);
 
-    const result = helpers.matrix(data, [[['a', 1]], [['b', 2]], [['c', 3]]]);
+    let result = helpers.combination_indexes(data, [[['a', 1]], [['b', 2]], [['c', 3]]]);
+    assert.deepEqual([1, 2, 4, 6, 7], result.a.array());
+    assert.deepEqual([1, 4, 6, 9], result.b.array());
+    assert.deepEqual([1, 2, 3, 4, 5, 6, 7, 8, 9], result.c.array());
+
+    result = helpers.matrix(data, [[['a', 1]], [['b', 2]], [['c', 3]]]);
     assert.deepEqual(result.bits_data_temp.a['1'].array(), [1, 4, 6]);
-    assert.deepEqual(result.bits_data_temp.a['2'].array(), []);
+    assert.deepEqual(result.bits_data_temp.a['2'].array(), [9]);
     assert.deepEqual(result.bits_data_temp.b['2'].array(), [1, 4, 6]);
-    assert.deepEqual(result.bits_data_temp.b['3'].array(), []);
+    assert.deepEqual(result.bits_data_temp.b['3'].array(), [2, 7]);
     assert.deepEqual(result.bits_data_temp.c['3'].array(), [1, 4, 6]);
     done();
   });
@@ -161,7 +174,6 @@ describe('filtering and generating facets', function() {
 
     const data = helpers.index(items, fields);
     const result = helpers.matrix(data, [['a', '-', 1]]);
-    //console.log(result.data);
     assert.deepEqual(result.bits_data_temp.a['1'].array(), []);
     assert.deepEqual(result.bits_data_temp.a['2'].array(), [2]);
     assert.deepEqual(result.bits_data_temp.a['3'].array(), [3]);
@@ -176,7 +188,6 @@ describe('filtering and generating facets', function() {
 
     const data = helpers.index(items, fields);
     const result = helpers.matrix(data, [['a', '-', 1], ['b', '-', 2]]);
-    //console.log(result.data);
     assert.deepEqual(result.bits_data_temp.a['1'].array(), []);
     assert.deepEqual(result.bits_data_temp.a['2'].array(), []);
     assert.deepEqual(result.bits_data_temp.a['3'].array(), [3]);
@@ -184,6 +195,59 @@ describe('filtering and generating facets', function() {
     assert.deepEqual(result.bits_data_temp.b['2'].array(), []);
     assert.deepEqual(result.bits_data_temp.b['3'].array(), [3]);
     assert.deepEqual(result.bits_data_temp.c['3'].array(), [3]);
+    done();
+  });
+});
+
+describe('filtering and generating facets', function() {
+
+  const items = [
+    { a: 1, b: 3 },
+    { a: 1, b: 4 },
+    { a: 2, b: 3 },
+    { a: 2, b: 4 }
+  ]
+
+  const fields = ['a', 'b'];
+
+  it('checks matrix with disjunctive filters', function test(done) {
+
+    const data = helpers.index(items, fields);
+
+    const result = helpers.matrix(data);
+    assert.deepEqual(result.bits_data_temp.a['1'].array(), [1, 2]);
+    assert.deepEqual(result.bits_data_temp.a['2'].array(), [3, 4]);
+    assert.deepEqual(result.bits_data_temp.b['3'].array(), [1, 3]);
+    assert.deepEqual(result.bits_data_temp.b['4'].array(), [2, 4]);
+    done();
+  });
+
+
+  xit('checks matrix with disjunctive filters', function test(done) {
+
+    const data = helpers.index(items, fields);
+
+    const result = helpers.matrix(data, [[['a', 1]]]);
+    assert.deepEqual(result.bits_data_temp.a['1'].array(), [1, 2]);
+    assert.deepEqual(result.bits_data_temp.a['2'].array(), [3, 4]);
+    assert.deepEqual(result.bits_data_temp.b['3'].array(), [1]);
+    assert.deepEqual(result.bits_data_temp.b['4'].array(), [2]);
+    done();
+  });
+
+  it('checks matrix with disjunctive filters', function test(done) {
+
+    const data = helpers.index(items, fields);
+
+    let result = helpers.combination_indexes(data, [[['b', 3]], [['a', 1]]]);
+    assert.deepEqual([1, 2], result.a.array());
+    assert.deepEqual([1, 3], result.b.array());
+
+    result = helpers.matrix(data, [[['b', 3]], [['a', 1]]]);
+    assert.deepEqual([1], result.bits_data_temp.a['1'].array());
+    assert.deepEqual([3], result.bits_data_temp.a['2'].array());
+    assert.deepEqual([1], result.bits_data_temp.b['3'].array());
+    assert.deepEqual([2], result.bits_data_temp.b['4'].array());
     done();
   });
 });
