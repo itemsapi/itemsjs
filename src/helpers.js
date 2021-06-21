@@ -336,19 +336,17 @@ const input_to_facet_filters = function(input, config) {
   _.mapValues(input.filters, function(values, key) {
 
     if (values && values.length) {
-      if (config[key].conjunction !== true) {
-
+      if (config[key].conjunction !== false) {
+        _.mapValues(values, function(values2) {
+          filters.push([key, values2]);
+        });
+      } else {
         const temp = [];
         _.mapValues(values, function(values2) {
           temp.push([key, values2]);
         });
 
         filters.push(temp);
-
-      } else {
-        _.mapValues(values, function(values2) {
-          filters.push([key, values2]);
-        });
       }
     }
   });
