@@ -86,14 +86,20 @@ const matrix = function(facets, filters) {
 
 
   // cross all facets with conjunctive index
-  _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
-    _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
-
-      if (conjunctive_index) {
+  if (conjunctive_index) {
+    _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
+      _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
         temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data_temp'][key][key2].new_intersection(conjunctive_index);
-      }
+      });
     });
-  });
+  }
+
+  // cross all combination indexes with conjunctive index
+  /*if (conjunctive_index) {
+    _.mapValues(disjunctive_indexes, function(disjunctive_index, disjunctive_key) {
+      disjunctive_indexes[disjunctive_key] = conjunctive_index.new_intersection(disjunctive_indexes[disjunctive_key]);
+    });
+  }*/
 
   /**
    * process only negative filters
@@ -125,12 +131,6 @@ const matrix = function(facets, filters) {
           temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data_temp'][key][key2].new_intersection(disjunctive_index);
         }
       });
-    });
-  });
-
-  _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
-    _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
-      temp_facet['data'][key][key2] = temp_facet['bits_data_temp'][key][key2].array();
     });
   });
 
