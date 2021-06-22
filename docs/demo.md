@@ -5,7 +5,7 @@ Example animation provided by [@darkrubyist](https://github.com/darkrubyist):
 ![](https://media.giphy.com/media/2wYrjCuszHdDVHMQ6k/giphy.gif)
 
 Search engine for movies provided by [@cigolpl](https://github.com/cigolpl):
-https://jsfiddle.net/cigol/0ef9qeos/189/. It's using very basic Vue.
+https://jsfiddle.net/cigol/0ef9qeos/195/. It's using very basic Vue.
 
 Same as above but with pagination [@bellerophons-pegasus](https://github.com/bellerophons-pegasus) https://jsfiddle.net/3ybkqa05/2/
 
