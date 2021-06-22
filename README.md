@@ -1,5 +1,4 @@
 ![npm version](https://img.shields.io/npm/v/itemsjs)
-![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/itemsapi/itemsjs)
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/itemsapi/itemsjs?label=package.json)
 [![NPM monthly downloads](https://img.shields.io/npm/dm/itemsjs.svg)](https://img.shields.io/npm/dm/itemsjs.svg)
 [![GitHub license](https://img.shields.io/github/license/itemsapi/itemsjs)](https://github.com/itemsapi/itemsjs/blob/master/LICENSE)
