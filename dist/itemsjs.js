@@ -3281,6 +3281,7 @@ module.exports.search = function (items, input, configuration, fulltext, facets)
    * sorting items
    */
 
+  var paginationApplied = false;
   var sorting_start_time = new Date().getTime();
   var sorting_time = 0;
 
@@ -3295,11 +3296,15 @@ module.exports.search = function (items, input, configuration, fulltext, facets)
       filtered_items = filtered_items_indexes.map(function (_id) {
         return facets.get_item(_id);
       });
+      paginationApplied = true;
     }
   } // pagination
 
 
-  filtered_items = filtered_items.slice((page - 1) * per_page, page * per_page);
+  if (!paginationApplied) {
+    filtered_items = filtered_items.slice((page - 1) * per_page, page * per_page);
+  }
+
   sorting_time = new Date().getTime() - sorting_start_time;
   var total_time = new Date().getTime() - total_time_start; //console.log(facet_result);
 
