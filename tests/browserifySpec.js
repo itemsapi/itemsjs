@@ -59,6 +59,18 @@ describe('itemjs general tests', function() {
     done();
   });
 
+  it('makes search with pagination and filter', function test(done) {
+    const result = itemsjs.search({
+      per_page: 1,
+      page: 3,
+      filter: (item) => item.tags.includes('a')
+    });
+
+    assert.equal(result.data.items.length, 1);
+    
+    done();
+  });
+
   it('makes search with aggregation filters', function test(done) {
 
     const itemsjs = require('./../index')(items, {
