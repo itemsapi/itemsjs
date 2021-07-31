@@ -18,6 +18,8 @@ The short list of projects using Itemsjs for powering faceted search:
 
 - LeaddMe - https://leaddme.com/jobs (jobs searching)
 
+- Nobel Laureats - https://www.nobelprize.ru (AMP Frontend)
+
 And portfolios:
 
 - https://www.anand-iyer.com/publications/
