@@ -109,7 +109,7 @@ var itemsjs = require('itemsjs')(data, {
     },
     actors: {
       title: 'Actors',
-      size: 10,
+      size: 10
     },
     genres: {
       title: 'Genres',
