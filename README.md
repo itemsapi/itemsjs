@@ -104,11 +104,12 @@ var itemsjs = require('itemsjs')(data, {
   aggregations: {
     tags: {
       title: 'Tags',
-      size: 10
+      size: 10,
+      conjunction: false
     },
     actors: {
       title: 'Actors',
-      size: 10
+      size: 10,
     },
     genres: {
       title: 'Genres',
@@ -213,6 +214,7 @@ It returns full list of filters for specific aggregation
 - **`per_page`** filters per page
 - **`page`** page number
 - **`query`** used for quering filters. It's not full text search
+- **`conjunction`** choose between AND, OR
 
 ### itemsjs.similar(id, options)
 
