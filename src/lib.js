@@ -90,6 +90,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
   }
   // pagination
   if (!paginationApplied) {
+    all_filtered_items = filtered_items;
     filtered_items = filtered_items.slice((page - 1) * per_page, page * per_page);
   }
   
@@ -114,6 +115,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
     },
     data: {
       items: filtered_items,
+      allFilteredItems: all_filtered_items,
       //aggregations: aggregations,
       aggregations: helpers.getBuckets(facet_result, input, configuration.aggregations),
     }
