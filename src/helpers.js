@@ -1,4 +1,4 @@
-const _ = require('./../vendor/lodash');
+const _ = require('lodash');
 const FastBitSet = require('fastbitset');
 
 const clone = function(val) {
@@ -30,7 +30,7 @@ const combination_indexes = function(facets, filters) {
     if (Array.isArray(filter[0])) {
 
       let facet_union = new FastBitSet([]);
-      let filter_keys = [];
+      const filter_keys = [];
 
       _.mapValues(filter, function(disjunctive_filter) {
         const filter_key = disjunctive_filter[0];
@@ -44,7 +44,7 @@ const combination_indexes = function(facets, filters) {
   });
 
   return indexes;
-}
+};
 
 /*
  * returns facets and ids
@@ -62,7 +62,7 @@ const matrix = function(facets, filters) {
 
 
   let conjunctive_index;
-  let disjunctive_indexes = combination_indexes(facets, filters);
+  const disjunctive_indexes = combination_indexes(facets, filters);
 
   /**
    * process only conjunctive filters
@@ -340,7 +340,7 @@ const mergeAggregations = function(aggregations, input) {
 
 const input_to_facet_filters = function(input, config) {
 
-  let filters = [];
+  const filters = [];
 
   _.mapValues(input.filters, function(values, key) {
 

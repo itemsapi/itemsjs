@@ -206,7 +206,7 @@ describe('filtering and generating facets', function() {
     { a: 1, b: 4 },
     { a: 2, b: 3 },
     { a: 2, b: 4 }
-  ]
+  ];
 
   const fields = ['a', 'b'];
 

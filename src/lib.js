@@ -1,4 +1,4 @@
-const _ = require('./../vendor/lodash');
+const _ = require('lodash');
 const helpers = require('./helpers');
 const FastBitSet = require('fastbitset');
 
@@ -95,7 +95,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
     all_filtered_items = is_all_filtered_items ? filtered_items: null;
     filtered_items = filtered_items.slice((page - 1) * per_page, page * per_page);
   }
-  
+
   sorting_time = new Date().getTime() - sorting_start_time;
 
   const total_time = new Date().getTime() - total_time_start;
