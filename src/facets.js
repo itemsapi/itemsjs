@@ -1,4 +1,4 @@
-const _ = require('./../vendor/lodash');
+const _ = require('lodash');
 const helpers = require('./helpers');
 const FastBitSet = require('fastbitset');
 

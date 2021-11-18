@@ -447,7 +447,7 @@ describe('generates symetrical disjunctive facets (SergeyRe)', function() {
     { a: 1, b: 4 },
     { a: 2, b: 3 },
     { a: 2, b: 4 }
-  ]
+  ];
 
   const facets = new Facets(items, aggregations);
   const itemsjs = require('./../index')(items, {
@@ -456,13 +456,13 @@ describe('generates symetrical disjunctive facets (SergeyRe)', function() {
 
   it('provides symetrical result', function test(done) {
 
-      let input = {
-        filters: {
-          b: [3], a: [1]
-        }
+    const input = {
+      filters: {
+        b: [3], a: [1]
+      }
     };
 
-    let result = facets.search(input, {
+    const result = facets.search(input, {
       test: true
     });
 
