@@ -11,6 +11,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
 
   const per_page = parseInt(input.per_page || 12);
   const page = parseInt(input.page || 1);
+  const is_all_filtered_items = input.is_all_filtered_items || false;
 
   if (configuration.native_search_enabled === false && (input.query || input.filter)) {
     throw new Error('"query" and "filter" options are not working once native search is disabled');
@@ -22,6 +23,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
   // all ids bitmap
   let filtered_indexes_bitmap = facets.bits_ids();
   let _ids;
+  let all_filtered_items;
 
   if (input._ids) {
     query_ids = new FastBitSet(input._ids);
@@ -90,6 +92,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
   }
   // pagination
   if (!paginationApplied) {
+    all_filtered_items = is_all_filtered_items ? filtered_items: null;
     filtered_items = filtered_items.slice((page - 1) * per_page, page * per_page);
   }
   
@@ -114,6 +117,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
     },
     data: {
       items: filtered_items,
+      allFilteredItems: all_filtered_items,
       //aggregations: aggregations,
       aggregations: helpers.getBuckets(facet_result, input, configuration.aggregations),
     }

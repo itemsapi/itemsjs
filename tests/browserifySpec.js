@@ -59,6 +59,32 @@ describe('itemjs general tests', function() {
     done();
   });
 
+
+  it('makes search with pagination, and is_all_filtered_items', function test(done) {
+
+    let result = itemsjs.search({
+      per_page: 1,
+      is_all_filtered_items: true,
+    });
+    assert.equal(result.data.items.length, 1);
+    assert.equal(result.data.allFilteredItems.length, 3);
+
+    result = itemsjs.search({
+      per_page: 1,
+      is_all_filtered_items: false,
+    });
+    assert.equal(result.data.items.length, 1);
+    assert.equal(result.data.allFilteredItems, null);
+
+    result = itemsjs.search({
+      per_page: 1,
+    });
+    assert.equal(result.data.items.length, 1);
+    assert.equal(result.data.allFilteredItems, null);
+
+    done();
+  });
+
   it('makes search with pagination and filter', function test(done) {
     const result = itemsjs.search({
       per_page: 1,
