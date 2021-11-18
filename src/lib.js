@@ -22,6 +22,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
   // all ids bitmap
   let filtered_indexes_bitmap = facets.bits_ids();
   let _ids;
+  let all_filtered_items;
 
   if (input._ids) {
     query_ids = new FastBitSet(input._ids);
