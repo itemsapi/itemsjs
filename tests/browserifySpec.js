@@ -60,28 +60,27 @@ describe('itemjs general tests', function() {
   });
 
 
-  it('makes search with pagination, show allFilteredItems', function test(done) {
+  it('makes search with pagination, and is_all_filtered_items', function test(done) {
 
     let result = itemsjs.search({
-      per_page: 1
+      per_page: 1,
+      is_all_filtered_items: true,
     });
     assert.equal(result.data.items.length, 1);
     assert.equal(result.data.allFilteredItems.length, 3);
 
-
     result = itemsjs.search({
       per_page: 1,
-      page: 4
-    });
-    assert.equal(result.data.items.length, 0);
-    assert.equal(result.data.allFilteredItems.length, 3);
-
-    result = itemsjs.search({
-      per_page: 1,
-      page: 3
+      is_all_filtered_items: false,
     });
     assert.equal(result.data.items.length, 1);
-    assert.equal(result.data.allFilteredItems.length, 3);
+    assert.equal(result.data.allFilteredItems, null);
+
+    result = itemsjs.search({
+      per_page: 1,
+    });
+    assert.equal(result.data.items.length, 1);
+    assert.equal(result.data.allFilteredItems, null);
 
     done();
   });

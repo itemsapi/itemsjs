@@ -11,6 +11,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
 
   const per_page = parseInt(input.per_page || 12);
   const page = parseInt(input.page || 1);
+  const is_all_filtered_items = input.is_all_filtered_items || false;
 
   if (configuration.native_search_enabled === false && (input.query || input.filter)) {
     throw new Error('"query" and "filter" options are not working once native search is disabled');
@@ -116,7 +117,7 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
     },
     data: {
       items: filtered_items,
-      allFilteredItems: all_filtered_items,
+      allFilteredItems: is_all_filtered_items ? all_filtered_items : null,
       //aggregations: aggregations,
       aggregations: helpers.getBuckets(facet_result, input, configuration.aggregations),
     }
