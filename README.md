@@ -204,7 +204,7 @@ Responsible for defining global configuration. Look for full example here - [con
   
 - **`isExactSearch`** set to `true` if you want to always show exact search matches. See [lunr stemmer](https://github.com/olivernn/lunr.js/issues/328) and [lunr stopWordFilter](https://github.com/olivernn/lunr.js/issues/233).
 
-- **`is_all_filtered_items`** set to `true` if you want the whole filtered dataset. 
+- **`is_all_filtered_items`** set to `true` if you want to return the whole filtered dataset. 
 
 ### itemsjs.aggregation(options)
 
