@@ -264,12 +264,14 @@ const getBuckets = function(data, input, aggregations) {
     let sort;
     let size;
     let title;
+    let show_facet_stats
 
     if (aggregations[k]) {
       order = aggregations[k].order;
       sort = aggregations[k].sort;
       size = aggregations[k].size;
       title = aggregations[k].title;
+      show_facet_stats = aggregations[k].show_facet_stats || false
     }
 
     let buckets = _.chain(v)
@@ -289,21 +291,50 @@ const getBuckets = function(data, input, aggregations) {
       })
       .value();
 
-    if (sort === 'term') {
-      buckets = _.orderBy(buckets, ['selected', 'key'], ['desc', order || 'asc']);
-    } else {
-      buckets = _.orderBy(buckets, ['selected', 'doc_count', 'key'], ['desc', order || 'desc', 'asc']);
-    }
+      if (sort === 'term') {
+        buckets = _.orderBy(buckets, ['selected', 'key'], ['desc', order || 'asc']);
+      } else {
+        buckets = _.orderBy(buckets, ['selected', 'doc_count', 'key'], ['desc', order || 'desc', 'asc']);
+      }
 
-    buckets = buckets.slice(0, size || 10);
+      buckets = buckets.slice(0, size || 10);
 
-    return {
-      name: k,
-      title: title || humanize(k),
-      position: position++,
-      buckets: buckets
-    };
+      // Calculate the facet_stats
+      let facet_stats;
+      let calculated_facet_stats;
 
+      if(show_facet_stats) {
+        facet_stats = [];
+         _.chain(v)
+          .toPairs().forEach(v2 => {
+            if(isNaN(v2[0])) {
+              throw new Error("You cant use chars to calculate the facet_stats.");
+            }
+
+            // Doc_count 
+            if(v2[1].array().length > 0) {
+              v2[1].forEach(doc_count => {
+                facet_stats.push(parseInt(v2[0]));
+              });
+            }
+        })
+        .value();
+
+        calculated_facet_stats = {
+          min: _.minBy(facet_stats),
+          max: _.maxBy(facet_stats),
+          avg: _.meanBy(facet_stats),
+          sum: _.sumBy(facet_stats),
+        };
+      }
+              
+      return {
+        name: k,
+        title: title || humanize(k),
+        position: position++,
+        buckets: buckets,
+        ...(show_facet_stats) && {facet_stats: calculated_facet_stats},
+      };
   });
 };
 

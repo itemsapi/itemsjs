@@ -217,6 +217,78 @@ describe('itemjs general tests', function() {
     done();
   });
 
+  it('makes aggregations with facet_stats', function test(done) {
+    const items = [{
+      name: 'Apple 7',
+      price: 1,
+    }, {
+      name: 'Apple 8',
+      price: 1,
+    }, {
+      name: 'Apple 9',
+      price: '7',
+    }, {
+      name: 'Samsung',
+      price: 7,
+    }, {
+      name: 'Apple 10',
+    }];
+
+    const itemsjs = require('./../index')(items, {
+      aggregations: {
+        price: {
+          title: 'Price',
+          size: 3,
+          show_facet_stats: true
+        }
+      }
+    });
+
+    const result = itemsjs.search({
+      query: 'Apple'
+    });
+    
+    assert.equal(result.data.aggregations.price.facet_stats.min, 1);
+    assert.equal(result.data.aggregations.price.facet_stats.max, 7);
+    assert.equal(result.data.aggregations.price.facet_stats.avg, 3);
+    assert.equal(result.data.aggregations.price.facet_stats.sum, 9);
+
+    done();
+  });
+
+  it('makes aggregations with facet_stats and string values', function test(done) {
+    const items = [{
+      name: 'movie1',
+      tags: '€ 1 euro',
+    }, {
+      name: 'movie2',
+      tags: '€ 1 euro',
+    }, {
+      name: 'movie3',
+      tags: '€ 1 euro',
+    }];
+
+    const itemsjs = require('./../index')(items, {
+      aggregations: {
+        tags: {
+          title: 'Tags',
+          size: 1,
+          show_facet_stats: true,
+        }
+      }
+    });
+    
+    try {
+      itemsjs.search({
+        query: ''
+      });
+    } catch (err) {
+      assert.equal(err.message, 'You cant use chars to calculate the facet_stats.');
+    }
+
+    done();
+  });
+
   xit('makes aggregations for undefined field', function test(done) {
     const items = [{
       name: 'movie1',
