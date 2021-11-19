@@ -20015,6 +20015,12 @@ module.exports = Fulltext;
 },{"lodash":3,"lunr":4}],7:[function(require,module,exports){
 "use strict";
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var _ = require('lodash');
 
 var FastBitSet = require('fastbitset');
@@ -20241,12 +20247,14 @@ var getBuckets = function getBuckets(data, input, aggregations) {
     var sort;
     var size;
     var title;
+    var show_facet_stats;
 
     if (aggregations[k]) {
       order = aggregations[k].order;
       sort = aggregations[k].sort;
       size = aggregations[k].size;
       title = aggregations[k].title;
+      show_facet_stats = aggregations[k].show_facet_stats || false;
     }
 
     var buckets = _.chain(v).toPairs().map(function (v2) {
@@ -20269,13 +20277,43 @@ var getBuckets = function getBuckets(data, input, aggregations) {
       buckets = _.orderBy(buckets, ['selected', 'doc_count', 'key'], ['desc', order || 'desc', 'asc']);
     }
 
-    buckets = buckets.slice(0, size || 10);
-    return {
+    buckets = buckets.slice(0, size || 10); // Calculate the facet_stats
+
+    var facet_stats;
+    var calculated_facet_stats;
+
+    if (show_facet_stats) {
+      facet_stats = [];
+
+      _.chain(v).toPairs().forEach(function (v2) {
+        if (isNaN(v2[0])) {
+          throw new Error("You cant use chars to calculate the facet_stats.");
+        } // Doc_count 
+
+
+        if (v2[1].array().length > 0) {
+          v2[1].forEach(function (doc_count) {
+            facet_stats.push(parseInt(v2[0]));
+          });
+        }
+      }).value();
+
+      calculated_facet_stats = {
+        min: _.minBy(facet_stats),
+        max: _.maxBy(facet_stats),
+        avg: _.meanBy(facet_stats),
+        sum: _.sumBy(facet_stats)
+      };
+    }
+
+    return _objectSpread({
       name: k,
       title: title || humanize(k),
       position: position++,
       buckets: buckets
-    };
+    }, show_facet_stats && {
+      facet_stats: calculated_facet_stats
+    });
   });
 };
 
