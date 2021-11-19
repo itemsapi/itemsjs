@@ -334,7 +334,6 @@ const getBuckets = function(data, input, aggregations) {
         position: position++,
         buckets: buckets,
         ...(show_facet_stats) && {facet_stats: calculated_facet_stats},
-        test: facet_stats,
       };
   });
 };
