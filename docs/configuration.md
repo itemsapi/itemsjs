@@ -32,7 +32,9 @@ var itemsjs = require('itemsjs')(data, {
       // it is sorting by value (not by count). 'count' is the default
       sort: 'term',
       order: 'asc',
-      size: 5
+      size: 5,
+      // If you want to retrieve the min, max, avg, sum rating values from the whole filtered dataset
+      show_facet_stats: true,
     }
   },
   searchableFields: ['name', 'tags'],
