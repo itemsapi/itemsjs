@@ -1,5 +1,9 @@
 # Demo
 
+Instantsearch Adapter for ItemsJS. See more info here: https://github.com/unplatform-io/instantsearch-itemsjs-adapter
+
+![](https://raw.githubusercontent.com/itemsapi/itemsjs/master/assets/electronics_search_demo.gif)
+
 Example animation provided by [@darkrubyist](https://github.com/darkrubyist):
 
 ![](https://media.giphy.com/media/2wYrjCuszHdDVHMQ6k/giphy.gif)
