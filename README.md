@@ -10,9 +10,7 @@ Created to perform fast search on json dataset (up to 100K items).
 
 ## Demo
 
-![demo](https://media.giphy.com/media/1xOcvGeYJPPFZxSpHy/giphy.gif)
-
-(by @darkrubyist)
+![demo](https://raw.githubusercontent.com/itemsapi/itemsjs/master/assets/electronics_search_demo.gif)
 
 [See another demo examples](/docs/demo.md)
 
