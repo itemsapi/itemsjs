@@ -32,7 +32,8 @@ describe('fulltext', function() {
 
   const specialItems = [
     {'name': 'elation'},
-    {'name': 'source'}
+    {'name': 'source'},
+    {'name': 'headless'}
   ];
 
   it('checks search', function test(done) {
@@ -98,6 +99,29 @@ describe('fulltext', function() {
     assert.equal(fulltext.search('sour').length, 1);
     assert.equal(fulltext.search('sourc').length, 1);
     assert.equal(fulltext.search('source').length, 1);
+
+    done();
+  });
+
+  it('makes search stepping through characters', function test(done) {
+    const stopwordfilter = new Fulltext(specialItems, {
+      searchableFields: ['name'],
+    });
+
+    const withoutstopwordfilter = new Fulltext(specialItems, {
+      searchableFields: ['name'],
+      removeStopWordFilter: true
+    });
+    
+    assert.equal(stopwordfilter.search('h').length, 1);
+    assert.equal(stopwordfilter.search('he').length, 0); // The stopwordfilter filters out "he"
+    assert.equal(stopwordfilter.search('hea').length, 1);
+    assert.equal(stopwordfilter.search('head').length, 1);
+
+    assert.equal(withoutstopwordfilter.search('h').length, 1);
+    assert.equal(withoutstopwordfilter.search('he').length, 1); 
+    assert.equal(withoutstopwordfilter.search('hea').length, 1);
+    assert.equal(withoutstopwordfilter.search('head').length, 1);
 
     done();
   });
