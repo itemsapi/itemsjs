@@ -30,14 +30,6 @@ const Fulltext = function(items, config) {
       this.pipeline.remove(lunr.stemmer);
       this.pipeline.remove(lunr.stopWordFilter);
     }
-
-    /**
-     * Remove the stopWordFilter from the pipeline
-     * stopWordFilter: https://github.com/itemsapi/itemsjs/issues/46
-     */
-    if (config.removeStopWordFilter) {
-      this.pipeline.remove(lunr.stopWordFilter);
-    }
   });
 
   let i = 1;

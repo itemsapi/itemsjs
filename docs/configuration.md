@@ -33,7 +33,7 @@ var itemsjs = require('itemsjs')(data, {
       sort: 'term',
       order: 'asc',
       size: 5,
-      // If you want to retrieve the min, max, avg, and sum rating values from the whole filtered dataset
+      // If you want to retrieve the min, max, avg, sum rating values from the whole filtered dataset
       show_facet_stats: true,
     }
   },
