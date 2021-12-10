@@ -32,7 +32,8 @@ describe('fulltext', function() {
 
   const specialItems = [
     {'name': 'elation'},
-    {'name': 'source'}
+    {'name': 'source'},
+    {'name': 'headless'}
   ];
 
   it('checks search', function test(done) {
@@ -85,6 +86,7 @@ describe('fulltext', function() {
       searchableFields: ['name'],
       isExactSearch: true
     });
+
     assert.equal(fulltext.search('e').length, 1);
     assert.equal(fulltext.search('el').length, 1);
     assert.equal(fulltext.search('ela').length, 1);
@@ -102,9 +104,31 @@ describe('fulltext', function() {
     done();
   });
 
+  it('makes search stepping through characters', function test(done) {
+    const stopwordfilter = new Fulltext(specialItems, {
+      searchableFields: ['name'],
+    });
+
+    const withoutstopwordfilter = new Fulltext(specialItems, {
+      searchableFields: ['name'],
+      removeStopWordFilter: true
+    });
+    
+    assert.equal(stopwordfilter.search('h').length, 1);
+    assert.equal(stopwordfilter.search('he').length, 0); // The stopwordfilter filters out "he"
+    assert.equal(stopwordfilter.search('hea').length, 1);
+    assert.equal(stopwordfilter.search('head').length, 1);
+
+    assert.equal(withoutstopwordfilter.search('h').length, 1);
+    assert.equal(withoutstopwordfilter.search('he').length, 1); 
+    assert.equal(withoutstopwordfilter.search('hea').length, 1);
+    assert.equal(withoutstopwordfilter.search('head').length, 1);
+
+    done();
+  });
+
 
   xit('returns internal ids', function test(done) {
-
     const fulltext = new Fulltext(items);
     assert.deepEqual(fulltext.internal_ids(), [1, 2, 3]);
     assert.deepEqual(fulltext.bits_ids().array(), [1, 2, 3]);
