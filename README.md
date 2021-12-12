@@ -10,9 +10,7 @@ Created to perform fast search on json dataset (up to 100K items).
 
 ## Demo
 
-![demo](https://media.giphy.com/media/1xOcvGeYJPPFZxSpHy/giphy.gif)
-
-(by @darkrubyist)
+![demo](https://raw.githubusercontent.com/itemsapi/itemsjs/master/assets/electronics_search_demo.gif)
 
 [See another demo examples](/docs/demo.md)
 
@@ -203,6 +201,8 @@ Responsible for defining global configuration. Look for full example here - [con
 - **`filter`** function responsible for items filtering. The way of working is similar to js [native filter function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter). [See example](/docs/configuration.md)
   
 - **`isExactSearch`** set to `true` if you want to always show exact search matches. See [lunr stemmer](https://github.com/olivernn/lunr.js/issues/328) and [lunr stopWordFilter](https://github.com/olivernn/lunr.js/issues/233).
+
+- **`removeStopWordFilter`** set to `true` if you want to remove the stopWordFilter. See https://github.com/itemsapi/itemsjs/issues/46.
 
 - **`is_all_filtered_items`** set to `true` if you want to return the whole filtered dataset. 
 
