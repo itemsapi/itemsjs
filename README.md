@@ -84,7 +84,7 @@ function itemjs() {
 npm install itemsjs
 
 # download json data
-wget https://raw.githubusercontent.com/itemsapi/itemsapi-example-data/master/items/movies-processed.json -O data.json
+wget https://raw.githubusercontent.com/itemsapi/itemsapi-example-data/master/items/imdb.json -O data.json
 ```
 
 Create `search.js`:
