@@ -48,7 +48,7 @@ var itemsjs = require('itemsjs')(data, {
 // aggregation
 var movies = itemsjs.search({
   per_page: 1,
-  sort: 'name_asc',
+  sort: 'year_asc', // key from itemsjs configuration `sortings` object
   filters: {
     tags: ['1980s']
   }
