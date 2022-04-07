@@ -178,6 +178,15 @@ Responsible for defining global configuration. Look for full example here - [con
 
 - **`aggregations`** filters configuration i.e. for `tags`, `actors`, `colors`, etc. Responsible for generating facets.
 
+  Each filter can have it's own configuration. You can access those as `buckets` on the `search()` response.
+
+  - **`title`** Human readable filter name
+  - **`size`** Number of values provided for this filter (Default: `10`)
+  - **`sort`** Values sorted by `count` (Default) or `term` for the value name
+  - **`order`** `asc` | `desc`
+  - **`show_facet_stats`** `true` | `false` (Default) to retrieve the min, max, avg, sum rating values from the whole filtered dataset
+  - **`conjunction`** `true` (Default) stands for an _AND_ query (results have to fit all selected facet-values), `false` for an _OR_ query (results have to fit one of the selected facet-values)
+
 - **`sortings`** you can configure different sortings like `tags_asc`, `tags_desc` with options and later use it with one key.
 
 - **`searchableFields`** an array of searchable fields.
@@ -216,7 +225,7 @@ It returns full list of filters for specific aggregation
 - **`per_page`** filters per page
 - **`page`** page number
 - **`query`** used for quering filters. It's not full text search
-- **`conjunction`** choose between AND, OR
+- **`conjunction`** `true` (Default) stands for an _AND_ query, `false` for an _OR_ query
 
 ### `itemsjs.similar(id, options)`
 
