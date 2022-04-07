@@ -38,7 +38,6 @@ var itemsjs = require('itemsjs')(data, {
     }
   },
   searchableFields: ['name', 'tags'],
-  isExactSearch: true // Default false
 });
 ```
 
