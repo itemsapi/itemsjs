@@ -166,7 +166,7 @@ Examples:
 
 ## API
 
-### var itemsjs = ItemsJS(data, [configuration])
+### `var itemsjs = ItemsJS(data, [configuration])`
 
 #### `data`
 
@@ -184,7 +184,7 @@ Responsible for defining global configuration. Look for full example here - [con
 
 - **`native_search_enabled`** if native full text search is enabled (true | false. It's enabled by default)
 
-### itemsjs.search(options)
+### `itemsjs.search(options)`
 
 #### `options`
 
@@ -206,7 +206,7 @@ Responsible for defining global configuration. Look for full example here - [con
 
 - **`is_all_filtered_items`** set to `true` if you want to return the whole filtered dataset. 
 
-### itemsjs.aggregation(options)
+### `itemsjs.aggregation(options)`
 
 It returns full list of filters for specific aggregation
 
@@ -218,7 +218,7 @@ It returns full list of filters for specific aggregation
 - **`query`** used for quering filters. It's not full text search
 - **`conjunction`** choose between AND, OR
 
-### itemsjs.similar(id, options)
+### `itemsjs.similar(id, options)`
 
 It returns similar items to item for given id
 
@@ -230,7 +230,7 @@ It returns similar items to item for given id
 - **`page`** page number
 
   
-### itemsjs.reindex(data)
+### `itemsjs.reindex(data)`
 
 It's used in case you need to reindex the whole data
 
