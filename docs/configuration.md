@@ -78,14 +78,3 @@ var result = itemsjs.search({
   }
 });
 ```
-
-```js
-var result = itemsjs.search({
-  query: 'shoes',
-  prefilter: function(items) {
-    return items.filter(item => {
-      return item.price > 100;
-    });
-  }
-});
-```
