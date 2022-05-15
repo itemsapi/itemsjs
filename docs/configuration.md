@@ -38,7 +38,6 @@ var itemsjs = require('itemsjs')(data, {
     }
   },
   searchableFields: ['name', 'tags'],
-  isExactSearch: true // Default false
 });
 ```
 
@@ -48,7 +47,7 @@ var itemsjs = require('itemsjs')(data, {
 // aggregation
 var movies = itemsjs.search({
   per_page: 1,
-  sort: 'name_asc',
+  sort: 'year_asc', // key from itemsjs configuration `sortings` object
   filters: {
     tags: ['1980s']
   }
@@ -75,17 +74,6 @@ var result = itemsjs.search({
   query: 'shoes',
   filter: function(item) {
     return item.rating >= 8 && item.reviews_count >= 200;
-  }
-});
-```
-
-```js
-var result = itemsjs.search({
-  query: 'shoes',
-  prefilter: function(items) {
-    return items.filter(item => {
-      return item.price > 100;
-    });
   }
 });
 ```
