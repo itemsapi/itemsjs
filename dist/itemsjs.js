@@ -20280,7 +20280,9 @@ var getBuckets = function getBuckets(data, input, aggregations) {
       };
     }).value();
 
-    if (sort === 'term') {
+    if (_.isArray(sort)) {
+      buckets = _.orderBy(buckets, sort || ['key'], order || ['asc']);
+    } else if (sort === 'term') {
       buckets = _.orderBy(buckets, ['selected', 'key'], ['desc', order || 'asc']);
     } else {
       buckets = _.orderBy(buckets, ['selected', 'doc_count', 'key'], ['desc', order || 'desc', 'asc']);
