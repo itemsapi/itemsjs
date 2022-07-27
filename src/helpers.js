@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const FastBitSet = require('fastbitset');
+const booleanParser = require('boolean-parser');
 
 const clone = function(val) {
 
@@ -93,13 +94,6 @@ const matrix = function(facets, filters) {
       });
     });
   }
-
-  // cross all combination indexes with conjunctive index
-  /*if (conjunctive_index) {
-    _.mapValues(disjunctive_indexes, function(disjunctive_index, disjunctive_key) {
-      disjunctive_indexes[disjunctive_key] = conjunctive_index.new_intersection(disjunctive_indexes[disjunctive_key]);
-    });
-  }*/
 
   /**
    * process only negative filters
@@ -313,7 +307,7 @@ const getBuckets = function(data, input, aggregations) {
               throw new Error("You cant use chars to calculate the facet_stats.");
             }
 
-            // Doc_count 
+            // Doc_count
             if(v2[1].array().length > 0) {
               v2[1].forEach(doc_count => {
                 facet_stats.push(parseInt(v2[0]));
@@ -329,7 +323,7 @@ const getBuckets = function(data, input, aggregations) {
           sum: _.sumBy(facet_stats),
         };
       }
-              
+
       return {
         name: k,
         title: title || humanize(k),
@@ -404,6 +398,32 @@ const input_to_facet_filters = function(input, config) {
   return filters;
 };
 
+/**
+  * TODO: make it recursive
+  **/
+const parse_boolean_query = function (query) {
+  const result = booleanParser.parseBooleanQuery(query);
+
+  return _.map(result, v1 => {
+
+    if (Array.isArray(v1)) {
+
+      return _.map(v1, v2 => {
+        if (Array.isArray(v2)) {
+          return _.map(v2, v3 => {
+            return v3;
+          })
+        } else {
+          return v2.split(':');
+        }
+      })
+    } else {
+      return v1.split(':');
+    }
+  })
+}
+
+module.exports.parse_boolean_query = parse_boolean_query;
 module.exports.input_to_facet_filters = input_to_facet_filters;
 module.exports.facets_ids = facets_ids;
 module.exports.clone = clone;
