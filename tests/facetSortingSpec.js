@@ -90,5 +90,72 @@ describe('facet sorting', function() {
     done();
   });
 
+  it('sort by selected, key and order by desc, asc if sort is term', function test(done) {
+    const result_array = require('./../index')(items, {
+      aggregations: {
+        genres: {
+          sort: ['selected', 'key'],
+          order: ['desc', 'asc']
+        }
+      }
+    }).aggregation({
+      name: 'genres'
+    });
+
+    const result_term = require('./../index')(items, {
+      aggregations: {
+        genres: {
+          sort: 'term'
+        }
+      }
+    }).aggregation({
+      name: 'genres'
+    });   
+
+    assert.deepEqual(result_array.data.buckets, result_term.data.buckets);
+    
+    done();
+  });
+
+  it('sort by selected if chosen_filters_on_top is not set', function test(done) {
+    
+    const result = require('./../index')(items, {
+      aggregations: {
+        genres: {
+          sort: 'term'
+        }
+      }
+    }).aggregation({
+      name: 'genres',
+      filters: {
+        genres: ['Drama', 'Romance']
+      }
+    });
+
+    assert.deepEqual(result.data.buckets.map(v => v.key), ['Drama', 'Romance', 'Comedy', 'Horror', 'Western']);
+
+    done();    
+  });
+
+  it('does not sort by selected if chosen_filters_on_top is false', function test(done) {
+    
+    const result = require('./../index')(items, {
+      aggregations: {
+        genres: {
+          sort: 'term',
+          chosen_filters_on_top: false
+        }
+      }
+    }).aggregation({
+      name: 'genres',
+      filters: {
+        genres: ['Drama', 'Romance']
+      }
+    });
+
+    assert.deepEqual(result.data.buckets.map(v => v.key), ['Comedy', 'Drama', 'Horror', 'Romance', 'Western']);
+
+    done();    
+  });
 });
 
