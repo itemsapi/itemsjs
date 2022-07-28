@@ -186,7 +186,8 @@ Responsible for defining global configuration. Look for full example here - [con
   - **`order`** `asc` | `desc`. This can be also an array of orders (if `sort` is also array) 
   - **`show_facet_stats`** `true` | `false` (Default) to retrieve the min, max, avg, sum rating values from the whole filtered dataset
   - **`conjunction`** `true` (Default) stands for an _AND_ query (results have to fit all selected facet-values), `false` for an _OR_ query (results have to fit one of the selected facet-values)
-
+  - **`chosen_filters_on_top`** `true` (Default) Filters that have been selected will appear above those not selected, `false` for filters displaying in the order set out by `sort` and `order` regardless of selected status or not
+  
 - **`sortings`** you can configure different sortings like `tags_asc`, `tags_desc` with options and later use it with one key.
 
 - **`searchableFields`** an array of searchable fields.

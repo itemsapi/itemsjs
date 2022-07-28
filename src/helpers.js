@@ -331,14 +331,16 @@ const getBuckets = function(data, input, aggregations) {
     let sort;
     let size;
     let title;
-    let show_facet_stats
+    let show_facet_stats;
+    let chosen_filters_on_top;
 
     if (aggregations[k]) {
       order = aggregations[k].order;
       sort = aggregations[k].sort;
       size = aggregations[k].size;
       title = aggregations[k].title;
-      show_facet_stats = aggregations[k].show_facet_stats || false
+      show_facet_stats = aggregations[k].show_facet_stats || false;
+      chosen_filters_on_top = aggregations[k].chosen_filters_on_top !== false;
     }
 
     let buckets = _.chain(v)
@@ -358,13 +360,28 @@ const getBuckets = function(data, input, aggregations) {
       })
       .value();
 
+      let iteratees;
+      let sort_order;
+
       if (_.isArray(sort)) {
-        buckets = _.orderBy(buckets, sort || ['key'], order || ['asc']);
-      } else if (sort === 'term') {
-        buckets = _.orderBy(buckets, ['selected', 'key'], ['desc', order || 'asc']);
+        iteratees = sort || ['key'];
+        sort_order = order || ['asc'];
       } else {
-        buckets = _.orderBy(buckets, ['selected', 'doc_count', 'key'], ['desc', order || 'desc', 'asc']);
+        if (sort === 'term') {
+          iteratees = ['key'];
+          sort_order = [order || 'asc'];
+        } else {
+          iteratees = ['doc_count', 'key'];
+          sort_order = [order || 'desc', 'asc'];
+        }
+
+        if (chosen_filters_on_top) {
+          iteratees.unshift('selected');
+          sort_order.unshift('desc');
+        }
       }
+  
+      buckets = _.orderBy(buckets, iteratees, sort_order);
 
       buckets = buckets.slice(0, size || 10);
 
