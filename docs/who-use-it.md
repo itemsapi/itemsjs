@@ -20,6 +20,8 @@ The short list of projects using Itemsjs for powering faceted search:
 
 - Nobel Laureats - https://www.nobelprize.ru (AMP Frontend)
 
+- Radwege-Check.de - https://bikelane-safetycheck.net/ (React/Gatsby)
+
 And portfolios:
 
 - https://www.anand-iyer.com/publications/
