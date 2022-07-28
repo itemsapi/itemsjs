@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const FastBitSet = require('fastbitset');
+const booleanParser = require('boolean-parser');
 
 const clone = function(val) {
 
@@ -46,6 +47,63 @@ const combination_indexes = function(facets, filters) {
   return indexes;
 };
 
+
+const filters_matrix = function(facets, query_filters) {
+  const temp_facet = _.clone(facets);
+
+  if (!temp_facet['is_temp_copied']) {
+    _.mapValues(temp_facet['bits_data'], function(values, key) {
+      _.mapValues(temp_facet['bits_data'][key], function(facet_indexes, key2) {
+        temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data'][key][key2];
+      });
+    });
+  }
+
+  let union = null; ;
+
+  /**
+   * process only conjunctive filters
+   */
+  _.mapValues(query_filters, function(conjunction) {
+
+    let conjunctive_index = null;
+
+    _.mapValues(conjunction, function(filter) {
+
+      const filter_key = filter[0];
+      const filter_val = filter[1];
+
+      if (!temp_facet['bits_data_temp'][filter_key]) {
+        throw new Error('Panic. The key does not exist in facets lists.')
+      }
+
+
+      if (conjunctive_index && temp_facet['bits_data_temp'][filter_key][filter_val]) {
+        conjunctive_index = temp_facet['bits_data_temp'][filter_key][filter_val].new_intersection(conjunctive_index);
+      } else if (conjunctive_index && !temp_facet['bits_data_temp'][filter_key][filter_val]) {
+        conjunctive_index = new FastBitSet([]);
+      } else {
+        conjunctive_index = temp_facet['bits_data_temp'][filter_key][filter_val];
+      }
+    });
+
+    union = (union || new FastBitSet([])).new_union(conjunctive_index || new FastBitSet([]));
+  });
+
+  if (union !== null) {
+
+    _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
+      _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
+        temp_facet['bits_data_temp'][key][key2] = temp_facet['bits_data_temp'][key][key2].new_intersection(union);
+      });
+    });
+  }
+
+  return temp_facet;
+}
+
+
+
 /*
  * returns facets and ids
  */
@@ -60,6 +118,7 @@ const matrix = function(facets, filters) {
     });
   });
 
+  temp_facet['is_temp_copied'] = true;
 
   let conjunctive_index;
   const disjunctive_indexes = combination_indexes(facets, filters);
@@ -93,13 +152,6 @@ const matrix = function(facets, filters) {
       });
     });
   }
-
-  // cross all combination indexes with conjunctive index
-  /*if (conjunctive_index) {
-    _.mapValues(disjunctive_indexes, function(disjunctive_index, disjunctive_key) {
-      disjunctive_indexes[disjunctive_key] = conjunctive_index.new_intersection(disjunctive_indexes[disjunctive_key]);
-    });
-  }*/
 
   /**
    * process only negative filters
@@ -227,9 +279,26 @@ const index = function(items, fields) {
 };
 
 /**
+ * calculates ids for filters
+ */
+const filters_ids = function(facets_data) {
+
+  let output = new FastBitSet([]);
+
+  _.mapValues(facets_data, function(values, key) {
+    _.mapValues(facets_data[key], function(facet_indexes, key2) {
+      output = output.new_union(facets_data[key][key2]);
+    });
+  });
+
+  return output;
+};
+
+
+/**
  * calculates ids for facets
  * if there is no facet input then return null to not save resources for OR calculation
- * null means facets haven't crossed searched items
+ * null means facets haven't matched searched items
  */
 const facets_ids = function(facets_data, filters) {
 
@@ -237,8 +306,6 @@ const facets_ids = function(facets_data, filters) {
   let i = 0;
 
   _.mapValues(filters, function(filters, field) {
-
-    //console.log(facets_data);
 
     filters.forEach(filter => {
 
@@ -313,7 +380,7 @@ const getBuckets = function(data, input, aggregations) {
               throw new Error("You cant use chars to calculate the facet_stats.");
             }
 
-            // Doc_count 
+            // Doc_count
             if(v2[1].array().length > 0) {
               v2[1].forEach(doc_count => {
                 facet_stats.push(parseInt(v2[0]));
@@ -329,7 +396,7 @@ const getBuckets = function(data, input, aggregations) {
           sum: _.sumBy(facet_stats),
         };
       }
-              
+
       return {
         name: k,
         title: title || humanize(k),
@@ -404,13 +471,44 @@ const input_to_facet_filters = function(input, config) {
   return filters;
 };
 
+const parse_boolean_query = function (query) {
+  const result = parse_boolean_query_temp(query);
+  return result;
+}
+
+const parse_boolean_query_temp = function (query) {
+
+  const result = booleanParser.parseBooleanQuery(query);
+
+  return _.map(result, v1 => {
+
+    if (Array.isArray(v1)) {
+
+      return _.map(v1, v2 => {
+        if (Array.isArray(v2)) {
+          return _.map(v2, v3 => {
+            return v3;
+          })
+        } else {
+          return v2.split(':');
+        }
+      })
+    } else {
+      return v1.split(':');
+    }
+  })
+}
+
+module.exports.parse_boolean_query = parse_boolean_query;
 module.exports.input_to_facet_filters = input_to_facet_filters;
 module.exports.facets_ids = facets_ids;
+module.exports.filters_ids = filters_ids;
 module.exports.clone = clone;
 module.exports.humanize = humanize;
 module.exports.index = index;
 module.exports.combination_indexes = combination_indexes;
 module.exports.matrix = matrix;
+module.exports.filters_matrix = filters_matrix;
 module.exports.getBuckets = getBuckets;
 module.exports.getFacets = getBuckets;
 module.exports.mergeAggregations = mergeAggregations;

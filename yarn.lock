@@ -1441,6 +1441,11 @@
   "resolved" "https://registry.npmjs.org/bn.js/-/bn.js-5.2.0.tgz"
   "version" "5.2.0"
 
+"boolean-parser@^0.0.2":
+  "integrity" "sha512-e06Mqk6t7DOXaEo3s+RATvv7ZNt5brRQ2os4NUHVkVCzUD0Z7Gw4AL4AFA/gT3WaLhrobmGvRVh1/UuJiY3sKg=="
+  "resolved" "https://registry.npmjs.org/boolean-parser/-/boolean-parser-0.0.2.tgz"
+  "version" "0.0.2"
+
 "brace-expansion@^1.1.7":
   "integrity" "sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA=="
   "resolved" "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.11.tgz"
