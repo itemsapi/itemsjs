@@ -5,7 +5,7 @@ const Facets = require('./../src/facets');
 const helpers = require('./../src/helpers');
 const FastBitSet = require('fastbitset');
 
-describe('filtering and generating facets', function() {
+describe('filtering and generating facets with matrix (9 rows in dataset)', function() {
 
   const items =  [
     {a: 1, b: 2, c: 3, d: 3},
@@ -21,7 +21,7 @@ describe('filtering and generating facets', function() {
 
   const fields = ['a', 'b', 'c'];
 
-  it('checks matrix without filters applied', function test(done) {
+  it('checks matrix with no argument provided', function test(done) {
 
     const data = helpers.index(items, fields);
 
@@ -34,7 +34,7 @@ describe('filtering and generating facets', function() {
     done();
   });
 
-  it('checks matrix with filters', function test(done) {
+  it('checks matrix with some values', function test(done) {
 
     const data = helpers.index(items, fields);
 
@@ -51,7 +51,7 @@ describe('filtering and generating facets', function() {
     done();
   });
 
-  it('checks matrix with one empty filter', function test(done) {
+  it('checks matrix with one not existing value', function test(done) {
 
     const data = helpers.index(items, fields);
 
@@ -64,7 +64,8 @@ describe('filtering and generating facets', function() {
     done();
   });
 
-  it('checks matrix with one empty filter and check again', function test(done) {
+
+  it('checks matrix with one not existing value and check again with another values', function test(done) {
 
     const data = helpers.index(items, fields);
 
@@ -80,7 +81,7 @@ describe('filtering and generating facets', function() {
   });
 
 
-  it('checks matrix with disjunctive filters', function test(done) {
+  it('checks matrix with disjunctive values', function test(done) {
 
     const data = helpers.index(items, fields);
 
@@ -97,7 +98,7 @@ describe('filtering and generating facets', function() {
     done();
   });
 
-  it('checks matrix with disjunctive filters (ittocean case)', function test(done) {
+  it('checks matrix with disjunctive values (ittocean case)', function test(done) {
 
     const data = helpers.index(items, fields);
 
@@ -116,7 +117,7 @@ describe('filtering and generating facets', function() {
   });
 });
 
-describe('filtering and generating facets', function() {
+describe('filtering and generating facets for another dataset (3 rows in dataset)', function() {
 
   const items =  [
     {a: 1, b: 1, c: 3},
@@ -126,7 +127,7 @@ describe('filtering and generating facets', function() {
 
   const fields = ['a', 'b', 'c'];
 
-  it('checks matrix with disjunctive filters', function test(done) {
+  it('checks matrix with disjunctive values', function test(done) {
 
     const data = helpers.index(items, fields);
 
@@ -141,7 +142,7 @@ describe('filtering and generating facets', function() {
     done();
   });
 
-  it('checks matrix with one disjunctive filters', function test(done) {
+  it('checks matrix with one disjunctive value', function test(done) {
 
     const data = helpers.index(items, fields);
 
@@ -156,7 +157,7 @@ describe('filtering and generating facets', function() {
     done();
   });
 
-  it('checks matrix with many disjunctive filters', function test(done) {
+  it('checks matrix with many disjunctive values', function test(done) {
 
     const data = helpers.index(items, fields);
     const result = helpers.matrix(data, [[['a', 1]], [['b', 1]], [['c', 3]]]);
@@ -170,7 +171,7 @@ describe('filtering and generating facets', function() {
     done();
   });
 
-  it('checks matrix with negative filters', function test(done) {
+  it('checks matrix with negative filter values', function test(done) {
 
     const data = helpers.index(items, fields);
     const result = helpers.matrix(data, [['a', '-', 1]]);
@@ -184,7 +185,7 @@ describe('filtering and generating facets', function() {
     done();
   });
 
-  it('checks matrix with negative filters 2', function test(done) {
+  it('checks matrix with negative filter values (2)', function test(done) {
 
     const data = helpers.index(items, fields);
     const result = helpers.matrix(data, [['a', '-', 1], ['b', '-', 2]]);
@@ -199,7 +200,7 @@ describe('filtering and generating facets', function() {
   });
 });
 
-describe('filtering and generating facets', function() {
+describe('filtering and generating facets (4 rows in dataset)', function() {
 
   const items = [
     { a: 1, b: 3 },
@@ -210,7 +211,7 @@ describe('filtering and generating facets', function() {
 
   const fields = ['a', 'b'];
 
-  it('checks matrix with disjunctive filters', function test(done) {
+  it('checks matrix with disjunctive values', function test(done) {
 
     const data = helpers.index(items, fields);
 
@@ -223,7 +224,7 @@ describe('filtering and generating facets', function() {
   });
 
 
-  xit('checks matrix with disjunctive filters', function test(done) {
+  xit('checks matrix with disjunctive values', function test(done) {
 
     const data = helpers.index(items, fields);
 
@@ -235,7 +236,7 @@ describe('filtering and generating facets', function() {
     done();
   });
 
-  it('checks matrix with disjunctive filters', function test(done) {
+  it('checks matrix with disjunctive values', function test(done) {
 
     const data = helpers.index(items, fields);
 

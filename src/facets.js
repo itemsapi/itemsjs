@@ -78,9 +78,15 @@ Facets.prototype = {
 
     temp_facet.not_ids = helpers.facets_ids(temp_facet['bits_data'], input.not_filters, config);
 
-    const filters = helpers.input_to_facet_filters(input, config);
+    let temp_data;
 
-    const temp_data = helpers.matrix(this.facets, filters);
+    const filters = helpers.input_to_facet_filters(input, config);
+    temp_data = helpers.matrix(this.facets, filters);
+
+    if (input.filters_query) {
+      const filters = helpers.parse_boolean_query(input.filters_query);
+      temp_data = helpers.filters_matrix(temp_data, filters);
+    }
 
     temp_facet['bits_data_temp'] = temp_data['bits_data_temp'];
 
@@ -98,9 +104,15 @@ Facets.prototype = {
     });
 
     /**
-     * calculating ids
+     * calculating ids (for a list of items)
+     * facets ids is faster and filter ids because filter ids makes union each to each filters
+     * filter ids needs to be used if there is filters query
      */
-    temp_facet.ids = helpers.facets_ids(temp_facet['bits_data_temp'], input.filters, config);
+    if (input.filters_query) {
+      temp_facet.ids = helpers.filters_ids(temp_facet['bits_data_temp']);
+    } else {
+      temp_facet.ids = helpers.facets_ids(temp_facet['bits_data_temp'], input.filters);
+    }
 
     return temp_facet;
   }

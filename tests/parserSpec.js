@@ -58,6 +58,25 @@ describe('parsing filters to matrix', function() {
     done();
   });
 
+  it('makes disjunction for two different groups', function test(done) {
+
+    const result = helpers.input_to_facet_filters({
+      filters: {
+        tags: ['novel'],
+        category: ['Western']
+      }
+    }, {
+      tags: {
+        conjunction: false
+      },
+      category: {
+        conjunction: false
+      }
+    });
+
+    assert.deepEqual([ [ [ 'tags', 'novel' ] ], [[ 'category', 'Western' ]]], result);
+    done();
+  });
 
   it('makes negative filter', function test(done) {
 
@@ -109,31 +128,21 @@ describe('parsing boolean queries', function() {
   it('makes conjunction', function test(done) {
 
     const result = helpers.parse_boolean_query('(tags:novel AND tags:90s)');
-    console.log(result);
-
     assert.deepEqual([ [ ['tags', 'novel' ], [ 'tags', '90s' ] ] ], result);
-    //assert.deepEqual([ [ 'tags', 'novel' ], [ 'tags', '90s' ] ], result);
     done();
   });
 
   it('makes disjunction', function test(done) {
 
     const result = helpers.parse_boolean_query('(tags:novel OR tags:90s)');
-    console.log(result);
-
     assert.deepEqual([ [ [ 'tags', 'novel' ] ], [ [ 'tags', '90s' ] ] ], result);
-    //assert.deepEqual([ [ [ 'tags', 'novel' ], [ 'tags', '90s' ] ] ], result);
     done();
   });
 
   it('makes conjunction and disjunction', function test(done) {
 
-    //assert.deepEqual([ [ [ 'tags', 'novel' ] ], [ 'category', 'Western' ]], result);
     const result = helpers.parse_boolean_query('tags:novel OR category:Western');
-    //console.log(result);
-
     assert.deepEqual([ [ [ 'tags', 'novel' ] ], [ [ 'category', 'Western' ] ] ], result);
-    //assert.deepEqual([ [ [ 'tags', 'novel' ] ], [ 'category', 'Western' ]], result);
     done();
   });
 });

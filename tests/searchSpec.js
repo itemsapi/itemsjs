@@ -85,6 +85,52 @@ describe('search', function() {
     done();
   });
 
+  it('searches with filters query', function test(done) {
+
+    const itemsjs = require('./../index')(items, configuration);
+
+    const result = itemsjs.search({
+      filters_query: 'tags:c'
+    });
+
+    assert.equal(result.data.items.length, 3);
+    assert.equal(result.data.aggregations.tags.buckets[0].doc_count, 3);
+
+    done();
+  });
+
+  it('searches with filters query and filters', function test(done) {
+
+    const itemsjs = require('./../index')(items, configuration);
+
+    const result = itemsjs.search({
+      filters_query: 'tags:c',
+      filters: {
+        tags: ['z']
+      }
+    });
+
+    assert.equal(result.data.items.length, 1);
+    assert.equal(result.data.aggregations.tags.buckets[0].doc_count, 1);
+
+    done();
+  });
+
+
+  it('searches with filters query not existing value', function test(done) {
+
+    const itemsjs = require('./../index')(items, configuration);
+
+    const result = itemsjs.search({
+      filters_query: 'tags:not_existing'
+    });
+
+    assert.equal(result.data.items.length, 0);
+    assert.equal(result.data.aggregations.tags.buckets[0].doc_count, 0);
+
+    done();
+  });
+
   it('searches with filter and query', function test(done) {
 
     const itemsjs = require('./../index')(items, configuration);
