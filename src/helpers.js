@@ -333,6 +333,7 @@ const getBuckets = function(data, input, aggregations) {
     let title;
     let show_facet_stats;
     let chosen_filters_on_top;
+    let hide_zero_doc_count;
 
     if (aggregations[k]) {
       order = aggregations[k].order;
@@ -341,6 +342,7 @@ const getBuckets = function(data, input, aggregations) {
       title = aggregations[k].title;
       show_facet_stats = aggregations[k].show_facet_stats || false;
       chosen_filters_on_top = aggregations[k].chosen_filters_on_top !== false;
+      hide_zero_doc_count = aggregations[k].hide_zero_doc_count || false;
     }
 
     let buckets = _.chain(v)
@@ -352,12 +354,19 @@ const getBuckets = function(data, input, aggregations) {
           filters = input.filters[k];
         }
 
+        let doc_count = v2[1].array().length;
+
+        if (hide_zero_doc_count && doc_count === 0) {
+          return;
+        }
+
         return {
           key: v2[0],
-          doc_count: v2[1].array().length,
+          doc_count: doc_count,
           selected: filters.indexOf(v2[0]) !== -1
         };
       })
+      .compact()
       .value();
 
       let iteratees;
