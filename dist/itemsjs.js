@@ -20133,13 +20133,14 @@ var FastBitSet = require('fastbitset');
  */
 
 
-var Facets = function Facets(items, config) {
+var Facets = function Facets(items, configuration) {
   var _this = this;
 
-  config = config || {};
+  configuration = configuration || {};
+  configuration.aggregations = configuration.aggregations || {};
   this.items = items;
-  this.config = config;
-  this.facets = helpers.index(items, _.keys(config));
+  this.config = configuration.aggregations;
+  this.facets = helpers.index(items, _.keys(configuration.aggregations));
   this._items_map = {};
   this._ids = [];
   var i = 1;
@@ -20156,8 +20157,10 @@ var Facets = function Facets(items, config) {
 
   if (items) {
     items.forEach(function (v) {
-      if (v.id && v._id) {
-        _this.ids_map[v.id] = v._id;
+      var custom_id_field = configuration.custom_id_field || 'id';
+
+      if (v[custom_id_field] && v._id) {
+        _this.ids_map[v[custom_id_field]] = v._id;
       }
     });
   }
@@ -20849,7 +20852,7 @@ module.exports = function itemsjs(items, configuration) {
   } // index facets
 
 
-  var facets = new Facets(items, configuration.aggregations);
+  var facets = new Facets(items, configuration);
   return {
     /**
      * per_page
@@ -20894,7 +20897,7 @@ module.exports = function itemsjs(items, configuration) {
     reindex: function reindex(newItems) {
       items = newItems;
       fulltext = new Fulltext(items, configuration);
-      facets = new Facets(items, configuration.aggregations);
+      facets = new Facets(items, configuration);
     }
   };
 };

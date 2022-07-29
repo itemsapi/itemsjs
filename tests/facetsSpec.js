@@ -53,7 +53,9 @@ describe('conjunctive search', function() {
     }
   };
 
-  const facets = new Facets(items, aggregations);
+  const facets = new Facets(items, {
+    aggregations: aggregations
+  });
   const itemsjs = require('./../index')(items, {
     aggregations: aggregations
   });
@@ -240,7 +242,9 @@ describe('disjunctive search', function() {
     }
   };
 
-  const facets = new Facets(items, aggregations);
+  const facets = new Facets(items, {
+    aggregations: aggregations
+  });
 
   it('returns facets', function test(done) {
 
@@ -305,7 +309,9 @@ describe('disjunctive and conjunctive search', function() {
     }
   };
 
-  const facets = new Facets(items, aggregations);
+  const facets = new Facets(items, {
+    aggregations: aggregations
+  });
 
   it('returns facets', function test(done) {
 
@@ -371,7 +377,9 @@ describe('generates facets crossed with query', function() {
     }
   };
 
-  const facets = new Facets(items, aggregations);
+  const facets = new Facets(items, {
+    aggregations: aggregations
+  });
   const itemsjs = require('./../index')(items, {
     aggregations: aggregations,
     searchableFields: ['actors'],
@@ -449,7 +457,9 @@ describe('generates symetrical disjunctive facets (SergeyRe)', function() {
     { a: 2, b: 4 }
   ];
 
-  const facets = new Facets(items, aggregations);
+  const facets = new Facets(items, {
+    aggregations: aggregations
+  });
   const itemsjs = require('./../index')(items, {
     aggregations: aggregations,
   });
