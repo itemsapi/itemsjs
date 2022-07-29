@@ -20646,6 +20646,7 @@ var getBuckets = function getBuckets(data, input, aggregations) {
     var title;
     var show_facet_stats;
     var chosen_filters_on_top;
+    var hide_zero_doc_count;
 
     if (aggregations[k]) {
       order = aggregations[k].order;
@@ -20654,6 +20655,7 @@ var getBuckets = function getBuckets(data, input, aggregations) {
       title = aggregations[k].title;
       show_facet_stats = aggregations[k].show_facet_stats || false;
       chosen_filters_on_top = aggregations[k].chosen_filters_on_top !== false;
+      hide_zero_doc_count = aggregations[k].hide_zero_doc_count || false;
     }
 
     var buckets = _.chain(v).toPairs().map(function (v2) {
@@ -20663,12 +20665,18 @@ var getBuckets = function getBuckets(data, input, aggregations) {
         filters = input.filters[k];
       }
 
+      var doc_count = v2[1].array().length;
+
+      if (hide_zero_doc_count && doc_count === 0) {
+        return;
+      }
+
       return {
         key: v2[0],
-        doc_count: v2[1].array().length,
+        doc_count: doc_count,
         selected: filters.indexOf(v2[0]) !== -1
       };
-    }).value();
+    }).compact().value();
 
     var iteratees;
     var sort_order;
