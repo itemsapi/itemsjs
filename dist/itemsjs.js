@@ -20674,7 +20674,7 @@ var getBuckets = function getBuckets(data, input, aggregations) {
       iteratees = sort || ['key'];
       sort_order = order || ['asc'];
     } else {
-      if (sort === 'term') {
+      if (sort === 'term' || sort === 'key') {
         iteratees = ['key'];
         sort_order = [order || 'asc'];
       } else {

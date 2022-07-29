@@ -36,6 +36,24 @@ describe('facet sorting', function() {
     done();
   });
 
+  it('sort by key (field, not array)', function test(done) {
+
+    const result = require('./../index')(items, {
+      aggregations: {
+        genres: {
+          sort: 'key',
+          order: 'desc',
+        }
+      }
+    }).aggregation({
+      name: 'genres',
+    });
+
+    assert.deepEqual(result.data.buckets.map(v => v.key), ['Western', 'Romance', 'Horror', 'Drama', 'Comedy']);
+
+    done();
+  });
+
   it('sort by key descending', function test(done) {
 
     const result = require('./../index')(items, {
@@ -61,6 +79,24 @@ describe('facet sorting', function() {
         genres: {
           sort: ['doc_count'],
           order: ['desc'],
+        }
+      }
+    }).aggregation({
+      name: 'genres',
+    });
+
+    assert.deepEqual(result.data.buckets.map(v => v.key), ['Western', 'Comedy', 'Drama', 'Horror', 'Romance']);
+
+    done();
+  });
+
+  it('sort by count', function test(done) {
+
+    const result = require('./../index')(items, {
+      aggregations: {
+        genres: {
+          sort: 'count',
+          order: 'desc',
         }
       }
     }).aggregation({
@@ -110,15 +146,15 @@ describe('facet sorting', function() {
       }
     }).aggregation({
       name: 'genres'
-    });   
+    });
 
     assert.deepEqual(result_array.data.buckets, result_term.data.buckets);
-    
+
     done();
   });
 
   it('sort by selected if chosen_filters_on_top is not set', function test(done) {
-    
+
     const result = require('./../index')(items, {
       aggregations: {
         genres: {
@@ -134,15 +170,15 @@ describe('facet sorting', function() {
 
     assert.deepEqual(result.data.buckets.map(v => v.key), ['Drama', 'Romance', 'Comedy', 'Horror', 'Western']);
 
-    done();    
+    done();
   });
 
   it('does not sort by selected if chosen_filters_on_top is false', function test(done) {
-    
+
     const result = require('./../index')(items, {
       aggregations: {
         genres: {
-          sort: 'term',
+          sort: 'key',
           chosen_filters_on_top: false
         }
       }
@@ -155,7 +191,7 @@ describe('facet sorting', function() {
 
     assert.deepEqual(result.data.buckets.map(v => v.key), ['Comedy', 'Drama', 'Horror', 'Romance', 'Western']);
 
-    done();    
+    done();
   });
 });
 

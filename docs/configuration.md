@@ -22,6 +22,9 @@ var itemsjs = require('itemsjs')(data, {
       title: 'Tags',
       // conjunctive facet (AND)
       conjunction: true,
+      // sort can ben an array
+      sort: ['selected', 'count', 'key']
+      order: ['desc', 'desc', 'asc']
       // the default is 10
       size: 20
     },
@@ -30,7 +33,7 @@ var itemsjs = require('itemsjs')(data, {
       // non conjunctive facet (OR)
       conjunction: false,
       // it is sorting by value (not by count). 'count' is the default
-      sort: 'term',
+      sort: 'key',
       order: 'asc',
       size: 5,
       // If you want to retrieve the min, max, avg, sum rating values from the whole filtered dataset

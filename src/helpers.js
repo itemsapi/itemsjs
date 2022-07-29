@@ -367,7 +367,7 @@ const getBuckets = function(data, input, aggregations) {
         iteratees = sort || ['key'];
         sort_order = order || ['asc'];
       } else {
-        if (sort === 'term') {
+        if (sort === 'term' || sort === 'key') {
           iteratees = ['key'];
           sort_order = [order || 'asc'];
         } else {
@@ -380,7 +380,7 @@ const getBuckets = function(data, input, aggregations) {
           sort_order.unshift('desc');
         }
       }
-  
+
       buckets = _.orderBy(buckets, iteratees, sort_order);
 
       buckets = buckets.slice(0, size || 10);
