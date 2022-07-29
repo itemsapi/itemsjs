@@ -182,7 +182,7 @@ Responsible for defining global configuration. Look for full example here - [con
 
   - **`title`** Human readable filter name
   - **`size`** Number of values provided for this filter (Default: `10`)
-  - **`sort`** Values sorted by `count` (Default) or `term` for the value name. This can be also an array of keys which define the sorting priority 
+  - **`sort`** Values sorted by `count` (Default) or `key` for the value name. This can be also an array of keys which define the sorting priority 
   - **`order`** `asc` | `desc`. This can be also an array of orders (if `sort` is also array) 
   - **`show_facet_stats`** `true` | `false` (Default) to retrieve the min, max, avg, sum rating values from the whole filtered dataset
   - **`conjunction`** `true` (Default) stands for an _AND_ query (results have to fit all selected facet-values), `false` for an _OR_ query (results have to fit one of the selected facet-values)
