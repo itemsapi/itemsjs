@@ -193,5 +193,25 @@ describe('facet sorting', function() {
 
     done();
   });
+
+  it('excludes filters with zero doc_count if hide_zero_doc_count is true', function test(done) {
+
+    const result = require('./../index')(items, {
+      aggregations: {
+        genres: {
+          hide_zero_doc_count: true
+        }
+      }
+    }).aggregation({
+      name: 'genres',
+      filters: {
+        genres: ['Western']
+      }
+    });
+
+    assert.deepEqual(result.data.buckets.map(v => v.key), ['Western']);
+
+    done();
+  });
 });
 

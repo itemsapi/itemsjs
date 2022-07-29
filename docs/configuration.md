@@ -39,7 +39,9 @@ var itemsjs = require('itemsjs')(data, {
       // If you want to retrieve the min, max, avg, sum rating values from the whole filtered dataset
       show_facet_stats: true,
       // If you don't want selected filters to be positioned at the top of the filter list
-      chosen_filters_on_top: false
+      chosen_filters_on_top: false,
+      // If you don't want to show filters with no results returned
+      hide_zero_doc_count: true
     }
   },
   searchableFields: ['name', 'tags'],
