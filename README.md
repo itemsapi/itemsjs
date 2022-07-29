@@ -153,7 +153,7 @@ If native full text search is not enough then you can integrate with external fu
 
 How it works:
 
-- each item of your data needs to have `id` field
+- each item of your data needs to have `id` field. It can be also custom field but it needs to be defined.
 - `native_search_enabled` option in configuration should be disabled
 - index data once in your search and itemsjs
 - make search in your custom search and provide `ids` data into itemsjs

@@ -17,7 +17,7 @@ module.exports = function itemsjs(items, configuration) {
   }
 
   // index facets
-  let facets = new Facets(items, configuration.aggregations);
+  let facets = new Facets(items, configuration);
 
   return {
     /**
@@ -65,7 +65,7 @@ module.exports = function itemsjs(items, configuration) {
     reindex: function(newItems) {
       items = newItems;
       fulltext = new Fulltext(items, configuration);
-      facets = new Facets(items, configuration.aggregations);
+      facets = new Facets(items, configuration);
     }
   };
 };

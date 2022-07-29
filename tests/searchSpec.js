@@ -316,4 +316,37 @@ describe('custom fulltext integration', function() {
     assert.equal(result.data.items.length, 2);
     done();
   });
+
+  it('makes faceted search after separated quasi fulltext with custom id field', function test(done) {
+
+    let i = 10;
+    const temp_movies = movies.map(v => {
+
+      v.uuid = i;
+      i += 10;
+      delete v.id;
+      return v;
+    });
+
+    configuration.custom_id_field = 'uuid';
+
+    itemsjs = require('./../index')(temp_movies, configuration);
+
+    let result = itemsjs.search({
+      ids: temp_movies.map(v => v.uuid).slice(0, 1),
+    });
+
+    assert.equal(result.data.items[0].uuid, 10);
+    assert.equal(result.data.items[0]._id, 1);
+    assert.equal(result.data.items.length, 1);
+
+    result = itemsjs.search({
+      ids: [50, 20]
+    });
+
+    assert.equal(result.data.items[0].uuid, 50);
+    assert.equal(result.data.items[0]._id, 5);
+    assert.equal(result.data.items.length, 2);
+    done();
+  });
 });

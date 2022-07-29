@@ -32,6 +32,7 @@ const data = [{
 // configuration for itemsjs faceted search
 const configuration = {
   native_search_enabled: false,
+  custom_id_field: 'id', // 'id' is a default one but we can also use 'uuid' and other if necessary
   aggregations: {
     category: {
       title: 'Categories',

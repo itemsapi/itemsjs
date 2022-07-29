@@ -5,12 +5,13 @@ const FastBitSet = require('fastbitset');
 /**
  * responsible for making faceted search
  */
-const Facets = function(items, config) {
+const Facets = function(items, configuration) {
 
-  config = config || {};
+  configuration = configuration || {};
+  configuration.aggregations = configuration.aggregations || {};
   this.items = items;
-  this.config = config;
-  this.facets = helpers.index(items, _.keys(config));
+  this.config = configuration.aggregations;
+  this.facets = helpers.index(items, _.keys(configuration.aggregations));
 
   this._items_map = {};
   this._ids = [];
@@ -27,8 +28,10 @@ const Facets = function(items, config) {
 
   if (items) {
     items.forEach(v => {
-      if (v.id && v._id) {
-        this.ids_map[v.id] = v._id;
+
+      const custom_id_field = configuration.custom_id_field || 'id';
+      if (v[custom_id_field] && v._id) {
+        this.ids_map[v[custom_id_field]] = v._id;
       }
     });
   }
