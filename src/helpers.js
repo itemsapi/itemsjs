@@ -366,7 +366,7 @@ const getBuckets = function(data, input, aggregations) {
           selected: filters.indexOf(v2[0]) !== -1
         };
       })
-      .compact(this)
+      .compact()
       .value();
 
       let iteratees;
