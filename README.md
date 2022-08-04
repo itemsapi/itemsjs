@@ -90,9 +90,9 @@ wget https://raw.githubusercontent.com/itemsapi/itemsapi-example-data/master/ite
 Create `search.js`:
 
 ```js
-var data = require('./data.json');
+const data = require('./data.json');
 
-var itemsjs = require('itemsjs')(data, {
+const itemsjs = require('itemsjs')(data, {
   sortings: {
     name_asc: {
       field: 'name',
@@ -120,7 +120,7 @@ var itemsjs = require('itemsjs')(data, {
 /**
  * get filtered list of movies 
  */
-var movies = itemsjs.search({
+const movies = itemsjs.search({
   per_page: 1,
   sort: 'name_asc',
   // full text search
@@ -134,7 +134,7 @@ console.log(JSON.stringify(movies, null, 2));
 /**
  * get list of top tags 
  */
-var top_tags = itemsjs.aggregation({
+const top_tags = itemsjs.aggregation({
   name: 'tags',
   per_page: 10
 })
@@ -166,7 +166,7 @@ Examples:
 
 ## API
 
-### `var itemsjs = ItemsJS(data, [configuration])`
+### `const itemsjs = ItemsJS(data, [configuration])`
 
 #### `data`
 
