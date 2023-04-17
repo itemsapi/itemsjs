@@ -20665,9 +20665,9 @@ var getBuckets = function getBuckets(data, input, aggregations) {
         filters = input.filters[k];
       }
 
-      var doc_count = v2[1].array().length;
+      var doc_count = v2[1].array().length; //hide zero_doc_count facet only if it is not selected
 
-      if (hide_zero_doc_count && doc_count === 0) {
+      if (hide_zero_doc_count && doc_count === 0 && filters.indexOf(v2[0]) === -1) {
         return;
       }
 
