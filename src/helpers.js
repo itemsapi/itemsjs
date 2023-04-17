@@ -3,6 +3,7 @@ const FastBitSet = require('fastbitset');
 const booleanParser = require('boolean-parser');
 
 const clone = function(val) {
+ 
 
   try {
     return JSON.parse(JSON.stringify(val));
@@ -356,7 +357,8 @@ const getBuckets = function(data, input, aggregations) {
 
         let doc_count = v2[1].array().length;
 
-        if (hide_zero_doc_count && doc_count === 0) {
+         //hide zero_doc_count facet only if it is not selected
+        if (hide_zero_doc_count && doc_count === 0 && filters.indexOf(v2[0]) === -1) {
           return;
         }
 
