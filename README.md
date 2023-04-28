@@ -195,6 +195,10 @@ Responsible for defining global configuration. Look for full example here - [con
 
 - **`native_search_enabled`** if native full text search is enabled (true | false. It's enabled by default)
 
+- **`isExactSearch`** set to `true` if you want to always show exact search matches. See [lunr stemmer](https://github.com/olivernn/lunr.js/issues/328) and [lunr stopWordFilter](https://github.com/olivernn/lunr.js/issues/233).
+
+- **`removeStopWordFilter`** set to `true` if you want to remove the stopWordFilter. See https://github.com/itemsapi/itemsjs/issues/46.
+
 ### `itemsjs.search(options)`
 
 #### `options`
@@ -212,10 +216,6 @@ Responsible for defining global configuration. Look for full example here - [con
 - **`filter`** function responsible for items filtering. The way of working is similar to js [native filter function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter). [See example](/docs/configuration.md)
 
 - **`filters_query`** boolean filtering i.e. (tags:novel OR tags:80s) AND category:Western
-  
-- **`isExactSearch`** set to `true` if you want to always show exact search matches. See [lunr stemmer](https://github.com/olivernn/lunr.js/issues/328) and [lunr stopWordFilter](https://github.com/olivernn/lunr.js/issues/233).
-
-- **`removeStopWordFilter`** set to `true` if you want to remove the stopWordFilter. See https://github.com/itemsapi/itemsjs/issues/46.
 
 - **`is_all_filtered_items`** set to `true` if you want to return the whole filtered dataset. 
 
