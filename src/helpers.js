@@ -39,7 +39,7 @@ const combination_indexes = function(facets, filters) {
         const filter_val = disjunctive_filter[1];
 
         filter_keys.push(filter_key);
-        facet_union = facet_union.new_union(facets['bits_data'][filter_key][filter_val]);
+        facet_union = facet_union.new_union(facets['bits_data'][filter_key][filter_val] || new FastBitSet([]));
         indexes[filter_key] = facet_union;
       });
     }
@@ -311,7 +311,7 @@ const facets_ids = function(facets_data, filters) {
     filters.forEach(filter => {
 
       ++i;
-      output = output.new_union(facets_data[field][filter]);
+      output = output.new_union(facets_data[field][filter] || new FastBitSet([]));
     });
   });
 

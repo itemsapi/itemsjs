@@ -28,7 +28,7 @@ describe('search', function() {
       },
       category: {
         title: 'Category',
-        conjunction: true,
+        conjunction: false,
       }
     }
   };
@@ -191,6 +191,22 @@ describe('search', function() {
     });
 
     assert.equal(result.data.items.length, 0);
+
+    done();
+  });
+
+  it('makes search with non existing filter value', function test(done) {
+
+    const itemsjs = require('./../index')(items, configuration);
+
+    const result = itemsjs.search({
+      filters: {
+        category: ['drama', 'thriller']
+      }
+    });
+
+    assert.equal(result.data.items.length, 2);
+    assert.equal(result.data.aggregations.tags.buckets[0].doc_count, 2);
 
     done();
   });
