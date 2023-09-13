@@ -28,7 +28,7 @@ describe('search', function() {
       },
       category: {
         title: 'Category',
-        conjunction: false,
+        conjunction: true,
       }
     }
   };
@@ -195,8 +195,25 @@ describe('search', function() {
     done();
   });
 
-  it('makes search with non existing filter value', function test(done) {
+  it('makes search with non existing filter value with conjunction true should return no results', function test(done) {
 
+    const itemsjs = require('./../index')(items, configuration);
+    
+    const result = itemsjs.search({
+      filters: {
+        category: ['drama', 'thriller']
+      }
+    });
+    
+    assert.equal(result.data.items.length, 0);
+    assert.equal(result.data.aggregations.tags.buckets[0].doc_count, 0);
+    
+    done();
+  });
+  
+  it('makes search with non existing filter value with conjunction false should return results', function test(done) {
+    
+    configuration.aggregations.category.conjunction = false;
     const itemsjs = require('./../index')(items, configuration);
 
     const result = itemsjs.search({
