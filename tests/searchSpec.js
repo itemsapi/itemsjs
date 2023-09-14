@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = require('assert');
+const { clone } = require('lodash');
 const items = require('./fixtures/items.json');
 const movies = require('./fixtures/movies.json');
 let itemsjs = require('./../src/index')();
@@ -213,8 +214,10 @@ describe('search', function() {
   
   it('makes search with non existing filter value with conjunction false should return results', function test(done) {
     
-    configuration.aggregations.category.conjunction = false;
-    const itemsjs = require('./../index')(items, configuration);
+    const localConfiguration = clone(configuration);
+    localConfiguration.aggregations.category.conjunction = false;
+
+    const itemsjs = require('./../index')(items, localConfiguration);
 
     const result = itemsjs.search({
       filters: {
@@ -224,6 +227,25 @@ describe('search', function() {
 
     assert.equal(result.data.items.length, 2);
     assert.equal(result.data.aggregations.tags.buckets[0].doc_count, 2);
+
+    done();
+  });
+
+  it('makes search with non existing single filter value with conjunction false should return no results', function test(done) {
+    
+    const localConfiguration = clone(configuration);
+    localConfiguration.aggregations.category.conjunction = false;
+
+    const itemsjs = require('./../index')(items, configuration);
+
+    const result = itemsjs.search({
+      filters: {
+        category: ['thriller']
+      }
+    });
+
+    assert.equal(result.data.items.length, 0);
+    assert.equal(result.data.aggregations.tags.buckets[0].doc_count, 0);
 
     done();
   });
