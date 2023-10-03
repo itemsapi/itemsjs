@@ -22,12 +22,13 @@ You can find a list of real implementations - [here](/docs/who-use-it.md)
 
 ## Features
 
-- faceted search
-- full text
-- pagination
-- no dependencies (only javascript)
-- working on backend and frontend
-- working with custom full text search
+- Ultra-fast faceted search: Process and filter data with blazing speed.
+- Simple full-text search: Intuitive and straightforward text searching.
+- Relevance scoring: Rank search results based on relevance.
+- Facet filtering and sorting: Filter and order results by various facets.
+- Pagination
+- Works on both backend and frontend
+- Integration with custom full-text search engines
 
 ## Getting Started
 
