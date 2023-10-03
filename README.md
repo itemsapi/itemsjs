@@ -5,7 +5,7 @@
 
 # ItemsJS - search engine in javascript
 
-Full text, faceted, dependency free search library in javascript.
+Extremely fast faceted search engine in JavaScript - lightweight, flexible, and simple to use
 Created to perform fast search on json dataset (up to 100K items).
 
 ## Demo
