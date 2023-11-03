@@ -1,6 +1,14 @@
 import { map, mapValues, clone, keys } from 'lodash-es';
 import FastBitSet from 'fastbitset';
-import { facets_ids, filters_ids, filters_matrix, index, input_to_facet_filters, matrix, parse_boolean_query } from './helpers.js';
+import {
+  facets_ids,
+  filters_ids,
+  filters_matrix,
+  index,
+  input_to_facet_filters,
+  matrix,
+  parse_boolean_query,
+} from './helpers.js';
 
 /**
  * responsible for making faceted search
@@ -77,7 +85,7 @@ Facets.prototype = {
     temp_facet.not_ids = facets_ids(
       temp_facet['bits_data'],
       input.not_filters,
-      config
+      config,
     );
 
     let temp_data;
@@ -99,7 +107,7 @@ Facets.prototype = {
           if (data.query_ids) {
             temp_facet['bits_data_temp'][key][key2] =
               data.query_ids.new_intersection(
-                temp_facet['bits_data_temp'][key][key2]
+                temp_facet['bits_data_temp'][key][key2],
               );
           }
 
@@ -107,7 +115,7 @@ Facets.prototype = {
             temp_facet['data'][key][key2] =
               temp_facet['bits_data_temp'][key][key2].array();
           }
-        }
+        },
       );
     });
 
@@ -119,10 +127,7 @@ Facets.prototype = {
     if (input.filters_query) {
       temp_facet.ids = filters_ids(temp_facet['bits_data_temp']);
     } else {
-      temp_facet.ids = facets_ids(
-        temp_facet['bits_data_temp'],
-        input.filters
-      );
+      temp_facet.ids = facets_ids(temp_facet['bits_data_temp'], input.filters);
     }
 
     return temp_facet;

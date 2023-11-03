@@ -42,7 +42,7 @@ export const combination_indexes = function (facets, filters) {
 
         filter_keys.push(filter_key);
         facet_union = facet_union.new_union(
-          facets['bits_data'][filter_key][filter_val] || new FastBitSet([])
+          facets['bits_data'][filter_key][filter_val] || new FastBitSet([]),
         );
         indexes[filter_key] = facet_union;
       });
@@ -86,7 +86,7 @@ export const filters_matrix = function (facets, query_filters) {
       ) {
         conjunctive_index =
           temp_facet['bits_data_temp'][filter_key][filter_val].new_intersection(
-            conjunctive_index
+            conjunctive_index,
           );
       } else if (
         conjunctive_index &&
@@ -100,7 +100,7 @@ export const filters_matrix = function (facets, query_filters) {
     });
 
     union = (union || new FastBitSet([])).new_union(
-      conjunctive_index || new FastBitSet([])
+      conjunctive_index || new FastBitSet([]),
     );
   });
 
@@ -111,7 +111,7 @@ export const filters_matrix = function (facets, query_filters) {
         function (facet_indexes, key2) {
           temp_facet['bits_data_temp'][key][key2] =
             temp_facet['bits_data_temp'][key][key2].new_intersection(union);
-        }
+        },
       );
     });
   }
@@ -153,7 +153,7 @@ export const matrix = function (facets, filters) {
       ) {
         conjunctive_index =
           temp_facet['bits_data_temp'][filter_key][filter_val].new_intersection(
-            conjunctive_index
+            conjunctive_index,
           );
       } else if (
         conjunctive_index &&
@@ -175,9 +175,9 @@ export const matrix = function (facets, filters) {
         function (facet_indexes, key2) {
           temp_facet['bits_data_temp'][key][key2] =
             temp_facet['bits_data_temp'][key][key2].new_intersection(
-              conjunctive_index
+              conjunctive_index,
             );
-        }
+        },
       );
     });
   }
@@ -199,9 +199,9 @@ export const matrix = function (facets, filters) {
           function (facet_indexes, key2) {
             temp_facet['bits_data_temp'][key][key2] =
               temp_facet['bits_data_temp'][key][key2].new_difference(
-                negative_bits
+                negative_bits,
               );
-          }
+          },
         );
       });
     }
@@ -218,12 +218,12 @@ export const matrix = function (facets, filters) {
             if (disjunctive_key !== key) {
               temp_facet['bits_data_temp'][key][key2] =
                 temp_facet['bits_data_temp'][key][key2].new_intersection(
-                  disjunctive_index
+                  disjunctive_index,
                 );
             }
-          }
+          },
         );
-      }
+      },
     );
   });
 
@@ -336,7 +336,7 @@ export const facets_ids = function (facets_data, filters) {
     filters.forEach((filter) => {
       ++i;
       output = output.new_union(
-        facets_data[field][filter] || new FastBitSet([])
+        facets_data[field][filter] || new FastBitSet([]),
       );
     });
   });

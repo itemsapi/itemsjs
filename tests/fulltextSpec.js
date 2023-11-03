@@ -56,7 +56,7 @@ describe('fulltext', function () {
     done();
   });
 
-  it('checks search with defined id\'s', function test(done) {
+  it("checks search with defined id's", function test(done) {
     const fulltext = new Fulltext(items_with_ids);
     assert.equal(fulltext.search_full('club').length, 1);
     assert.equal(fulltext.search_full('gump').length, 1);

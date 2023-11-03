@@ -244,7 +244,7 @@ describe('search', function () {
     } catch (err) {
       assert.equal(
         err.message,
-        '"query" and "filter" options are not working once native search is disabled'
+        '"query" and "filter" options are not working once native search is disabled',
       );
     }
 

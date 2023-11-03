@@ -99,7 +99,7 @@ describe('conjunctive search', function () {
     const ids = helpers.facets_ids(
       result['bits_data_temp'],
       input.filters,
-      aggregations
+      aggregations,
     );
     assert.deepEqual(ids.array(), [1, 3, 4]);
 
@@ -157,7 +157,7 @@ describe('conjunctive search', function () {
     const ids = helpers.facets_ids(
       result['bits_data_temp'],
       input.filters,
-      aggregations
+      aggregations,
     );
     assert.deepEqual(ids, null);
 
@@ -344,7 +344,7 @@ describe('disjunctive and conjunctive search', function () {
     const ids = helpers.facets_ids(
       result['bits_data_temp'],
       input.filters,
-      aggregations
+      aggregations,
     );
     assert.deepEqual(ids.array(), [1, 4]);
 

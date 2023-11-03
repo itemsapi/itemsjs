@@ -17,7 +17,7 @@ export function search(items, input, configuration, fulltext, facets) {
     (input.query || input.filter)
   ) {
     throw new Error(
-      '"query" and "filter" options are not working once native search is disabled'
+      '"query" and "filter" options are not working once native search is disabled',
     );
   }
 
@@ -55,13 +55,13 @@ export function search(items, input, configuration, fulltext, facets) {
 
   if (facet_result.ids) {
     filtered_indexes_bitmap = filtered_indexes_bitmap.new_intersection(
-      facet_result.ids
+      facet_result.ids,
     );
   }
 
   if (facet_result.not_ids) {
     filtered_indexes_bitmap = filtered_indexes_bitmap.new_difference(
-      facet_result.not_ids
+      facet_result.not_ids,
     );
   }
 
@@ -83,7 +83,7 @@ export function search(items, input, configuration, fulltext, facets) {
     filtered_items = module.exports.sorted_items(
       filtered_items,
       input.sort,
-      configuration.sortings
+      configuration.sortings,
     );
   } else {
     if (_ids) {
@@ -93,7 +93,7 @@ export function search(items, input, configuration, fulltext, facets) {
 
       const filtered_items_indexes = filtered_indexes.slice(
         (page - 1) * per_page,
-        page * per_page
+        page * per_page,
       );
       filtered_items = filtered_items_indexes.map((_id) => {
         return facets.get_item(_id);
@@ -107,7 +107,7 @@ export function search(items, input, configuration, fulltext, facets) {
     all_filtered_items = is_all_filtered_items ? filtered_items : null;
     filtered_items = filtered_items.slice(
       (page - 1) * per_page,
-      page * per_page
+      page * per_page,
     );
   }
 
@@ -218,7 +218,7 @@ export function aggregation(items, input, configuration, fulltext, facets) {
     (!configuration.aggregations || !configuration.aggregations[input.name])
   ) {
     throw new Error(
-      'Please define aggregation "'.concat(input.name, '" in config')
+      'Please define aggregation "'.concat(input.name, '" in config'),
     );
   }
 
