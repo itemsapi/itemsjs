@@ -20,7 +20,7 @@
   "dependencies": {
     "boolean-parser": "^0.0.2",
     "fastbitset": "^0.4.0",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "lunr": "^1.0.0"
   },
   "devDependencies": {

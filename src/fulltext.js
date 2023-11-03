@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { forEach, map, mapKeys } from 'lodash-es';
 import lunr from 'lunr';
 
 /**
@@ -15,7 +15,7 @@ export const Fulltext = function (items, config) {
     this.field('name', { boost: 10 });
 
     const self = this;
-    _.forEach(config.searchableFields, function (field) {
+    forEach(config.searchableFields, function (field) {
       self.field(field);
     });
     this.ref('_id');
@@ -41,14 +41,14 @@ export const Fulltext = function (items, config) {
 
   let i = 1;
 
-  _.map(items, (item) => {
+  map(items, (item) => {
     item._id = i;
     ++i;
 
     this.idx.add(item);
   });
 
-  this.store = _.mapKeys(items, (doc) => {
+  this.store = mapKeys(items, (doc) => {
     return doc._id;
   });
 };
@@ -68,7 +68,7 @@ Fulltext.prototype = {
     let items;
 
     if (query) {
-      items = _.map(this.idx.search(query), (val) => {
+      items = map(this.idx.search(query), (val) => {
         const item = this.store[val.ref];
         return item;
       });

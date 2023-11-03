@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { map, mapValues, clone, keys } from 'lodash-es';
 import FastBitSet from 'fastbitset';
 import * as helpers from './helpers.js';
 
@@ -10,13 +10,13 @@ export const Facets = function (items, configuration) {
   configuration.aggregations = configuration.aggregations || {};
   this.items = items;
   this.config = configuration.aggregations;
-  this.facets = helpers.index(items, _.keys(configuration.aggregations));
+  this.facets = helpers.index(items, keys(configuration.aggregations));
 
   this._items_map = {};
   this._ids = [];
 
   let i = 1;
-  _.map(items, (item) => {
+  map(items, (item) => {
     this._ids.push(i);
     this._items_map[i] = item;
     item._id = i;
@@ -72,12 +72,12 @@ Facets.prototype = {
     data = data || {};
 
     // consider removing clone
-    const temp_facet = _.clone(this.facets);
+    const temp_facet = clone(this.facets);
 
     temp_facet.not_ids = helpers.facets_ids(
       temp_facet['bits_data'],
       input.not_filters,
-      config,
+      config
     );
 
     let temp_data;
@@ -92,14 +92,14 @@ Facets.prototype = {
 
     temp_facet['bits_data_temp'] = temp_data['bits_data_temp'];
 
-    _.mapValues(temp_facet['bits_data_temp'], function (values, key) {
-      _.mapValues(
+    mapValues(temp_facet['bits_data_temp'], function (values, key) {
+      mapValues(
         temp_facet['bits_data_temp'][key],
         function (facet_indexes, key2) {
           if (data.query_ids) {
             temp_facet['bits_data_temp'][key][key2] =
               data.query_ids.new_intersection(
-                temp_facet['bits_data_temp'][key][key2],
+                temp_facet['bits_data_temp'][key][key2]
               );
           }
 
@@ -107,7 +107,7 @@ Facets.prototype = {
             temp_facet['data'][key][key2] =
               temp_facet['bits_data_temp'][key][key2].array();
           }
-        },
+        }
       );
     });
 
@@ -121,7 +121,7 @@ Facets.prototype = {
     } else {
       temp_facet.ids = helpers.facets_ids(
         temp_facet['bits_data_temp'],
-        input.filters,
+        input.filters
       );
     }
 

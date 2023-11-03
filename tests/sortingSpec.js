@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import * as service from '../src/lib.js';
-import _ from 'lodash';
+import { map } from 'lodash-es';
 
 describe('aggregations', function () {
   const items = [
@@ -39,7 +39,7 @@ describe('aggregations', function () {
     };
 
     let result = service.sorted_items(items, 'name_asc', sortings);
-    assert.deepEqual(_.map(result, 'name'), [
+    assert.deepEqual(map(result, 'name'), [
       'movie1',
       'movie2',
       'movie3',
@@ -48,12 +48,12 @@ describe('aggregations', function () {
 
     result = service.sorted_items(items, 'name_desc', sortings);
     assert.deepEqual(
-      _.map(result, 'name'),
+      map(result, 'name'),
       ['movie1', 'movie2', 'movie3', 'movie7'].reverse(),
     );
 
     result = service.sorted_items(items, 'date_asc', sortings);
-    assert.deepEqual(_.map(result, 'name'), [
+    assert.deepEqual(map(result, 'name'), [
       'movie2',
       'movie7',
       'movie3',
@@ -66,7 +66,7 @@ describe('aggregations', function () {
     };
 
     result = service.sorted_items(items, customSort);
-    assert.deepEqual(_.map(result, 'name'), [
+    assert.deepEqual(map(result, 'name'), [
       'movie1',
       'movie3',
       'movie7',

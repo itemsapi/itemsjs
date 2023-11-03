@@ -1,11 +1,9 @@
 import assert from 'node:assert';
 import itemsJS from '../src/index.js';
-import _ from 'lodash';
+import { clone } from 'lodash-es';
 import { readFileSync } from 'node:fs';
 const items = JSON.parse(readFileSync('./tests/fixtures/items.json'));
 const movies = JSON.parse(readFileSync('./tests/fixtures/movies.json'));
-
-const { clone } = _;
 
 let itemsjs = itemsJS();
 
@@ -246,7 +244,7 @@ describe('search', function () {
     } catch (err) {
       assert.equal(
         err.message,
-        '"query" and "filter" options are not working once native search is disabled',
+        '"query" and "filter" options are not working once native search is disabled'
       );
     }
 

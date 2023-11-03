@@ -1,4 +1,16 @@
-import _ from 'lodash';
+import {
+  mapValues,
+  clone as _clone,
+  map,
+  chain,
+  sortBy,
+  isArray,
+  orderBy,
+  minBy,
+  maxBy,
+  sumBy,
+  meanBy,
+} from 'lodash-es';
 import FastBitSet from 'fastbitset';
 import booleanParser from 'boolean-parser';
 
@@ -18,19 +30,19 @@ export const humanize = function (str) {
 export const combination_indexes = function (facets, filters) {
   const indexes = {};
 
-  _.mapValues(filters, function (filter) {
+  mapValues(filters, function (filter) {
     // filter is still array so disjunctive
     if (Array.isArray(filter[0])) {
       let facet_union = new FastBitSet([]);
       const filter_keys = [];
 
-      _.mapValues(filter, function (disjunctive_filter) {
+      mapValues(filter, function (disjunctive_filter) {
         const filter_key = disjunctive_filter[0];
         const filter_val = disjunctive_filter[1];
 
         filter_keys.push(filter_key);
         facet_union = facet_union.new_union(
-          facets['bits_data'][filter_key][filter_val] || new FastBitSet([]),
+          facets['bits_data'][filter_key][filter_val] || new FastBitSet([])
         );
         indexes[filter_key] = facet_union;
       });
@@ -41,11 +53,11 @@ export const combination_indexes = function (facets, filters) {
 };
 
 export const filters_matrix = function (facets, query_filters) {
-  const temp_facet = _.clone(facets);
+  const temp_facet = _clone(facets);
 
   if (!temp_facet['is_temp_copied']) {
-    _.mapValues(temp_facet['bits_data'], function (values, key) {
-      _.mapValues(temp_facet['bits_data'][key], function (facet_indexes, key2) {
+    mapValues(temp_facet['bits_data'], function (values, key) {
+      mapValues(temp_facet['bits_data'][key], function (facet_indexes, key2) {
         temp_facet['bits_data_temp'][key][key2] =
           temp_facet['bits_data'][key][key2];
       });
@@ -57,10 +69,10 @@ export const filters_matrix = function (facets, query_filters) {
   /**
    * process only conjunctive filters
    */
-  _.mapValues(query_filters, function (conjunction) {
+  mapValues(query_filters, function (conjunction) {
     let conjunctive_index = null;
 
-    _.mapValues(conjunction, function (filter) {
+    mapValues(conjunction, function (filter) {
       const filter_key = filter[0];
       const filter_val = filter[1];
 
@@ -74,7 +86,7 @@ export const filters_matrix = function (facets, query_filters) {
       ) {
         conjunctive_index =
           temp_facet['bits_data_temp'][filter_key][filter_val].new_intersection(
-            conjunctive_index,
+            conjunctive_index
           );
       } else if (
         conjunctive_index &&
@@ -88,18 +100,18 @@ export const filters_matrix = function (facets, query_filters) {
     });
 
     union = (union || new FastBitSet([])).new_union(
-      conjunctive_index || new FastBitSet([]),
+      conjunctive_index || new FastBitSet([])
     );
   });
 
   if (union !== null) {
-    _.mapValues(temp_facet['bits_data_temp'], function (values, key) {
-      _.mapValues(
+    mapValues(temp_facet['bits_data_temp'], function (values, key) {
+      mapValues(
         temp_facet['bits_data_temp'][key],
         function (facet_indexes, key2) {
           temp_facet['bits_data_temp'][key][key2] =
             temp_facet['bits_data_temp'][key][key2].new_intersection(union);
-        },
+        }
       );
     });
   }
@@ -111,12 +123,12 @@ export const filters_matrix = function (facets, query_filters) {
  * returns facets and ids
  */
 export const matrix = function (facets, filters) {
-  const temp_facet = _.clone(facets);
+  const temp_facet = _clone(facets);
 
   filters = filters || [];
 
-  _.mapValues(temp_facet['bits_data'], function (values, key) {
-    _.mapValues(temp_facet['bits_data'][key], function (facet_indexes, key2) {
+  mapValues(temp_facet['bits_data'], function (values, key) {
+    mapValues(temp_facet['bits_data'][key], function (facet_indexes, key2) {
       temp_facet['bits_data_temp'][key][key2] =
         temp_facet['bits_data'][key][key2];
     });
@@ -130,7 +142,7 @@ export const matrix = function (facets, filters) {
   /**
    * process only conjunctive filters
    */
-  _.mapValues(filters, function (filter) {
+  mapValues(filters, function (filter) {
     if (!Array.isArray(filter[0])) {
       const filter_key = filter[0];
       const filter_val = filter[1];
@@ -141,7 +153,7 @@ export const matrix = function (facets, filters) {
       ) {
         conjunctive_index =
           temp_facet['bits_data_temp'][filter_key][filter_val].new_intersection(
-            conjunctive_index,
+            conjunctive_index
           );
       } else if (
         conjunctive_index &&
@@ -157,15 +169,15 @@ export const matrix = function (facets, filters) {
 
   // cross all facets with conjunctive index
   if (conjunctive_index) {
-    _.mapValues(temp_facet['bits_data_temp'], function (values, key) {
-      _.mapValues(
+    mapValues(temp_facet['bits_data_temp'], function (values, key) {
+      mapValues(
         temp_facet['bits_data_temp'][key],
         function (facet_indexes, key2) {
           temp_facet['bits_data_temp'][key][key2] =
             temp_facet['bits_data_temp'][key][key2].new_intersection(
-              conjunctive_index,
+              conjunctive_index
             );
-        },
+        }
       );
     });
   }
@@ -173,7 +185,7 @@ export const matrix = function (facets, filters) {
   /**
    * process only negative filters
    */
-  _.mapValues(filters, function (filter) {
+  mapValues(filters, function (filter) {
     if (filter.length === 3 && filter[1] === '-') {
       const filter_key = filter[0];
       const filter_val = filter[2];
@@ -181,37 +193,37 @@ export const matrix = function (facets, filters) {
       const negative_bits =
         temp_facet['bits_data_temp'][filter_key][filter_val].clone();
 
-      _.mapValues(temp_facet['bits_data_temp'], function (values, key) {
-        _.mapValues(
+      mapValues(temp_facet['bits_data_temp'], function (values, key) {
+        mapValues(
           temp_facet['bits_data_temp'][key],
           function (facet_indexes, key2) {
             temp_facet['bits_data_temp'][key][key2] =
               temp_facet['bits_data_temp'][key][key2].new_difference(
-                negative_bits,
+                negative_bits
               );
-          },
+          }
         );
       });
     }
   });
 
   // cross all facets with disjunctive index
-  _.mapValues(temp_facet['bits_data_temp'], function (values, key) {
-    _.mapValues(
+  mapValues(temp_facet['bits_data_temp'], function (values, key) {
+    mapValues(
       temp_facet['bits_data_temp'][key],
       function (facet_indexes, key2) {
-        _.mapValues(
+        mapValues(
           disjunctive_indexes,
           function (disjunctive_index, disjunctive_key) {
             if (disjunctive_key !== key) {
               temp_facet['bits_data_temp'][key][key2] =
                 temp_facet['bits_data_temp'][key][key2].new_intersection(
-                  disjunctive_index,
+                  disjunctive_index
                 );
             }
-          },
+          }
         );
-      },
+      }
     );
   });
 
@@ -229,7 +241,7 @@ export const index = function (items, fields) {
 
   let i = 1;
 
-  items = _.map(items, (item) => {
+  items = map(items, (item) => {
     if (!item['_id']) {
       item['_id'] = i;
       ++i;
@@ -240,7 +252,7 @@ export const index = function (items, fields) {
 
   // replace chain with forEach
 
-  _.chain(items)
+  chain(items)
     .map((item) => {
       fields.forEach((field) => {
         //if (!item || !item[field]) {
@@ -279,15 +291,15 @@ export const index = function (items, fields) {
     })
     .value();
 
-  facets['data'] = _.mapValues(facets['data'], function (values, field) {
+  facets['data'] = mapValues(facets['data'], function (values, field) {
     if (!facets['bits_data'][field]) {
       facets['bits_data'][field] = {};
       facets['bits_data_temp'][field] = {};
     }
 
     //console.log(values);
-    return _.mapValues(values, function (indexes, filter) {
-      const sorted_indexes = _.sortBy(indexes);
+    return mapValues(values, function (indexes, filter) {
+      const sorted_indexes = sortBy(indexes);
       facets['bits_data'][field][filter] = new FastBitSet(sorted_indexes);
       return sorted_indexes;
     });
@@ -302,8 +314,8 @@ export const index = function (items, fields) {
 export const filters_ids = function (facets_data) {
   let output = new FastBitSet([]);
 
-  _.mapValues(facets_data, function (values, key) {
-    _.mapValues(facets_data[key], function (facet_indexes, key2) {
+  mapValues(facets_data, function (values, key) {
+    mapValues(facets_data[key], function (facet_indexes, key2) {
       output = output.new_union(facets_data[key][key2]);
     });
   });
@@ -320,11 +332,11 @@ export const facets_ids = function (facets_data, filters) {
   let output = new FastBitSet([]);
   let i = 0;
 
-  _.mapValues(filters, function (filters, field) {
+  mapValues(filters, function (filters, field) {
     filters.forEach((filter) => {
       ++i;
       output = output.new_union(
-        facets_data[field][filter] || new FastBitSet([]),
+        facets_data[field][filter] || new FastBitSet([])
       );
     });
   });
@@ -339,7 +351,7 @@ export const facets_ids = function (facets_data, filters) {
 export const getBuckets = function (data, input, aggregations) {
   let position = 1;
 
-  return _.mapValues(data['bits_data_temp'], (v, k) => {
+  return mapValues(data['bits_data_temp'], (v, k) => {
     let order;
     let sort;
     let size;
@@ -358,7 +370,7 @@ export const getBuckets = function (data, input, aggregations) {
       hide_zero_doc_count = aggregations[k].hide_zero_doc_count || false;
     }
 
-    let buckets = _.chain(v)
+    let buckets = chain(v)
       .toPairs()
       .map((v2) => {
         let filters = [];
@@ -390,7 +402,7 @@ export const getBuckets = function (data, input, aggregations) {
     let iteratees;
     let sort_order;
 
-    if (_.isArray(sort)) {
+    if (isArray(sort)) {
       iteratees = sort || ['key'];
       sort_order = order || ['asc'];
     } else {
@@ -408,7 +420,7 @@ export const getBuckets = function (data, input, aggregations) {
       }
     }
 
-    buckets = _.orderBy(buckets, iteratees, sort_order);
+    buckets = orderBy(buckets, iteratees, sort_order);
 
     buckets = buckets.slice(0, size || 10);
 
@@ -418,7 +430,7 @@ export const getBuckets = function (data, input, aggregations) {
 
     if (show_facet_stats) {
       facet_stats = [];
-      _.chain(v)
+      chain(v)
         .toPairs()
         .forEach((v2) => {
           if (isNaN(v2[0])) {
@@ -435,10 +447,10 @@ export const getBuckets = function (data, input, aggregations) {
         .value();
 
       calculated_facet_stats = {
-        min: _.minBy(facet_stats),
-        max: _.maxBy(facet_stats),
-        avg: _.meanBy(facet_stats),
-        sum: _.sumBy(facet_stats),
+        min: minBy(facet_stats),
+        max: maxBy(facet_stats),
+        avg: meanBy(facet_stats),
+        sum: sumBy(facet_stats),
       };
     }
 
@@ -453,7 +465,7 @@ export const getBuckets = function (data, input, aggregations) {
 };
 
 export const mergeAggregations = function (aggregations, input) {
-  return _.mapValues(clone(aggregations), (val, key) => {
+  return mapValues(clone(aggregations), (val, key) => {
     if (!val.field) {
       val.field = key;
     }
@@ -483,15 +495,15 @@ export const mergeAggregations = function (aggregations, input) {
 export const input_to_facet_filters = function (input, config) {
   const filters = [];
 
-  _.mapValues(input.filters, function (values, key) {
+  mapValues(input.filters, function (values, key) {
     if (values && values.length) {
       if (config[key].conjunction !== false) {
-        _.mapValues(values, function (values2) {
+        mapValues(values, function (values2) {
           filters.push([key, values2]);
         });
       } else {
         const temp = [];
-        _.mapValues(values, function (values2) {
+        mapValues(values, function (values2) {
           temp.push([key, values2]);
         });
 
@@ -500,9 +512,9 @@ export const input_to_facet_filters = function (input, config) {
     }
   });
 
-  _.mapValues(input.not_filters, function (values, key) {
+  mapValues(input.not_filters, function (values, key) {
     if (values && values.length) {
-      _.mapValues(values, function (values2) {
+      mapValues(values, function (values2) {
         filters.push([key, '-', values2]);
       });
     }
@@ -519,11 +531,11 @@ export const parse_boolean_query = function (query) {
 const parse_boolean_query_temp = function (query) {
   const result = booleanParser.parseBooleanQuery(query);
 
-  return _.map(result, (v1) => {
+  return map(result, (v1) => {
     if (Array.isArray(v1)) {
-      return _.map(v1, (v2) => {
+      return map(v1, (v2) => {
         if (Array.isArray(v2)) {
-          return _.map(v2, (v3) => {
+          return map(v2, (v3) => {
             return v3;
           });
         } else {
