@@ -3,17 +3,10 @@ const FastBitSet = require('fastbitset');
 const booleanParser = require('boolean-parser');
 
 const clone = function(val) {
- 
-
-  try {
-    return JSON.parse(JSON.stringify(val));
-  } catch (e) {
-    return val;
-  }
+  return structuredClone(val)
 };
 
 const humanize = function (str) {
-
   return str
     .replace(/^[\s_]+|[\s_]+$/g, '')
     .replace(/[_\s]+/g, ' ')
