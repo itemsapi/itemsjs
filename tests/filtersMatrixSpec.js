@@ -1,9 +1,9 @@
 'use strict';
 
 const assert = require('assert');
-const Facets = require('./../src/facets');
+// const Facets = require('./../src/facets');
 const helpers = require('./../src/helpers');
-const FastBitSet = require('fastbitset');
+// const FastBitSet = require('fastbitset');
 
 describe('filtering matrix (9 rows in dataset)', function() {
 

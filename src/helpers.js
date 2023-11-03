@@ -60,7 +60,7 @@ const filters_matrix = function(facets, query_filters) {
     });
   }
 
-  let union = null; ;
+  let union = null; 
 
   /**
    * process only conjunctive filters
@@ -75,7 +75,7 @@ const filters_matrix = function(facets, query_filters) {
       const filter_val = filter[1];
 
       if (!temp_facet['bits_data_temp'][filter_key]) {
-        throw new Error('Panic. The key does not exist in facets lists.')
+        throw new Error('Panic. The key does not exist in facets lists.');
       }
 
 
@@ -101,7 +101,7 @@ const filters_matrix = function(facets, query_filters) {
   }
 
   return temp_facet;
-}
+};
 
 
 
@@ -355,9 +355,9 @@ const getBuckets = function(data, input, aggregations) {
           filters = input.filters[k];
         }
 
-        let doc_count = v2[1].array().length;
+        const doc_count = v2[1].array().length;
 
-         //hide zero_doc_count facet only if it is not selected
+        //hide zero_doc_count facet only if it is not selected
         if (hide_zero_doc_count && doc_count === 0 && filters.indexOf(v2[0]) === -1) {
           return;
         }
@@ -371,67 +371,67 @@ const getBuckets = function(data, input, aggregations) {
       .compact()
       .value();
 
-      let iteratees;
-      let sort_order;
+    let iteratees;
+    let sort_order;
 
-      if (_.isArray(sort)) {
-        iteratees = sort || ['key'];
-        sort_order = order || ['asc'];
+    if (_.isArray(sort)) {
+      iteratees = sort || ['key'];
+      sort_order = order || ['asc'];
+    } else {
+      if (sort === 'term' || sort === 'key') {
+        iteratees = ['key'];
+        sort_order = [order || 'asc'];
       } else {
-        if (sort === 'term' || sort === 'key') {
-          iteratees = ['key'];
-          sort_order = [order || 'asc'];
-        } else {
-          iteratees = ['doc_count', 'key'];
-          sort_order = [order || 'desc', 'asc'];
-        }
-
-        if (chosen_filters_on_top) {
-          iteratees.unshift('selected');
-          sort_order.unshift('desc');
-        }
+        iteratees = ['doc_count', 'key'];
+        sort_order = [order || 'desc', 'asc'];
       }
 
-      buckets = _.orderBy(buckets, iteratees, sort_order);
+      if (chosen_filters_on_top) {
+        iteratees.unshift('selected');
+        sort_order.unshift('desc');
+      }
+    }
 
-      buckets = buckets.slice(0, size || 10);
+    buckets = _.orderBy(buckets, iteratees, sort_order);
 
-      // Calculate the facet_stats
-      let facet_stats;
-      let calculated_facet_stats;
+    buckets = buckets.slice(0, size || 10);
 
-      if(show_facet_stats) {
-        facet_stats = [];
-         _.chain(v)
-          .toPairs().forEach(v2 => {
-            if(isNaN(v2[0])) {
-              throw new Error("You cant use chars to calculate the facet_stats.");
-            }
+    // Calculate the facet_stats
+    let facet_stats;
+    let calculated_facet_stats;
 
-            // Doc_count
-            if(v2[1].array().length > 0) {
-              v2[1].forEach(doc_count => {
-                facet_stats.push(parseInt(v2[0]));
-              });
-            }
+    if(show_facet_stats) {
+      facet_stats = [];
+      _.chain(v)
+        .toPairs().forEach(v2 => {
+          if(isNaN(v2[0])) {
+            throw new Error('You cant use chars to calculate the facet_stats.');
+          }
+
+          // Doc_count
+          if(v2[1].array().length > 0) {
+            v2[1].forEach((/*doc_count*/) => {
+              facet_stats.push(parseInt(v2[0]));
+            });
+          }
         })
         .value();
 
-        calculated_facet_stats = {
-          min: _.minBy(facet_stats),
-          max: _.maxBy(facet_stats),
-          avg: _.meanBy(facet_stats),
-          sum: _.sumBy(facet_stats),
-        };
-      }
-
-      return {
-        name: k,
-        title: title || humanize(k),
-        position: position++,
-        buckets: buckets,
-        ...(show_facet_stats) && {facet_stats: calculated_facet_stats},
+      calculated_facet_stats = {
+        min: _.minBy(facet_stats),
+        max: _.maxBy(facet_stats),
+        avg: _.meanBy(facet_stats),
+        sum: _.sumBy(facet_stats),
       };
+    }
+
+    return {
+      name: k,
+      title: title || humanize(k),
+      position: position++,
+      buckets: buckets,
+      ...(show_facet_stats) && {facet_stats: calculated_facet_stats},
+    };
   });
 };
 
@@ -502,7 +502,7 @@ const input_to_facet_filters = function(input, config) {
 const parse_boolean_query = function (query) {
   const result = parse_boolean_query_temp(query);
   return result;
-}
+};
 
 const parse_boolean_query_temp = function (query) {
 
@@ -516,16 +516,16 @@ const parse_boolean_query_temp = function (query) {
         if (Array.isArray(v2)) {
           return _.map(v2, v3 => {
             return v3;
-          })
+          });
         } else {
           return v2.split(':');
         }
-      })
+      });
     } else {
       return v1.split(':');
     }
-  })
-}
+  });
+};
 
 module.exports.parse_boolean_query = parse_boolean_query;
 module.exports.input_to_facet_filters = input_to_facet_filters;

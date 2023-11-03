@@ -460,9 +460,9 @@ describe('generates symetrical disjunctive facets (SergeyRe)', function() {
   const facets = new Facets(items, {
     aggregations: aggregations
   });
-  const itemsjs = require('./../index')(items, {
-    aggregations: aggregations,
-  });
+  // const itemsjs = require('./../index')(items, {
+  //   aggregations: aggregations,
+  // });
 
   it('provides symetrical result', function test(done) {
 

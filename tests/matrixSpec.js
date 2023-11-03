@@ -1,9 +1,9 @@
 'use strict';
 
 const assert = require('assert');
-const Facets = require('./../src/facets');
+// const Facets = require('./../src/facets');
 const helpers = require('./../src/helpers');
-const FastBitSet = require('fastbitset');
+// const FastBitSet = require('fastbitset');
 
 describe('filtering and generating facets with matrix (9 rows in dataset)', function() {
 
@@ -69,7 +69,7 @@ describe('filtering and generating facets with matrix (9 rows in dataset)', func
 
     const data = helpers.index(items, fields);
 
-    const result = helpers.matrix(data, [['a', 2], ['c', 2]]);
+    // const result = helpers.matrix(data, [['a', 2], ['c', 2]]);
 
     const result2 = helpers.matrix(data);
     assert.deepEqual(result2.bits_data_temp.a['1'].array(), [1, 2, 4, 6, 7]);

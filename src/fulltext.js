@@ -35,7 +35,7 @@ const Fulltext = function(items, config) {
      * Remove the stopWordFilter from the pipeline
      * stopWordFilter: https://github.com/itemsapi/itemsjs/issues/46
      */
-     if (config.removeStopWordFilter) {
+    if (config.removeStopWordFilter) {
       this.pipeline.remove(lunr.stopWordFilter);
     }
   });
