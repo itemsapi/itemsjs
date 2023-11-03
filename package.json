@@ -2,19 +2,23 @@
   "name": "itemsjs",
   "version": "2.1.22",
   "description": "Created to perform fast search on small json dataset (up to 1000 elements).",
-  "main": "src/index.js",
   "type": "module",
   "scripts": {
     "test": "mocha tests/*",
     "lint": "eslint \"**/*.js\" --ext js",
     "lint:fix": "eslint \"**/*.js\" --ext js --fix",
-    "browserify": "browserify index.js -v -s itemsjs -o dist/itemsjs.js",
-    "minify": "minify dist/itemsjs.js -o dist/itemsjs.min.js",
-    "dist": "npm run browserify && npm run minify",
     "prepublishOnly": "npm run build",
-    "build:cjs": "babel src -d lib",
-    "build": "npm run build:cjs && npm run dist"
+    "build": "microbundle",
+    "dev": "microbundle watch"
   },
+  "source": "src/index.js",
+  "exports": {
+    "require": "./dist/itemsjs.cjs",
+    "default": "./dist/itemsjs.modern.js"
+  },
+  "main": "./dist/itemsjs.cjs",
+  "module": "./dist/itemsjs.module.js",
+  "unpkg": "./dist/itemsjs.umd.js",
   "author": "Mateusz Rzepa",
   "license": "Apache-2.0",
   "dependencies": {
@@ -24,25 +28,9 @@
     "lunr": "^1.0.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.16.0",
-    "@babel/core": "^7.16.0",
-    "@babel/preset-env": "^7.0.0",
-    "babel-minify": "^0.5.2",
-    "babelify": "^9.0.0",
-    "browserify": "^14.3.0",
     "eslint": "^7.32.0",
-    "expect": "^1.20.2",
+    "microbundle": "^0.15.1",
     "mocha": "^9.1.3"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "babelify"
-      ]
-    ]
-  },
-  "directories": {
-    "test": "tests"
   },
   "repository": {
     "type": "git",
