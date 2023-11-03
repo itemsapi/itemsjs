@@ -1,32 +1,39 @@
 import assert from 'node:assert';
 import itemsJS from '../src/index.js';
 
-describe('itemjs general tests', function() {
+describe('itemjs general tests', function () {
+  const items = [
+    {
+      name: 'movie1',
+      tags: ['a', 'b', 'c', 'd'],
+      actors: ['a', 'b'],
+    },
+    {
+      name: 'movie2',
+      tags: ['a', 'e', 'f'],
+      actors: ['a', 'b'],
+    },
+    {
+      name: 'movie3',
+      tags: ['a', 'c'],
+      actors: ['e'],
+    },
+  ];
 
-  const items = [{
-    name: 'movie1',
-    tags: ['a', 'b', 'c', 'd'],
-    actors: ['a', 'b']
-  }, {
-    name: 'movie2',
-    tags: ['a', 'e', 'f'],
-    actors: ['a', 'b']
-  }, {
-    name: 'movie3',
-    tags: ['a', 'c'],
-    actors: ['e']
-  }];
-
-  const similarItems = [{
-    name: 'movie1',
-    tags: 'Another tag'
-  }, {
-    name: 'movie2',
-    tags: 'Another'
-  }, {
-    name: 'movie3',
-    tags: 'Another tag'
-  }];
+  const similarItems = [
+    {
+      name: 'movie1',
+      tags: 'Another tag',
+    },
+    {
+      name: 'movie2',
+      tags: 'Another',
+    },
+    {
+      name: 'movie3',
+      tags: 'Another tag',
+    },
+  ];
 
   const itemsjs = itemsJS(items);
 
@@ -37,30 +44,27 @@ describe('itemjs general tests', function() {
   });
 
   it('makes search with pagination', function test(done) {
-
     let result = itemsjs.search({
-      per_page: 1
+      per_page: 1,
     });
     assert.equal(result.data.items.length, 1);
 
     result = itemsjs.search({
       per_page: 1,
-      page: 4
+      page: 4,
     });
     assert.equal(result.data.items.length, 0);
 
     result = itemsjs.search({
       per_page: 1,
-      page: 3
+      page: 3,
     });
     assert.equal(result.data.items.length, 1);
 
     done();
   });
 
-
   it('makes search with pagination, and is_all_filtered_items', function test(done) {
-
     let result = itemsjs.search({
       per_page: 1,
       is_all_filtered_items: true,
@@ -88,35 +92,34 @@ describe('itemjs general tests', function() {
     const result = itemsjs.search({
       per_page: 1,
       page: 3,
-      filter: (item) => item.tags.includes('a')
+      filter: (item) => item.tags.includes('a'),
     });
 
     assert.equal(result.data.items.length, 1);
-    
+
     done();
   });
 
   it('makes search with aggregation filters', function test(done) {
-
     const itemsjs = itemsJS(items, {
       aggregations: {
         tags: {},
-        actors: {}
-      }
+        actors: {},
+      },
     });
 
     let result = itemsjs.search({
       filters: {
-        tags: ['e', 'f']
-      }
+        tags: ['e', 'f'],
+      },
     });
     assert.equal(result.data.items.length, 1);
 
     result = itemsjs.search({
       filters: {
         tags: ['e', 'f'],
-        actors: ['a', 'b']
-      }
+        actors: ['a', 'b'],
+      },
     });
     assert.equal(result.data.items.length, 1);
 
@@ -135,10 +138,9 @@ describe('itemjs general tests', function() {
   });
 
   it('makes search with aggregation filters with single value object', function test(done) {
-
     const itemsjs = itemsJS(similarItems, {
       aggregations: {
-        tags: {}
+        tags: {},
       },
     });
 
@@ -175,9 +177,9 @@ describe('itemjs general tests', function() {
         tags: {
           type: 'terms',
           size: 10,
-          title: 'Tags'
-        }
-      }
+          title: 'Tags',
+        },
+      },
     });
     const result = itemsjs.search({});
 
@@ -188,25 +190,29 @@ describe('itemjs general tests', function() {
   });
 
   it('makes aggregations for non array (string) fields', function test(done) {
-    const items = [{
-      name: 'movie1',
-      tags: 'a',
-    }, {
-      name: 'movie2',
-      tags: 'a',
-    }, {
-      name: 'movie3',
-      tags: 'a',
-    }];
+    const items = [
+      {
+        name: 'movie1',
+        tags: 'a',
+      },
+      {
+        name: 'movie2',
+        tags: 'a',
+      },
+      {
+        name: 'movie3',
+        tags: 'a',
+      },
+    ];
 
     const itemsjs = itemsJS(items, {
       aggregations: {
         tags: {
           type: 'terms',
           size: 10,
-          title: 'Tags'
-        }
-      }
+          title: 'Tags',
+        },
+      },
     });
     const result = itemsjs.search({});
     assert.equal(result.data.items.length, 3);
@@ -217,36 +223,42 @@ describe('itemjs general tests', function() {
   });
 
   it('makes aggregations with facet_stats', function test(done) {
-    const items = [{
-      name: 'Apple 7',
-      price: 1,
-    }, {
-      name: 'Apple 8',
-      price: 1,
-    }, {
-      name: 'Apple 9',
-      price: '7',
-    }, {
-      name: 'Samsung',
-      price: 7,
-    }, {
-      name: 'Apple 10',
-    }];
+    const items = [
+      {
+        name: 'Apple 7',
+        price: 1,
+      },
+      {
+        name: 'Apple 8',
+        price: 1,
+      },
+      {
+        name: 'Apple 9',
+        price: '7',
+      },
+      {
+        name: 'Samsung',
+        price: 7,
+      },
+      {
+        name: 'Apple 10',
+      },
+    ];
 
     const itemsjs = itemsJS(items, {
       aggregations: {
         price: {
           title: 'Price',
           size: 3,
-          show_facet_stats: true
-        }
-      }
+          show_facet_stats: true,
+        },
+      },
     });
 
     const result = itemsjs.search({
-      query: 'Apple'
+      query: 'Apple',
     });
-    
+
     assert.equal(result.data.aggregations.price.facet_stats.min, 1);
     assert.equal(result.data.aggregations.price.facet_stats.max, 7);
     assert.equal(result.data.aggregations.price.facet_stats.avg, 3);
@@ -256,16 +268,20 @@ describe('itemjs general tests', function() {
   });
 
   it('makes aggregations with facet_stats and string values', function test(done) {
-    const items = [{
-      name: 'movie1',
-      tags: '€ 1 euro',
-    }, {
-      name: 'movie2',
-      tags: '€ 1 euro',
-    }, {
-      name: 'movie3',
-      tags: '€ 1 euro',
-    }];
+    const items = [
+      {
+        name: 'movie1',
+        tags: '€ 1 euro',
+      },
+      {
+        name: 'movie2',
+        tags: '€ 1 euro',
+      },
+      {
+        name: 'movie3',
+        tags: '€ 1 euro',
+      },
+    ];
 
     const itemsjs = itemsJS(items, {
       aggregations: {
@@ -273,38 +289,45 @@ describe('itemjs general tests', function() {
           title: 'Tags',
           size: 1,
           show_facet_stats: true,
-        }
-      }
+        },
+      },
     });
-    
+
     try {
       itemsjs.search({
-        query: ''
+        query: '',
       });
     } catch (err) {
-      assert.equal(err.message, 'You cant use chars to calculate the facet_stats.');
+      assert.equal(
+        err.message,
+        'You cant use chars to calculate the facet_stats.',
+      );
     }
 
     done();
   });
 
   xit('makes aggregations for undefined field', function test(done) {
-    const items = [{
-      name: 'movie1',
-    }, {
-      name: 'movie2',
-    }, {
-      name: 'movie3',
-    }];
+    const items = [
+      {
+        name: 'movie1',
+      },
+      {
+        name: 'movie2',
+      },
+      {
+        name: 'movie3',
+      },
+    ];
 
     const itemsjs = itemsJS(items, {
       aggregations: {
         tags: {
           type: 'terms',
           size: 10,
-          title: 'Tags'
-        }
-      }
+          title: 'Tags',
+        },
+      },
     });
     const result = itemsjs.search({});
     assert.equal(result.data.items.length, 3);
@@ -313,31 +336,33 @@ describe('itemjs general tests', function() {
   });
 
   it('search by tags', function test(done) {
-
-    const items = [{
-      name: 'movie1',
-      tags: ['drama']
-    }, {
-      name: 'movie2',
-      tags: ['drama', 'crime']
-    }, {
-      name: 'movie3',
-    }];
+    const items = [
+      {
+        name: 'movie1',
+        tags: ['drama'],
+      },
+      {
+        name: 'movie2',
+        tags: ['drama', 'crime'],
+      },
+      {
+        name: 'movie3',
+      },
+    ];
 
     const itemsjs = itemsJS(items, {
-      searchableFields: ['name', 'tags']
+      searchableFields: ['name', 'tags'],
     });
     let result = itemsjs.search({
-      query: 'drama'
+      query: 'drama',
     });
     assert.equal(result.data.items.length, 2);
 
     result = itemsjs.search({
-      query: 'crime'
+      query: 'crime',
     });
     assert.equal(result.data.items.length, 1);
 
     done();
   });
-
 });

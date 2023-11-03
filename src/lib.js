@@ -6,15 +6,19 @@ import * as helpers from './helpers.js';
  * search by filters
  */
 export function search(items, input, configuration, fulltext, facets) {
-
   input = input || {};
 
   const per_page = parseInt(input.per_page || 12);
   const page = parseInt(input.page || 1);
   const is_all_filtered_items = input.is_all_filtered_items || false;
 
-  if (configuration.native_search_enabled === false && (input.query || input.filter)) {
-    throw new Error('"query" and "filter" options are not working once native search is disabled');
+  if (
+    configuration.native_search_enabled === false &&
+    (input.query || input.filter)
+  ) {
+    throw new Error(
+      '"query" and "filter" options are not working once native search is disabled',
+    );
   }
 
   let search_time = 0;
@@ -33,7 +37,6 @@ export function search(items, input, configuration, fulltext, facets) {
     //console.log(_ids);
     query_ids = new FastBitSet(_ids);
   } else if (fulltext && (input.query || input.filter)) {
-
     const search_start_time = new Date().getTime();
     _ids = fulltext.search(input.query, input.filter);
     search_time = new Date().getTime() - search_start_time;
@@ -42,7 +45,7 @@ export function search(items, input, configuration, fulltext, facets) {
 
   let facets_time = new Date().getTime();
   const facet_result = facets.search(input, {
-    query_ids: query_ids
+    query_ids: query_ids,
   });
   facets_time = new Date().getTime() - facets_time;
 
@@ -51,18 +54,22 @@ export function search(items, input, configuration, fulltext, facets) {
   }
 
   if (facet_result.ids) {
-    filtered_indexes_bitmap = filtered_indexes_bitmap.new_intersection(facet_result.ids);
+    filtered_indexes_bitmap = filtered_indexes_bitmap.new_intersection(
+      facet_result.ids,
+    );
   }
 
   if (facet_result.not_ids) {
-    filtered_indexes_bitmap = filtered_indexes_bitmap.new_difference(facet_result.not_ids);
+    filtered_indexes_bitmap = filtered_indexes_bitmap.new_difference(
+      facet_result.not_ids,
+    );
   }
 
   // new filters to items
   // -------------------------------------
   let filtered_indexes = filtered_indexes_bitmap.array();
 
-  let filtered_items = filtered_indexes.map(_id => {
+  let filtered_items = filtered_indexes.map((_id) => {
     return facets.get_item(_id);
   });
 
@@ -73,17 +80,22 @@ export function search(items, input, configuration, fulltext, facets) {
   const sorting_start_time = new Date().getTime();
   let sorting_time = 0;
   if (input.sort) {
-    filtered_items = module.exports.sorted_items(filtered_items, input.sort, configuration.sortings);
+    filtered_items = module.exports.sorted_items(
+      filtered_items,
+      input.sort,
+      configuration.sortings,
+    );
   } else {
-
     if (_ids) {
-
-      filtered_indexes = _ids.filter(v => {
+      filtered_indexes = _ids.filter((v) => {
         return filtered_indexes_bitmap.has(v);
       });
 
-      const filtered_items_indexes = filtered_indexes.slice((page - 1) * per_page, page * per_page);
-      filtered_items = filtered_items_indexes.map(_id => {
+      const filtered_items_indexes = filtered_indexes.slice(
+        (page - 1) * per_page,
+        page * per_page,
+      );
+      filtered_items = filtered_items_indexes.map((_id) => {
         return facets.get_item(_id);
       });
 
@@ -92,8 +104,11 @@ export function search(items, input, configuration, fulltext, facets) {
   }
   // pagination
   if (!paginationApplied) {
-    all_filtered_items = is_all_filtered_items ? filtered_items: null;
-    filtered_items = filtered_items.slice((page - 1) * per_page, page * per_page);
+    all_filtered_items = is_all_filtered_items ? filtered_items : null;
+    filtered_items = filtered_items.slice(
+      (page - 1) * per_page,
+      page * per_page,
+    );
   }
 
   sorting_time = new Date().getTime() - sorting_start_time;
@@ -106,21 +121,25 @@ export function search(items, input, configuration, fulltext, facets) {
     pagination: {
       per_page: per_page,
       page: page,
-      total: filtered_indexes.length
+      total: filtered_indexes.length,
     },
     timings: {
       total: total_time,
       facets: facets_time,
       //filter: filter_time,
       search: search_time,
-      sorting: sorting_time
+      sorting: sorting_time,
     },
     data: {
       items: filtered_items,
       allFilteredItems: all_filtered_items,
       //aggregations: aggregations,
-      aggregations: helpers.getBuckets(facet_result, input, configuration.aggregations),
-    }
+      aggregations: helpers.getBuckets(
+        facet_result,
+        input,
+        configuration.aggregations,
+      ),
+    },
   };
 }
 
@@ -133,11 +152,7 @@ export function sorted_items(items, sort, sortings) {
   }
 
   if (sort.field) {
-    return _.orderBy(
-      items,
-      sort.field,
-      sort.order || 'asc'
-    );
+    return _.orderBy(items, sort.field, sort.order || 'asc');
   }
 
   return items;
@@ -148,14 +163,13 @@ export function sorted_items(items, sort, sortings) {
  * useful for autocomplete or list all aggregation options
  */
 export function similar(items, id, options) {
-
   const per_page = options.per_page || 10;
   const minimum = options.minimum || 0;
   const page = options.page || 1;
 
   let item;
 
-  for (let i = 0 ; i < items.length ; ++i) {
+  for (let i = 0; i < items.length; ++i) {
     if (items[i].id == id) {
       item = items[i];
       break;
@@ -169,36 +183,31 @@ export function similar(items, id, options) {
   const field = options.field;
   let sorted_items = [];
 
-  for (let i = 0 ; i < items.length ; ++i) {
-
+  for (let i = 0; i < items.length; ++i) {
     if (items[i].id !== id) {
       const intersection = _.intersection(item[field], items[i][field]);
 
       if (intersection.length >= minimum) {
         sorted_items.push(items[i]);
-        sorted_items[sorted_items.length - 1].intersection_length = intersection.length;
+        sorted_items[sorted_items.length - 1].intersection_length =
+          intersection.length;
       }
     }
   }
 
-  sorted_items = _.orderBy(
-    sorted_items,
-    ['intersection_length'],
-    ['desc']
-  );
+  sorted_items = _.orderBy(sorted_items, ['intersection_length'], ['desc']);
 
   return {
     pagination: {
       per_page: per_page,
       page: page,
-      total: sorted_items.length
+      total: sorted_items.length,
     },
     data: {
       items: sorted_items.slice((page - 1) * per_page, page * per_page),
-    }
+    },
   };
 }
-
 
 /**
  * returns list of elements in specific facet
@@ -208,8 +217,13 @@ export function aggregation(items, input, configuration, fulltext, facets) {
   const per_page = input.per_page || 10;
   const page = input.page || 1;
 
-  if (input.name && (!configuration.aggregations || !configuration.aggregations[input.name])) {
-    throw new Error('Please define aggregation "'.concat(input.name, '" in config'));
+  if (
+    input.name &&
+    (!configuration.aggregations || !configuration.aggregations[input.name])
+  ) {
+    throw new Error(
+      'Please define aggregation "'.concat(input.name, '" in config'),
+    );
   }
 
   const search_input = helpers.clone(input);
@@ -230,10 +244,10 @@ export function aggregation(items, input, configuration, fulltext, facets) {
     pagination: {
       per_page: per_page,
       page: page,
-      total: buckets.length
+      total: buckets.length,
     },
     data: {
-      buckets: buckets.slice((page - 1) * per_page, page * per_page)
-    }
+      buckets: buckets.slice((page - 1) * per_page, page * per_page),
+    },
   };
 }

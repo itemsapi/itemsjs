@@ -1,41 +1,47 @@
 import assert from 'node:assert';
 import Fulltext from '../src/fulltext.js';
 
-describe('fulltext', function() {
+describe('fulltext', function () {
+  const items = [
+    {
+      name: 'Godfather',
+      tags: ['mafia', 'crime'],
+    },
+    {
+      name: 'Fight club',
+      tags: ['dark humor', 'anti establishment'],
+    },
+    {
+      name: 'Forrest Gump',
+      tags: ['running', 'vietnam'],
+    },
+  ];
 
-  const items = [{
-    name: 'Godfather',
-    tags: ['mafia', 'crime'],
-  }, {
-    name: 'Fight club',
-    tags: ['dark humor', 'anti establishment'],
-  }, {
-    name: 'Forrest Gump',
-    tags: ['running', 'vietnam'],
-  }];
-
-  const items_with_ids = [{
-    id: 10,
-    name: 'Godfather',
-    tags: ['mafia', 'crime'],
-  }, {
-    id: 20,
-    name: 'Fight club',
-    tags: ['dark humor', 'anti establishment'],
-  }, {
-    id: 30,
-    name: 'Forrest Gump',
-    tags: ['running', 'vietnam'],
-  }];
+  const items_with_ids = [
+    {
+      id: 10,
+      name: 'Godfather',
+      tags: ['mafia', 'crime'],
+    },
+    {
+      id: 20,
+      name: 'Fight club',
+      tags: ['dark humor', 'anti establishment'],
+    },
+    {
+      id: 30,
+      name: 'Forrest Gump',
+      tags: ['running', 'vietnam'],
+    },
+  ];
 
   const specialItems = [
-    {'name': 'elation'},
-    {'name': 'source'},
-    {'name': 'headless'}
+    { name: 'elation' },
+    { name: 'source' },
+    { name: 'headless' },
   ];
 
   it('checks search', function test(done) {
-
     const fulltext = new Fulltext(items);
     assert.equal(fulltext.search_full('club').length, 1);
     assert.equal(fulltext.search_full('gump').length, 1);
@@ -51,7 +57,6 @@ describe('fulltext', function() {
   });
 
   it('checks search with defined id\'s', function test(done) {
-
     const fulltext = new Fulltext(items_with_ids);
     assert.equal(fulltext.search_full('club').length, 1);
     assert.equal(fulltext.search_full('gump').length, 1);
@@ -67,9 +72,8 @@ describe('fulltext', function() {
   });
 
   it('checks search on another fields', function test(done) {
-
     const fulltext = new Fulltext(items, {
-      searchableFields: ['name', 'tags']
+      searchableFields: ['name', 'tags'],
     });
     assert.equal(fulltext.search('vietnam').length, 1);
     assert.equal(fulltext.search('dark').length, 1);
@@ -78,11 +82,10 @@ describe('fulltext', function() {
     done();
   });
 
-
   it('makes search stepping through characters', function test(done) {
     const fulltext = new Fulltext(specialItems, {
       searchableFields: ['name'],
-      isExactSearch: true
+      isExactSearch: true,
     });
     assert.equal(fulltext.search('e').length, 1);
     assert.equal(fulltext.search('el').length, 1);
@@ -108,25 +111,23 @@ describe('fulltext', function() {
 
     const withoutstopwordfilter = new Fulltext(specialItems, {
       searchableFields: ['name'],
-      removeStopWordFilter: true
+      removeStopWordFilter: true,
     });
-    
+
     assert.equal(stopwordfilter.search('h').length, 1);
     assert.equal(stopwordfilter.search('he').length, 0); // The stopwordfilter filters out "he"
     assert.equal(stopwordfilter.search('hea').length, 1);
     assert.equal(stopwordfilter.search('head').length, 1);
 
     assert.equal(withoutstopwordfilter.search('h').length, 1);
-    assert.equal(withoutstopwordfilter.search('he').length, 1); 
+    assert.equal(withoutstopwordfilter.search('he').length, 1);
     assert.equal(withoutstopwordfilter.search('hea').length, 1);
     assert.equal(withoutstopwordfilter.search('head').length, 1);
 
     done();
   });
 
-
   xit('returns internal ids', function test(done) {
-
     const fulltext = new Fulltext(items);
     assert.deepEqual(fulltext.internal_ids(), [1, 2, 3]);
     assert.deepEqual(fulltext.bits_ids().array(), [1, 2, 3]);

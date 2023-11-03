@@ -5,8 +5,7 @@ import lunr from 'lunr';
  * responsible for making full text searching on items
  * config provide only searchableFields
  */
-export const Fulltext = function(items, config) {
-
+export const Fulltext = function (items, config) {
   config = config || {};
   config.searchableFields = config.searchableFields || [];
   this.items = items;
@@ -16,7 +15,7 @@ export const Fulltext = function(items, config) {
     this.field('name', { boost: 10 });
 
     const self = this;
-    _.forEach(config.searchableFields, function(field) {
+    _.forEach(config.searchableFields, function (field) {
       self.field(field);
     });
     this.ref('_id');
@@ -55,16 +54,15 @@ export const Fulltext = function(items, config) {
 };
 
 Fulltext.prototype = {
-
-  search_full: function(query, filter) {
-    return this.search(query, filter).map(v => {
+  search_full: function (query, filter) {
+    return this.search(query, filter).map((v) => {
       return this.store[v];
     });
   },
 
-  search: function(query, filter) {
+  search: function (query, filter) {
     if (!query && !filter) {
-      return this.items ? this.items.map(v => v._id) : [];
+      return this.items ? this.items.map((v) => v._id) : [];
     }
 
     let items;
@@ -80,8 +78,8 @@ Fulltext.prototype = {
       items = (items || this.items).filter(filter);
     }
 
-    return items.map(v => v._id);
-  }
+    return items.map((v) => v._id);
+  },
 };
 
 export default Fulltext;

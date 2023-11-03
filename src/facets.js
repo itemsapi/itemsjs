@@ -5,8 +5,7 @@ import * as helpers from './helpers.js';
 /**
  * responsible for making faceted search
  */
-export const Facets = function(items, configuration) {
-
+export const Facets = function (items, configuration) {
   configuration = configuration || {};
   configuration.aggregations = configuration.aggregations || {};
   this.items = items;
@@ -27,8 +26,7 @@ export const Facets = function(items, configuration) {
   this.ids_map = {};
 
   if (items) {
-    items.forEach(v => {
-
+    items.forEach((v) => {
       const custom_id_field = configuration.custom_id_field || 'id';
       if (v[custom_id_field] && v._id) {
         this.ids_map[v[custom_id_field]] = v._id;
@@ -40,30 +38,28 @@ export const Facets = function(items, configuration) {
 };
 
 Facets.prototype = {
-
-  items: function() {
+  items: function () {
     return this.items;
   },
 
-  bits_ids: function(ids) {
+  bits_ids: function (ids) {
     if (ids) {
       return new FastBitSet(ids);
     }
     return this._bits_ids;
   },
 
-  internal_ids_from_ids_map: function(ids) {
-
-    return ids.map(v => {
+  internal_ids_from_ids_map: function (ids) {
+    return ids.map((v) => {
       return this.ids_map[v];
     });
   },
 
-  index: function() {
+  index: function () {
     return this.facets;
   },
 
-  get_item: function(_id) {
+  get_item: function (_id) {
     return this._items_map[_id];
   },
 
@@ -71,15 +67,18 @@ Facets.prototype = {
    *
    * ids is optional only when there is query
    */
-  search: function(input, data) {
-
+  search: function (input, data) {
     const config = this.config;
     data = data || {};
 
     // consider removing clone
     const temp_facet = _.clone(this.facets);
 
-    temp_facet.not_ids = helpers.facets_ids(temp_facet['bits_data'], input.not_filters, config);
+    temp_facet.not_ids = helpers.facets_ids(
+      temp_facet['bits_data'],
+      input.not_filters,
+      config,
+    );
 
     let temp_data;
 
@@ -93,17 +92,23 @@ Facets.prototype = {
 
     temp_facet['bits_data_temp'] = temp_data['bits_data_temp'];
 
-    _.mapValues(temp_facet['bits_data_temp'], function(values, key) {
-      _.mapValues(temp_facet['bits_data_temp'][key], function(facet_indexes, key2) {
+    _.mapValues(temp_facet['bits_data_temp'], function (values, key) {
+      _.mapValues(
+        temp_facet['bits_data_temp'][key],
+        function (facet_indexes, key2) {
+          if (data.query_ids) {
+            temp_facet['bits_data_temp'][key][key2] =
+              data.query_ids.new_intersection(
+                temp_facet['bits_data_temp'][key][key2],
+              );
+          }
 
-        if (data.query_ids) {
-          temp_facet['bits_data_temp'][key][key2] = data.query_ids.new_intersection(temp_facet['bits_data_temp'][key][key2]);
-        }
-
-        if (data.test) {
-          temp_facet['data'][key][key2] = temp_facet['bits_data_temp'][key][key2].array();
-        }
-      });
+          if (data.test) {
+            temp_facet['data'][key][key2] =
+              temp_facet['bits_data_temp'][key][key2].array();
+          }
+        },
+      );
     });
 
     /**
@@ -114,11 +119,14 @@ Facets.prototype = {
     if (input.filters_query) {
       temp_facet.ids = helpers.filters_ids(temp_facet['bits_data_temp']);
     } else {
-      temp_facet.ids = helpers.facets_ids(temp_facet['bits_data_temp'], input.filters);
+      temp_facet.ids = helpers.facets_ids(
+        temp_facet['bits_data_temp'],
+        input.filters,
+      );
     }
 
     return temp_facet;
-  }
+  },
 };
 
 export default Facets;

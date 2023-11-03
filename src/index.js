@@ -4,9 +4,7 @@ import Fulltext from './fulltext.js';
 import Facets from './facets.js';
 
 export function itemsjs(items, configuration) {
-
   configuration = configuration || {};
-
 
   // upsert id to items
   // throw error in tests if id does not exists
@@ -27,13 +25,16 @@ export function itemsjs(items, configuration) {
      * sort
      * filters
      */
-    search: function(input) {
+    search: function (input) {
       input = input || {};
 
       /**
        * merge configuration aggregation with user input
        */
-      input.aggregations = helpers.mergeAggregations(configuration.aggregations, input);
+      input.aggregations = helpers.mergeAggregations(
+        configuration.aggregations,
+        input,
+      );
 
       return service.search(items, input, configuration, fulltext, facets);
     },
@@ -42,8 +43,7 @@ export function itemsjs(items, configuration) {
      * returns list of similar elements to specified item id
      * id
      */
-    similar: function(id, options) {
-
+    similar: function (id, options) {
       return service.similar(items, id, options);
     },
 
@@ -54,7 +54,7 @@ export function itemsjs(items, configuration) {
      * per_page
      * page
      */
-    aggregation: function(input) {
+    aggregation: function (input) {
       return service.aggregation(items, input, configuration, fulltext, facets);
     },
 
@@ -62,11 +62,11 @@ export function itemsjs(items, configuration) {
      * reindex items
      * reinitialize fulltext search
      */
-    reindex: function(newItems) {
+    reindex: function (newItems) {
       items = newItems;
       fulltext = new Fulltext(items, configuration);
       facets = new Facets(items, configuration);
-    }
+    },
   };
 }
 
