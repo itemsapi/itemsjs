@@ -1,6 +1,6 @@
 import { map, mapValues, clone, keys } from 'lodash-es';
 import FastBitSet from 'fastbitset';
-import * as helpers from './helpers.js';
+import { facets_ids, filters_ids, filters_matrix, index, input_to_facet_filters, matrix, parse_boolean_query } from './helpers.js';
 
 /**
  * responsible for making faceted search
@@ -10,7 +10,7 @@ export const Facets = function (items, configuration) {
   configuration.aggregations = configuration.aggregations || {};
   this.items = items;
   this.config = configuration.aggregations;
-  this.facets = helpers.index(items, keys(configuration.aggregations));
+  this.facets = index(items, keys(configuration.aggregations));
 
   this._items_map = {};
   this._ids = [];
@@ -74,7 +74,7 @@ Facets.prototype = {
     // consider removing clone
     const temp_facet = clone(this.facets);
 
-    temp_facet.not_ids = helpers.facets_ids(
+    temp_facet.not_ids = facets_ids(
       temp_facet['bits_data'],
       input.not_filters,
       config
@@ -82,12 +82,12 @@ Facets.prototype = {
 
     let temp_data;
 
-    const filters = helpers.input_to_facet_filters(input, config);
-    temp_data = helpers.matrix(this.facets, filters);
+    const filters = input_to_facet_filters(input, config);
+    temp_data = matrix(this.facets, filters);
 
     if (input.filters_query) {
-      const filters = helpers.parse_boolean_query(input.filters_query);
-      temp_data = helpers.filters_matrix(temp_data, filters);
+      const filters = parse_boolean_query(input.filters_query);
+      temp_data = filters_matrix(temp_data, filters);
     }
 
     temp_facet['bits_data_temp'] = temp_data['bits_data_temp'];
@@ -117,9 +117,9 @@ Facets.prototype = {
      * filter ids needs to be used if there is filters query
      */
     if (input.filters_query) {
-      temp_facet.ids = helpers.filters_ids(temp_facet['bits_data_temp']);
+      temp_facet.ids = filters_ids(temp_facet['bits_data_temp']);
     } else {
-      temp_facet.ids = helpers.facets_ids(
+      temp_facet.ids = facets_ids(
         temp_facet['bits_data_temp'],
         input.filters
       );
@@ -128,5 +128,3 @@ Facets.prototype = {
     return temp_facet;
   },
 };
-
-export default Facets;

@@ -1,9 +1,9 @@
-import * as service from './lib.js';
-import * as helpers from './helpers.js';
-import Fulltext from './fulltext.js';
-import Facets from './facets.js';
+import { search, similar, aggregation } from './lib.js';
+import { mergeAggregations } from './helpers.js';
+import { Fulltext } from './fulltext.js';
+import { Facets } from './facets.js';
 
-export function itemsjs(items, configuration) {
+function itemsjs(items, configuration) {
   configuration = configuration || {};
 
   // upsert id to items
@@ -31,12 +31,9 @@ export function itemsjs(items, configuration) {
       /**
        * merge configuration aggregation with user input
        */
-      input.aggregations = helpers.mergeAggregations(
-        configuration.aggregations,
-        input,
-      );
+      input.aggregations = mergeAggregations(configuration.aggregations, input);
 
-      return service.search(items, input, configuration, fulltext, facets);
+      return search(items, input, configuration, fulltext, facets);
     },
 
     /**
@@ -44,7 +41,7 @@ export function itemsjs(items, configuration) {
      * id
      */
     similar: function (id, options) {
-      return service.similar(items, id, options);
+      return similar(items, id, options);
     },
 
     /**
@@ -55,7 +52,7 @@ export function itemsjs(items, configuration) {
      * page
      */
     aggregation: function (input) {
-      return service.aggregation(items, input, configuration, fulltext, facets);
+      return aggregation(items, input, configuration, fulltext, facets);
     },
 
     /**

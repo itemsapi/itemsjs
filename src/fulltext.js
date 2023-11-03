@@ -81,5 +81,3 @@ Fulltext.prototype = {
     return items.map((v) => v._id);
   },
 };
-
-export default Fulltext;

@@ -1,6 +1,6 @@
 import { orderBy, intersection as _intersection } from 'lodash-es';
 import FastBitSet from 'fastbitset';
-import * as helpers from './helpers.js';
+import { getBuckets, clone } from './helpers.js';
 
 /**
  * search by filters
@@ -134,11 +134,7 @@ export function search(items, input, configuration, fulltext, facets) {
       items: filtered_items,
       allFilteredItems: all_filtered_items,
       //aggregations: aggregations,
-      aggregations: helpers.getBuckets(
-        facet_result,
-        input,
-        configuration.aggregations
-      ),
+      aggregations: getBuckets(facet_result, input, configuration.aggregations),
     },
   };
 }
@@ -226,7 +222,7 @@ export function aggregation(items, input, configuration, fulltext, facets) {
     );
   }
 
-  const search_input = helpers.clone(input);
+  const search_input = clone(input);
 
   search_input.page = 1;
   search_input.per_page = 0;

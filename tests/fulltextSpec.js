@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import Fulltext from '../src/fulltext.js';
+import { Fulltext } from '../src/fulltext.js';
 
 describe('fulltext', function () {
   const items = [

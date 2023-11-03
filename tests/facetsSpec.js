@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import itemsJS from '../src/index.js';
 
-import Facets from '../src/facets.js';
+import { Facets } from '../src/facets.js';
 import * as helpers from '../src/helpers.js';
 import FastBitSet from 'fastbitset';
 
@@ -99,7 +99,7 @@ describe('conjunctive search', function () {
     const ids = helpers.facets_ids(
       result['bits_data_temp'],
       input.filters,
-      aggregations,
+      aggregations
     );
     assert.deepEqual(ids.array(), [1, 3, 4]);
 
@@ -157,7 +157,7 @@ describe('conjunctive search', function () {
     const ids = helpers.facets_ids(
       result['bits_data_temp'],
       input.filters,
-      aggregations,
+      aggregations
     );
     assert.deepEqual(ids, null);
 
@@ -344,7 +344,7 @@ describe('disjunctive and conjunctive search', function () {
     const ids = helpers.facets_ids(
       result['bits_data_temp'],
       input.filters,
-      aggregations,
+      aggregations
     );
     assert.deepEqual(ids.array(), [1, 4]);
 
