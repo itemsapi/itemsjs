@@ -13,69 +13,69 @@ import {
 /**
  * responsible for making faceted search
  */
-export const Facets = function (items, configuration) {
-  configuration = configuration || {};
-  configuration.aggregations = configuration.aggregations || {};
-  this.items = items;
-  this.config = configuration.aggregations;
-  this.facets = index(items, keys(configuration.aggregations));
+export class Facets {
+  constructor(items, configuration) {
+    configuration = configuration || {};
+    configuration.aggregations = configuration.aggregations || {};
+    this.items = items;
+    this.config = configuration.aggregations;
+    this.facets = index(items, keys(configuration.aggregations));
 
-  this._items_map = {};
-  this._ids = [];
+    this._items_map = {};
+    this._ids = [];
 
-  let i = 1;
-  map(items, (item) => {
-    this._ids.push(i);
-    this._items_map[i] = item;
-    item._id = i;
-    ++i;
-  });
-
-  this.ids_map = {};
-
-  if (items) {
-    items.forEach((v) => {
-      const custom_id_field = configuration.custom_id_field || 'id';
-      if (v[custom_id_field] && v._id) {
-        this.ids_map[v[custom_id_field]] = v._id;
-      }
+    let i = 1;
+    map(items, (item) => {
+      this._ids.push(i);
+      this._items_map[i] = item;
+      item._id = i;
+      ++i;
     });
+
+    this.ids_map = {};
+
+    if (items) {
+      items.forEach((v) => {
+        const custom_id_field = configuration.custom_id_field || 'id';
+        if (v[custom_id_field] && v._id) {
+          this.ids_map[v[custom_id_field]] = v._id;
+        }
+      });
+    }
+
+    this._bits_ids = new FastBitSet(this._ids);
   }
 
-  this._bits_ids = new FastBitSet(this._ids);
-};
-
-Facets.prototype = {
-  items: function () {
+  items() {
     return this.items;
-  },
+  }
 
-  bits_ids: function (ids) {
+  bits_ids(ids) {
     if (ids) {
       return new FastBitSet(ids);
     }
     return this._bits_ids;
-  },
+  }
 
-  internal_ids_from_ids_map: function (ids) {
+  internal_ids_from_ids_map(ids) {
     return ids.map((v) => {
       return this.ids_map[v];
     });
-  },
+  }
 
-  index: function () {
+  index() {
     return this.facets;
-  },
+  }
 
-  get_item: function (_id) {
+  get_item(_id) {
     return this._items_map[_id];
-  },
+  }
 
   /*
    *
    * ids is optional only when there is query
    */
-  search: function (input, data) {
+  search(input, data) {
     const config = this.config;
     data = data || {};
 
@@ -85,7 +85,7 @@ Facets.prototype = {
     temp_facet.not_ids = facets_ids(
       temp_facet['bits_data'],
       input.not_filters,
-      config,
+      config
     );
 
     let temp_data;
@@ -107,7 +107,7 @@ Facets.prototype = {
           if (data.query_ids) {
             temp_facet['bits_data_temp'][key][key2] =
               data.query_ids.new_intersection(
-                temp_facet['bits_data_temp'][key][key2],
+                temp_facet['bits_data_temp'][key][key2]
               );
           }
 
@@ -115,7 +115,7 @@ Facets.prototype = {
             temp_facet['data'][key][key2] =
               temp_facet['bits_data_temp'][key][key2].array();
           }
-        },
+        }
       );
     });
 
@@ -131,5 +131,5 @@ Facets.prototype = {
     }
 
     return temp_facet;
-  },
-};
+  }
+}
