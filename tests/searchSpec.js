@@ -1,10 +1,13 @@
-'use strict';
+import assert from 'node:assert';
+import itemsJS from '../src/index.js';
+import _ from 'lodash';
+import { readFileSync } from 'node:fs';
+const items = JSON.parse(readFileSync('./tests/fixtures/items.json'));
+const movies = JSON.parse(readFileSync('./tests/fixtures/movies.json'));
 
-const assert = require('assert');
-const { clone } = require('lodash');
-const items = require('./fixtures/items.json');
-const movies = require('./fixtures/movies.json');
-let itemsjs = require('./../src/index')();
+const {clone} = _;
+
+let itemsjs = itemsJS();
 
 describe('search', function() {
 
@@ -47,7 +50,7 @@ describe('search', function() {
 
   it('searches no params', function test(done) {
 
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
     });
@@ -71,7 +74,7 @@ describe('search', function() {
 
   it('searches with two filters', function test(done) {
 
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       filters: {
@@ -88,7 +91,7 @@ describe('search', function() {
 
   it('searches with filters query', function test(done) {
 
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       filters_query: 'tags:c'
@@ -102,7 +105,7 @@ describe('search', function() {
 
   it('searches with filters query and filters', function test(done) {
 
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       filters_query: 'tags:c',
@@ -120,7 +123,7 @@ describe('search', function() {
 
   it('searches with filters query not existing value', function test(done) {
 
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       filters_query: 'tags:not_existing'
@@ -134,7 +137,7 @@ describe('search', function() {
 
   it('searches with filter and query', function test(done) {
 
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       filters: {
@@ -154,7 +157,7 @@ describe('search', function() {
 
   it('makes search with empty filters', function test(done) {
 
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       filters: {
@@ -168,7 +171,7 @@ describe('search', function() {
 
   it('makes search with not filters', function test(done) {
 
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       not_filters: {
@@ -183,7 +186,7 @@ describe('search', function() {
 
   it('makes search with many not filters', function test(done) {
 
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       not_filters: {
@@ -198,7 +201,7 @@ describe('search', function() {
 
   it('makes search with non existing filter value with conjunction true should return no results', function test(done) {
 
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
     
     const result = itemsjs.search({
       filters: {
@@ -217,7 +220,7 @@ describe('search', function() {
     const localConfiguration = clone(configuration);
     localConfiguration.aggregations.category.conjunction = false;
 
-    const itemsjs = require('./../index')(items, localConfiguration);
+    const itemsjs = itemsJS(items, localConfiguration);
 
     const result = itemsjs.search({
       filters: {
@@ -236,7 +239,7 @@ describe('search', function() {
     const localConfiguration = clone(configuration);
     localConfiguration.aggregations.category.conjunction = false;
 
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       filters: {
@@ -252,7 +255,7 @@ describe('search', function() {
 
   it('throws an error if name does not exist', function test(done) {
 
-    const itemsjs = require('./../index')(items, {
+    const itemsjs = itemsJS(items, {
       native_search_enabled: false
     });
 
@@ -276,7 +279,7 @@ describe('no configuration', function() {
   };
 
   before(function(done) {
-    itemsjs = require('./../index')(items, configuration);
+    itemsjs = itemsJS(items, configuration);
     done();
   });
 
@@ -292,7 +295,7 @@ describe('no configuration', function() {
 
   it('searches with filter', function test(done) {
 
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     let result = itemsjs.search({
       filter: function() {
@@ -321,7 +324,7 @@ describe('custom fulltext integration', function() {
   };
 
   before(function(done) {
-    itemsjs = require('./../index')(movies, configuration);
+    itemsjs = itemsJS(movies, configuration);
     done();
   });
 
@@ -352,7 +355,7 @@ describe('custom fulltext integration', function() {
       return v;
     });
 
-    itemsjs = require('./../index')(temp_movies, configuration);
+    itemsjs = itemsJS(temp_movies, configuration);
 
     let result = itemsjs.search({
       ids: temp_movies.map(v => v.id).slice(0, 1)
@@ -385,7 +388,7 @@ describe('custom fulltext integration', function() {
 
     configuration.custom_id_field = 'uuid';
 
-    itemsjs = require('./../index')(temp_movies, configuration);
+    itemsjs = itemsJS(temp_movies, configuration);
 
     let result = itemsjs.search({
       ids: temp_movies.map(v => v.uuid).slice(0, 1),

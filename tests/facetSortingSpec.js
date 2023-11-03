@@ -1,6 +1,6 @@
-'use strict';
+import assert from 'node:assert';
+import itemsJS from '../src/index.js';
 
-const assert = require('assert');
 const items = [{
   genres: 'Western'
 }, {
@@ -21,7 +21,7 @@ describe('facet sorting', function() {
 
   it('sort by key', function test(done) {
 
-    const result = require('./../index')(items, {
+    const result = itemsJS(items, {
       aggregations: {
         genres: {
           sort: ['key'],
@@ -38,7 +38,7 @@ describe('facet sorting', function() {
 
   it('sort by key (field, not array)', function test(done) {
 
-    const result = require('./../index')(items, {
+    const result = itemsJS(items, {
       aggregations: {
         genres: {
           sort: 'key',
@@ -56,7 +56,7 @@ describe('facet sorting', function() {
 
   it('sort by key descending', function test(done) {
 
-    const result = require('./../index')(items, {
+    const result = itemsJS(items, {
       aggregations: {
         genres: {
           sort: ['key'],
@@ -74,7 +74,7 @@ describe('facet sorting', function() {
 
   it('sort by doc_count', function test(done) {
 
-    const result = require('./../index')(items, {
+    const result = itemsJS(items, {
       aggregations: {
         genres: {
           sort: ['doc_count'],
@@ -92,7 +92,7 @@ describe('facet sorting', function() {
 
   it('sort by count', function test(done) {
 
-    const result = require('./../index')(items, {
+    const result = itemsJS(items, {
       aggregations: {
         genres: {
           sort: 'count',
@@ -110,7 +110,7 @@ describe('facet sorting', function() {
 
   it('sort by doc_count and key and order key desc', function test(done) {
 
-    const result = require('./../index')(items, {
+    const result = itemsJS(items, {
       aggregations: {
         genres: {
           sort: ['doc_count', 'key'],
@@ -127,7 +127,7 @@ describe('facet sorting', function() {
   });
 
   it('sort by selected, key and order by desc, asc if sort is term', function test(done) {
-    const result_array = require('./../index')(items, {
+    const result_array = itemsJS(items, {
       aggregations: {
         genres: {
           sort: ['selected', 'key'],
@@ -138,7 +138,7 @@ describe('facet sorting', function() {
       name: 'genres'
     });
 
-    const result_term = require('./../index')(items, {
+    const result_term = itemsJS(items, {
       aggregations: {
         genres: {
           sort: 'term'
@@ -155,7 +155,7 @@ describe('facet sorting', function() {
 
   it('sort by selected if chosen_filters_on_top is not set', function test(done) {
 
-    const result = require('./../index')(items, {
+    const result = itemsJS(items, {
       aggregations: {
         genres: {
           sort: 'term'
@@ -175,7 +175,7 @@ describe('facet sorting', function() {
 
   it('does not sort by selected if chosen_filters_on_top is false', function test(done) {
 
-    const result = require('./../index')(items, {
+    const result = itemsJS(items, {
       aggregations: {
         genres: {
           sort: 'key',
@@ -196,7 +196,7 @@ describe('facet sorting', function() {
 
   it('excludes filters with zero doc_count if hide_zero_doc_count is true', function test(done) {
 
-    const result = require('./../index')(items, {
+    const result = itemsJS(items, {
       aggregations: {
         genres: {
           hide_zero_doc_count: true

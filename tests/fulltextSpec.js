@@ -1,7 +1,5 @@
-'use strict';
-
-const assert = require('assert');
-const Fulltext = require('./../src/fulltext');
+import assert from 'node:assert';
+import Fulltext from '../src/fulltext.js';
 
 describe('fulltext', function() {
 

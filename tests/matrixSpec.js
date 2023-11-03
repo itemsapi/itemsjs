@@ -1,9 +1,5 @@
-'use strict';
-
-const assert = require('assert');
-// const Facets = require('./../src/facets');
-const helpers = require('./../src/helpers');
-// const FastBitSet = require('fastbitset');
+import assert from 'node:assert';
+import * as helpers from '../src/helpers.js';
 
 describe('filtering and generating facets with matrix (9 rows in dataset)', function() {
 

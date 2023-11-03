@@ -1,8 +1,6 @@
-'use strict';
-
-const assert = require('assert');
-const service = require('./../src/lib');
-const _ = require('lodash');
+import assert from 'node:assert';
+import * as service from '../src/lib.js';
+import _ from 'lodash';
 
 describe('aggregations', function() {
 

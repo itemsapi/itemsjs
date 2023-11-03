@@ -1,9 +1,9 @@
-const service = require('./lib');
-const helpers = require('./helpers');
-const Fulltext = require('./fulltext');
-const Facets = require('./facets');
+import * as service from './lib.js';
+import * as helpers from './helpers.js';
+import Fulltext from './fulltext.js';
+import Facets from './facets.js';
 
-module.exports = function itemsjs(items, configuration) {
+export function itemsjs(items, configuration) {
 
   configuration = configuration || {};
 
@@ -68,4 +68,6 @@ module.exports = function itemsjs(items, configuration) {
       facets = new Facets(items, configuration);
     }
   };
-};
+}
+
+export default itemsjs;

@@ -1,12 +1,12 @@
-const _ = require('lodash');
-const FastBitSet = require('fastbitset');
-const booleanParser = require('boolean-parser');
+import _ from 'lodash';
+import FastBitSet from 'fastbitset';
+import booleanParser from 'boolean-parser';
 
-const clone = function(val) {
-  return structuredClone(val)
+export const clone = function(val) {
+  return structuredClone(val);
 };
 
-const humanize = function (str) {
+export const humanize = function (str) {
   return str
     .replace(/^[\s_]+|[\s_]+$/g, '')
     .replace(/[_\s]+/g, ' ')
@@ -15,7 +15,7 @@ const humanize = function (str) {
     });
 };
 
-const combination_indexes = function(facets, filters) {
+export const combination_indexes = function(facets, filters) {
 
   const indexes = {};
 
@@ -42,7 +42,7 @@ const combination_indexes = function(facets, filters) {
 };
 
 
-const filters_matrix = function(facets, query_filters) {
+export const filters_matrix = function(facets, query_filters) {
   const temp_facet = _.clone(facets);
 
   if (!temp_facet['is_temp_copied']) {
@@ -101,7 +101,7 @@ const filters_matrix = function(facets, query_filters) {
 /*
  * returns facets and ids
  */
-const matrix = function(facets, filters) {
+export const matrix = function(facets, filters) {
   const temp_facet = _.clone(facets);
 
   filters = filters || [];
@@ -183,7 +183,7 @@ const matrix = function(facets, filters) {
   return temp_facet;
 };
 
-const index = function(items, fields) {
+export const index = function(items, fields) {
 
   fields = fields || [];
 
@@ -275,7 +275,7 @@ const index = function(items, fields) {
 /**
  * calculates ids for filters
  */
-const filters_ids = function(facets_data) {
+export const filters_ids = function(facets_data) {
 
   let output = new FastBitSet([]);
 
@@ -294,7 +294,7 @@ const filters_ids = function(facets_data) {
  * if there is no facet input then return null to not save resources for OR calculation
  * null means facets haven't matched searched items
  */
-const facets_ids = function(facets_data, filters) {
+export const facets_ids = function(facets_data, filters) {
 
   let output = new FastBitSet([]);
   let i = 0;
@@ -315,7 +315,7 @@ const facets_ids = function(facets_data, filters) {
   return output;
 };
 
-const getBuckets = function(data, input, aggregations) {
+export const getBuckets = function(data, input, aggregations) {
 
   let position = 1;
 
@@ -428,7 +428,7 @@ const getBuckets = function(data, input, aggregations) {
   });
 };
 
-const mergeAggregations = function(aggregations, input) {
+export const mergeAggregations = function(aggregations, input) {
 
   return _.mapValues(clone(aggregations), (val, key) => {
 
@@ -459,7 +459,7 @@ const mergeAggregations = function(aggregations, input) {
   });
 };
 
-const input_to_facet_filters = function(input, config) {
+export const input_to_facet_filters = function(input, config) {
 
   const filters = [];
 
@@ -492,7 +492,7 @@ const input_to_facet_filters = function(input, config) {
   return filters;
 };
 
-const parse_boolean_query = function (query) {
+export const parse_boolean_query = function (query) {
   const result = parse_boolean_query_temp(query);
   return result;
 };
@@ -520,16 +520,4 @@ const parse_boolean_query_temp = function (query) {
   });
 };
 
-module.exports.parse_boolean_query = parse_boolean_query;
-module.exports.input_to_facet_filters = input_to_facet_filters;
-module.exports.facets_ids = facets_ids;
-module.exports.filters_ids = filters_ids;
-module.exports.clone = clone;
-module.exports.humanize = humanize;
-module.exports.index = index;
-module.exports.combination_indexes = combination_indexes;
-module.exports.matrix = matrix;
-module.exports.filters_matrix = filters_matrix;
-module.exports.getBuckets = getBuckets;
-module.exports.getFacets = getBuckets;
-module.exports.mergeAggregations = mergeAggregations;
+export const getFacets = getBuckets;

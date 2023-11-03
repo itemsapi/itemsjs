@@ -1,11 +1,11 @@
-const _ = require('lodash');
-const lunr = require('lunr');
+import _ from 'lodash';
+import lunr from 'lunr';
 
 /**
  * responsible for making full text searching on items
  * config provide only searchableFields
  */
-const Fulltext = function(items, config) {
+export const Fulltext = function(items, config) {
 
   config = config || {};
   config.searchableFields = config.searchableFields || [];
@@ -84,4 +84,4 @@ Fulltext.prototype = {
   }
 };
 
-module.exports = Fulltext;
+export default Fulltext;

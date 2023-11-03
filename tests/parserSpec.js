@@ -1,7 +1,5 @@
-'use strict';
-
-const assert = require('assert');
-const helpers = require('./../src/helpers');
+import assert from 'node:assert';
+import * as helpers from '../src/helpers.js';
 
 describe('parsing filters to matrix', function() {
 

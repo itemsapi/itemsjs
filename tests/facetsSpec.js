@@ -1,9 +1,9 @@
-'use strict';
+import assert from 'node:assert';
+import itemsJS from '../src/index.js';
 
-const assert = require('assert');
-const Facets = require('./../src/facets');
-const helpers = require('./../src/helpers');
-const FastBitSet = require('fastbitset');
+import Facets from '../src/facets.js';
+import * as helpers from '../src/helpers.js';
+import FastBitSet from 'fastbitset';
 
 const items = [{
   id: 1,
@@ -56,7 +56,7 @@ describe('conjunctive search', function() {
   const facets = new Facets(items, {
     aggregations: aggregations
   });
-  const itemsjs = require('./../index')(items, {
+  const itemsjs = itemsJS(items, {
     aggregations: aggregations
   });
 
@@ -380,7 +380,7 @@ describe('generates facets crossed with query', function() {
   const facets = new Facets(items, {
     aggregations: aggregations
   });
-  const itemsjs = require('./../index')(items, {
+  const itemsjs = itemsJS(items, {
     aggregations: aggregations,
     searchableFields: ['actors'],
   });
@@ -460,7 +460,7 @@ describe('generates symetrical disjunctive facets (SergeyRe)', function() {
   const facets = new Facets(items, {
     aggregations: aggregations
   });
-  // const itemsjs = require('./../index')(items, {
+  // const itemsjs = itemsJS(items, {
   //   aggregations: aggregations,
   // });
 

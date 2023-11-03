@@ -1,11 +1,11 @@
-const _ = require('lodash');
-const helpers = require('./helpers');
-const FastBitSet = require('fastbitset');
+import _ from 'lodash';
+import FastBitSet from 'fastbitset';
+import * as helpers from './helpers.js';
 
 /**
  * search by filters
  */
-module.exports.search = function(items, input, configuration, fulltext, facets) {
+export function search(items, input, configuration, fulltext, facets) {
 
   input = input || {};
 
@@ -122,12 +122,12 @@ module.exports.search = function(items, input, configuration, fulltext, facets) 
       aggregations: helpers.getBuckets(facet_result, input, configuration.aggregations),
     }
   };
-};
+}
 
 /**
  * return items by sort
  */
-module.exports.sorted_items = function(items, sort, sortings) {
+export function sorted_items(items, sort, sortings) {
   if (sortings && sortings[sort]) {
     sort = sortings[sort];
   }
@@ -141,13 +141,13 @@ module.exports.sorted_items = function(items, sort, sortings) {
   }
 
   return items;
-};
+}
 
 /**
  * returns list of elements in aggregation
  * useful for autocomplete or list all aggregation options
  */
-module.exports.similar = function(items, id, options) {
+export function similar(items, id, options) {
 
   const per_page = options.per_page || 10;
   const minimum = options.minimum || 0;
@@ -197,14 +197,14 @@ module.exports.similar = function(items, id, options) {
       items: sorted_items.slice((page - 1) * per_page, page * per_page),
     }
   };
-};
+}
 
 
 /**
  * returns list of elements in specific facet
  * useful for autocomplete or list all aggregation options
  */
-module.exports.aggregation = function (items, input, configuration, fulltext, facets) {
+export function aggregation(items, input, configuration, fulltext, facets) {
   const per_page = input.per_page || 10;
   const page = input.page || 1;
 
@@ -223,7 +223,7 @@ module.exports.aggregation = function (items, input, configuration, fulltext, fa
 
   configuration.aggregations[input.name].size = 10000;
 
-  const result = module.exports.search(items, search_input, configuration, fulltext, facets);
+  const result = search(items, search_input, configuration, fulltext, facets);
   const buckets = result.data.aggregations[input.name].buckets;
 
   return {
@@ -236,4 +236,4 @@ module.exports.aggregation = function (items, input, configuration, fulltext, fa
       buckets: buckets.slice((page - 1) * per_page, page * per_page)
     }
   };
-};
+}

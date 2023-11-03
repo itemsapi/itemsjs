@@ -14,6 +14,7 @@ ignorePatterns:
   - temp
 parserOptions:
   ecmaVersion: 12
+  sourceType: module
 rules:
   indent:
     - error

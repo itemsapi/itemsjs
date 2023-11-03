@@ -1,11 +1,11 @@
-const _ = require('lodash');
-const helpers = require('./helpers');
-const FastBitSet = require('fastbitset');
+import _ from 'lodash';
+import FastBitSet from 'fastbitset';
+import * as helpers from './helpers.js';
 
 /**
  * responsible for making faceted search
  */
-const Facets = function(items, configuration) {
+export const Facets = function(items, configuration) {
 
   configuration = configuration || {};
   configuration.aggregations = configuration.aggregations || {};
@@ -121,4 +121,4 @@ Facets.prototype = {
   }
 };
 
-module.exports = Facets;
+export default Facets;

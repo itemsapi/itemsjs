@@ -1,7 +1,8 @@
-'use strict';
+import assert from 'node:assert';
+import itemsJS from '../src/index.js';
 
-const assert = require('assert');
-const items = require('./fixtures/movies.json');
+import { readFileSync } from 'node:fs';
+const items = JSON.parse(readFileSync('./tests/fixtures/movies.json'));
 
 const configuration = {
   aggregations: {
@@ -22,7 +23,7 @@ const configuration = {
 
 describe('aggregation / facet', function() {
 
-  const itemsjs = require('./../index')(items, configuration);
+  const itemsjs = itemsJS(items, configuration);
 
   it('makes error if name does not exist', function test(done) {
 

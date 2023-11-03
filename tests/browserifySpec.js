@@ -1,6 +1,5 @@
-'use strict';
-
-const assert = require('assert');
+import assert from 'node:assert';
+import itemsJS from '../src/index.js';
 
 describe('itemjs general tests', function() {
 
@@ -29,7 +28,7 @@ describe('itemjs general tests', function() {
     tags: 'Another tag'
   }];
 
-  const itemsjs = require('./../index')(items);
+  const itemsjs = itemsJS(items);
 
   it('makes search', function test(done) {
     const result = itemsjs.search();
@@ -99,7 +98,7 @@ describe('itemjs general tests', function() {
 
   it('makes search with aggregation filters', function test(done) {
 
-    const itemsjs = require('./../index')(items, {
+    const itemsjs = itemsJS(items, {
       aggregations: {
         tags: {},
         actors: {}
@@ -137,7 +136,7 @@ describe('itemjs general tests', function() {
 
   it('makes search with aggregation filters with single value object', function test(done) {
 
-    const itemsjs = require('./../index')(similarItems, {
+    const itemsjs = itemsJS(similarItems, {
       aggregations: {
         tags: {}
       },
@@ -171,7 +170,7 @@ describe('itemjs general tests', function() {
   });
 
   it('makes aggregations when configuration supplied', function test(done) {
-    const itemsjs = require('./../index')(items, {
+    const itemsjs = itemsJS(items, {
       aggregations: {
         tags: {
           type: 'terms',
@@ -200,7 +199,7 @@ describe('itemjs general tests', function() {
       tags: 'a',
     }];
 
-    const itemsjs = require('./../index')(items, {
+    const itemsjs = itemsJS(items, {
       aggregations: {
         tags: {
           type: 'terms',
@@ -234,7 +233,7 @@ describe('itemjs general tests', function() {
       name: 'Apple 10',
     }];
 
-    const itemsjs = require('./../index')(items, {
+    const itemsjs = itemsJS(items, {
       aggregations: {
         price: {
           title: 'Price',
@@ -268,7 +267,7 @@ describe('itemjs general tests', function() {
       tags: '€ 1 euro',
     }];
 
-    const itemsjs = require('./../index')(items, {
+    const itemsjs = itemsJS(items, {
       aggregations: {
         tags: {
           title: 'Tags',
@@ -298,7 +297,7 @@ describe('itemjs general tests', function() {
       name: 'movie3',
     }];
 
-    const itemsjs = require('./../index')(items, {
+    const itemsjs = itemsJS(items, {
       aggregations: {
         tags: {
           type: 'terms',
@@ -325,7 +324,7 @@ describe('itemjs general tests', function() {
       name: 'movie3',
     }];
 
-    const itemsjs = require('./../index')(items, {
+    const itemsjs = itemsJS(items, {
       searchableFields: ['name', 'tags']
     });
     let result = itemsjs.search({
