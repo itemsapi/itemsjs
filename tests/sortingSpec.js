@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import * as service from '../src/lib.js';
+import { sorted_items } from '../src/lib.js';
 import { map } from 'lodash-es';
 
 describe('aggregations', function () {
@@ -38,7 +38,7 @@ describe('aggregations', function () {
       },
     };
 
-    let result = service.sorted_items(items, 'name_asc', sortings);
+    let result = sorted_items(items, 'name_asc', sortings);
     assert.deepEqual(map(result, 'name'), [
       'movie1',
       'movie2',
@@ -46,13 +46,13 @@ describe('aggregations', function () {
       'movie7',
     ]);
 
-    result = service.sorted_items(items, 'name_desc', sortings);
+    result = sorted_items(items, 'name_desc', sortings);
     assert.deepEqual(
       map(result, 'name'),
-      ['movie1', 'movie2', 'movie3', 'movie7'].reverse(),
+      ['movie1', 'movie2', 'movie3', 'movie7'].reverse()
     );
 
-    result = service.sorted_items(items, 'date_asc', sortings);
+    result = sorted_items(items, 'date_asc', sortings);
     assert.deepEqual(map(result, 'name'), [
       'movie2',
       'movie7',
@@ -65,7 +65,7 @@ describe('aggregations', function () {
       order: ['desc', 'desc'],
     };
 
-    result = service.sorted_items(items, customSort);
+    result = sorted_items(items, customSort);
     assert.deepEqual(map(result, 'name'), [
       'movie1',
       'movie3',

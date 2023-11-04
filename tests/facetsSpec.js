@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import itemsJS from '../src/index.js';
 
 import { Facets } from '../src/facets.js';
-import * as helpers from '../src/helpers.js';
+import { facets_ids, getBuckets } from '../src/helpers.js';
 import FastBitSet from 'fastbitset';
 
 const items = [
@@ -96,14 +96,14 @@ describe('conjunctive search', function () {
     assert.deepEqual(result.data.actors.john, [1]);
     assert.deepEqual(result.data.category.comedy, [3]);
 
-    const ids = helpers.facets_ids(
+    const ids = facets_ids(
       result['bits_data_temp'],
       input.filters,
-      aggregations,
+      aggregations
     );
     assert.deepEqual(ids.array(), [1, 3, 4]);
 
-    const buckets = helpers.getBuckets(result, input, aggregations);
+    const buckets = getBuckets(result, input, aggregations);
     //console.log(buckets.tags.buckets);
     assert.deepEqual(buckets.tags.buckets[0].doc_count, 3);
     assert.deepEqual(buckets.tags.buckets[0].key, 'c');
@@ -154,10 +154,10 @@ describe('conjunctive search', function () {
     assert.deepEqual(result.data.tags.a, [1, 2, 3, 4]);
     assert.deepEqual(result.data.tags.e, [2]);
 
-    const ids = helpers.facets_ids(
+    const ids = facets_ids(
       result['bits_data_temp'],
       input.filters,
-      aggregations,
+      aggregations
     );
     assert.deepEqual(ids, null);
 
@@ -341,10 +341,10 @@ describe('disjunctive and conjunctive search', function () {
     assert.deepEqual(result.data.category.comedy, [3]);
     assert.deepEqual(result.data.category.drama, [1, 4]);
 
-    const ids = helpers.facets_ids(
+    const ids = facets_ids(
       result['bits_data_temp'],
       input.filters,
-      aggregations,
+      aggregations
     );
     assert.deepEqual(ids.array(), [1, 4]);
 
