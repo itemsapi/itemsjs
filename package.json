@@ -13,12 +13,15 @@
   },
   "source": "src/index.js",
   "exports": {
-    "require": "./dist/itemsjs.cjs",
-    "default": "./dist/itemsjs.modern.js"
+    "require": "./dist/index.cjs",
+    "default": "./dist/index.modern.js"
   },
-  "main": "./dist/itemsjs.cjs",
-  "module": "./dist/itemsjs.module.js",
-  "unpkg": "./dist/itemsjs.umd.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.module.js",
+  "unpkg": "./dist/index.umd.js",
+  "files": [
+    "./dist/*"
+  ],
   "author": "Mateusz Rzepa",
   "license": "Apache-2.0",
   "dependencies": {
