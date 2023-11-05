@@ -17,7 +17,7 @@ export class Facets {
   constructor(items, configuration) {
     configuration = configuration || {};
     configuration.aggregations = configuration.aggregations || {};
-    this.items = items;
+    this._items = items;
     this.config = configuration.aggregations;
     this.facets = index(items, keys(configuration.aggregations));
 
@@ -47,7 +47,7 @@ export class Facets {
   }
 
   items() {
-    return this.items;
+    return this._items;
   }
 
   bits_ids(ids) {

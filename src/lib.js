@@ -80,7 +80,7 @@ export function search(items, input, configuration, fulltext, facets) {
   const sorting_start_time = new Date().getTime();
   let sorting_time = 0;
   if (input.sort) {
-    filtered_items = module.exports.sorted_items(
+    filtered_items = sorted_items(
       filtered_items,
       input.sort,
       configuration.sortings,
