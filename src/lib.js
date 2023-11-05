@@ -6,7 +6,7 @@ import { getBuckets, clone } from './helpers.js';
  * search by filters
  */
 export function search(items, input, configuration, fulltext, facets) {
-  input = input || {};
+  input = input || Object.create(null);
 
   const per_page = parseInt(input.per_page || 12);
   const page = parseInt(input.page || 1);

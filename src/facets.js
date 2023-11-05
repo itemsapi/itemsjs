@@ -15,13 +15,13 @@ import {
  */
 export class Facets {
   constructor(items, configuration) {
-    configuration = configuration || {};
-    configuration.aggregations = configuration.aggregations || {};
+    configuration = configuration || Object.create(null);
+    configuration.aggregations = configuration.aggregations || Object.create(null);
     this._items = items;
     this.config = configuration.aggregations;
     this.facets = index(items, keys(configuration.aggregations));
 
-    this._items_map = {};
+    this._items_map = Object.create(null);
     this._ids = [];
 
     let i = 1;
@@ -32,7 +32,7 @@ export class Facets {
       ++i;
     });
 
-    this.ids_map = {};
+    this.ids_map = Object.create(null);
 
     if (items) {
       items.forEach((v) => {
@@ -77,7 +77,7 @@ export class Facets {
    */
   search(input, data) {
     const config = this.config;
-    data = data || {};
+    data = data || Object.create(null);
 
     // consider removing clone
     const temp_facet = clone(this.facets);

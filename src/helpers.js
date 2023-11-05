@@ -28,7 +28,7 @@ export const humanize = function (str) {
 };
 
 export const combination_indexes = function (facets, filters) {
-  const indexes = {};
+  const indexes = Object.create(null);
 
   mapValues(filters, function (filter) {
     // filter is still array so disjunctive
@@ -234,9 +234,9 @@ export const index = function (items, fields) {
   fields = fields || [];
 
   const facets = {
-    data: {},
-    bits_data: {},
-    bits_data_temp: {},
+    data: Object.create(null),
+    bits_data: Object.create(null),
+    bits_data_temp: Object.create(null),
   };
 
   let i = 1;
@@ -261,7 +261,7 @@ export const index = function (items, fields) {
         }
 
         if (!facets['data'][field]) {
-          facets['data'][field] = {};
+          facets['data'][field] = Object.create(null);
         }
 
         if (Array.isArray(item[field])) {
@@ -293,8 +293,8 @@ export const index = function (items, fields) {
 
   facets['data'] = mapValues(facets['data'], function (values, field) {
     if (!facets['bits_data'][field]) {
-      facets['bits_data'][field] = {};
-      facets['bits_data_temp'][field] = {};
+      facets['bits_data'][field] = Object.create(null);
+      facets['bits_data_temp'][field] = Object.create(null);
     }
 
     //console.log(values);

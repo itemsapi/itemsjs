@@ -7,7 +7,7 @@ import lunr from 'lunr';
  */
 export class Fulltext {
   constructor(items, config) {
-    config = config || {};
+    config = config || Object.create(null);
     config.searchableFields = config.searchableFields || [];
     this.items = items;
     // creating index

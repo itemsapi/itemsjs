@@ -4,7 +4,7 @@ import { Fulltext } from './fulltext.js';
 import { Facets } from './facets.js';
 
 function itemsjs(items, configuration) {
-  configuration = configuration || {};
+  configuration = configuration || Object.create(null);
 
   // upsert id to items
   // throw error in tests if id does not exists
@@ -26,7 +26,7 @@ function itemsjs(items, configuration) {
      * filters
      */
     search: function (input) {
-      input = input || {};
+      input = input || Object.create(null);
 
       /**
        * merge configuration aggregation with user input
