@@ -84,8 +84,7 @@ export class Facets {
 
     temp_facet.not_ids = facets_ids(
       temp_facet['bits_data'],
-      input.not_filters,
-      config
+      input.not_filters
     );
 
     let temp_data;

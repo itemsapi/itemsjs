@@ -96,11 +96,7 @@ describe('conjunctive search', function () {
     assert.deepEqual(result.data.actors.john, [1]);
     assert.deepEqual(result.data.category.comedy, [3]);
 
-    const ids = facets_ids(
-      result['bits_data_temp'],
-      input.filters,
-      aggregations
-    );
+    const ids = facets_ids(result['bits_data_temp'], input.filters);
     assert.deepEqual(ids.array(), [1, 3, 4]);
 
     const buckets = getBuckets(result, input, aggregations);
@@ -154,11 +150,7 @@ describe('conjunctive search', function () {
     assert.deepEqual(result.data.tags.a, [1, 2, 3, 4]);
     assert.deepEqual(result.data.tags.e, [2]);
 
-    const ids = facets_ids(
-      result['bits_data_temp'],
-      input.filters,
-      aggregations
-    );
+    const ids = facets_ids(result['bits_data_temp'], input.filters);
     assert.deepEqual(ids, null);
 
     result = itemsjs.search(input);
@@ -341,11 +333,7 @@ describe('disjunctive and conjunctive search', function () {
     assert.deepEqual(result.data.category.comedy, [3]);
     assert.deepEqual(result.data.category.drama, [1, 4]);
 
-    const ids = facets_ids(
-      result['bits_data_temp'],
-      input.filters,
-      aggregations
-    );
+    const ids = facets_ids(result['bits_data_temp'], input.filters);
     assert.deepEqual(ids.array(), [1, 4]);
 
     done();
