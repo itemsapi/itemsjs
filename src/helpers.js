@@ -15,7 +15,15 @@ import FastBitSet from 'fastbitset';
 import booleanParser from 'boolean-parser';
 
 export const clone = function (val) {
-  return structuredClone(val);
+  try {
+    return structuredClone(val);
+  } catch (e) {
+    try {
+      return JSON.parse(JSON.stringify(val));
+    } catch (e) {
+      return val;
+    }
+  }
 };
 
 export const humanize = function (str) {
