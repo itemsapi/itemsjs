@@ -34,51 +34,58 @@ You can find a list of real implementations - [here](/docs/who-use-it.md)
 
 ### NPM
 
+
 ```bash
 npm install itemsjs
 ```
 
+#### Using CommonJS syntax
 ```js
 const itemsjs = require('itemsjs')(data, configuration);
 const items = itemsjs.search();
 ```
 
-### Client side
-
-or using from the client side:
-
-```bash
-npm install itemsjs
+#### Using ES Module syntax
+```js
+import itemsjs from 'itemsjs';
+const searchEngine = itemsjs(data, configuration);
+const items = searchEngine.search();
 ```
 
+### Client side
+
+##### To use as an UMD in the browser:
 ```html
 <!-- CDN -->
 <!-- unpkg: use the latest release -->
-<script src="https://unpkg.com/itemsjs@latest/dist/itemsjs.min.js"></script>
+<script src="https://unpkg.com/itemsjs@latest/dist/index.umd.js"></script>
 <!-- unpkg: use a specific version -->
-<script src="https://unpkg.com/itemsjs@1.0.49/dist/itemsjs.min.js"></script>
+<script src="https://unpkg.com/itemsjs@2.1.24/dist/index.umd.js"></script>
 <!-- jsdelivr: use a specific version -->
-<script src="https://cdn.jsdelivr.net/npm/itemsjs@1.0.49/dist/itemsjs.min.js"></script>
-
-<!-- locally -->
-<script src="/node_modules/itemsjs/dist/itemsjs.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/itemsjs@2.1.24/dist/index.umd.js"></script>
 ```
 
-```js
-itemsjs = itemsjs(data, configuration);
-itemsjs.search()
+```html
+<script>
+  itemsjs = itemsjs(data, configuration);
+  itemsjs.search()
+</script>
 ```
 
-Gulp task:
-
-```javascript
-function itemjs() {
-  return src('node_modules/itemsjs/dist/itemsjs.min.js')
-      .pipe(dest('source/javascripts/'));
-}; // Will copy to source/javascripts/itemsjs.min.js
+##### To use as an ES module in the browser:
+```html
+<!-- Include as ES Module -->
+<script type="module">
+  import itemsjs from 'https://unpkg.com/itemsjs@2.1.24/dist/index.module.js';
+  // Initialize and use itemsjs here
+  const searchEngine = itemsjs(data, configuration);
+  searchEngine.search();
+</script>
 ```
 
-## Example
+
+
+## Example usage
 
 ```bash
 npm install itemsjs
@@ -87,7 +94,7 @@ npm install itemsjs
 wget https://raw.githubusercontent.com/itemsapi/itemsapi-example-data/master/items/imdb.json -O data.json
 ```
 
-Create `search.js`:
+Next, create a search.js file with the following content:
 
 ```js
 const data = require('./data.json');
@@ -141,7 +148,7 @@ const top_tags = itemsjs.aggregation({
 console.log(JSON.stringify(top_tags, null, 2));
 ```
 
-Test that with :
+Run your script with Node.js:
 
 ```bash
 node search.js
