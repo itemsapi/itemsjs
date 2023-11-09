@@ -1,8 +1,6 @@
 import {
   mapValues,
   clone as _clone,
-  map,
-  chain,
   sortBy,
   isArray,
   orderBy,
@@ -249,7 +247,7 @@ export const index = function (items, fields) {
 
   let i = 1;
 
-  items = map(items, (item) => {
+  items && items.map((item) => {
     if (!item['_id']) {
       item['_id'] = i;
       ++i;
@@ -258,7 +256,7 @@ export const index = function (items, fields) {
     return item;
   });
 
-  map(items, (item) => {
+  items && items.map((item) => {
     fields.forEach((field) => {
       //if (!item || !item[field]) {
       if (!item) {
@@ -374,8 +372,7 @@ export const getBuckets = function (data, input, aggregations) {
       hide_zero_doc_count = aggregations[k].hide_zero_doc_count || false;
     }
 
-    let buckets = chain(v)
-      .toPairs()
+    let buckets = Object.entries(v)
       .map((v2) => {
         let filters = [];
 
@@ -400,8 +397,7 @@ export const getBuckets = function (data, input, aggregations) {
           selected: filters.indexOf(v2[0]) !== -1,
         };
       })
-      .compact()
-      .value();
+      .filter(Boolean);
 
     let iteratees;
     let sort_order;
@@ -434,21 +430,18 @@ export const getBuckets = function (data, input, aggregations) {
 
     if (show_facet_stats) {
       facet_stats = [];
-      chain(v)
-        .toPairs()
-        .forEach((v2) => {
-          if (isNaN(v2[0])) {
-            throw new Error('You cant use chars to calculate the facet_stats.');
-          }
+      Object.entries(v).forEach((v2) => {
+        if (isNaN(v2[0])) {
+          throw new Error('You cant use chars to calculate the facet_stats.');
+        }
 
-          // Doc_count
-          if (v2[1].array().length > 0) {
-            v2[1].forEach((/*doc_count*/) => {
-              facet_stats.push(parseInt(v2[0]));
-            });
-          }
-        })
-        .value();
+        // Doc_count
+        if (v2[1].array().length > 0) {
+          v2[1].forEach((/*doc_count*/) => {
+            facet_stats.push(parseInt(v2[0]));
+          });
+        }
+      });
 
       calculated_facet_stats = {
         min: minBy(facet_stats),
@@ -530,11 +523,11 @@ export const input_to_facet_filters = function (input, config) {
 export const parse_boolean_query = function (query) {
   const result = booleanParser.parseBooleanQuery(query);
 
-  return map(result, (v1) => {
+  return result.map((v1) => {
     if (Array.isArray(v1)) {
-      return map(v1, (v2) => {
+      return v1.map((v2) => {
         if (Array.isArray(v2)) {
-          return map(v2, (v3) => {
+          return v2.map((v3) => {
             return v3;
           });
         } else {
