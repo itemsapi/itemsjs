@@ -24,13 +24,12 @@
   ],
   "author": "Mateusz Rzepa",
   "license": "Apache-2.0",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "boolean-parser": "^0.0.2",
     "fastbitset": "^0.4.1",
     "lodash-es": "^4.17.21",
-    "lunr": "^1.0.0"
-  },
-  "devDependencies": {
+    "lunr": "^1.0.0",
     "eslint": "^8.52.0",
     "microbundle": "^0.15.1",
     "mocha": "^10.2.0"

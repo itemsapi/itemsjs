@@ -258,46 +258,42 @@ export const index = function (items, fields) {
     return item;
   });
 
-  // replace chain with forEach
+  map(items, (item) => {
+    fields.forEach((field) => {
+      //if (!item || !item[field]) {
+      if (!item) {
+        return;
+      }
 
-  chain(items)
-    .map((item) => {
-      fields.forEach((field) => {
-        //if (!item || !item[field]) {
-        if (!item) {
-          return;
-        }
+      if (!facets['data'][field]) {
+        facets['data'][field] = Object.create(null);
+      }
 
-        if (!facets['data'][field]) {
-          facets['data'][field] = Object.create(null);
-        }
-
-        if (Array.isArray(item[field])) {
-          item[field].forEach((v) => {
-            if (!item[field]) {
-              return;
-            }
-
-            if (!facets['data'][field][v]) {
-              facets['data'][field][v] = [];
-            }
-
-            facets['data'][field][v].push(parseInt(item._id));
-          });
-        } else if (typeof item[field] !== 'undefined') {
-          const v = item[field];
+      if (Array.isArray(item[field])) {
+        item[field].forEach((v) => {
+          if (!item[field]) {
+            return;
+          }
 
           if (!facets['data'][field][v]) {
             facets['data'][field][v] = [];
           }
 
           facets['data'][field][v].push(parseInt(item._id));
-        }
-      });
+        });
+      } else if (typeof item[field] !== 'undefined') {
+        const v = item[field];
 
-      return item;
-    })
-    .value();
+        if (!facets['data'][field][v]) {
+          facets['data'][field][v] = [];
+        }
+
+        facets['data'][field][v].push(parseInt(item._id));
+      }
+    });
+
+    return item;
+  });
 
   facets['data'] = mapValues(facets['data'], function (values, field) {
     if (!facets['bits_data'][field]) {
