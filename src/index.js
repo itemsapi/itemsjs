@@ -1,12 +1,10 @@
-const service = require('./lib');
-const helpers = require('./helpers');
-const Fulltext = require('./fulltext');
-const Facets = require('./facets');
+import { search, similar, aggregation } from './lib.js';
+import { mergeAggregations } from './helpers.js';
+import { Fulltext } from './fulltext.js';
+import { Facets } from './facets.js';
 
-module.exports = function itemsjs(items, configuration) {
-
-  configuration = configuration || {};
-
+function itemsjs(items, configuration) {
+  configuration = configuration || Object.create(null);
 
   // upsert id to items
   // throw error in tests if id does not exists
@@ -27,24 +25,23 @@ module.exports = function itemsjs(items, configuration) {
      * sort
      * filters
      */
-    search: function(input) {
-      input = input || {};
+    search: function (input) {
+      input = input || Object.create(null);
 
       /**
        * merge configuration aggregation with user input
        */
-      input.aggregations = helpers.mergeAggregations(configuration.aggregations, input);
+      input.aggregations = mergeAggregations(configuration.aggregations, input);
 
-      return service.search(items, input, configuration, fulltext, facets);
+      return search(items, input, configuration, fulltext, facets);
     },
 
     /**
      * returns list of similar elements to specified item id
      * id
      */
-    similar: function(id, options) {
-
-      return service.similar(items, id, options);
+    similar: function (id, options) {
+      return similar(items, id, options);
     },
 
     /**
@@ -54,18 +51,20 @@ module.exports = function itemsjs(items, configuration) {
      * per_page
      * page
      */
-    aggregation: function(input) {
-      return service.aggregation(items, input, configuration, fulltext, facets);
+    aggregation: function (input) {
+      return aggregation(items, input, configuration, fulltext, facets);
     },
 
     /**
      * reindex items
      * reinitialize fulltext search
      */
-    reindex: function(newItems) {
+    reindex: function (newItems) {
       items = newItems;
       fulltext = new Fulltext(items, configuration);
       facets = new Facets(items, configuration);
-    }
+    },
   };
-};
+}
+
+export default itemsjs;

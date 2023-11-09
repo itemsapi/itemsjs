@@ -1,13 +1,13 @@
-'use strict';
+import assert from 'node:assert';
+import itemsJS from '../src/index.js';
+import { clone } from 'lodash-es';
+import { readFileSync } from 'node:fs';
+const items = JSON.parse(readFileSync('./tests/fixtures/items.json'));
+const movies = JSON.parse(readFileSync('./tests/fixtures/movies.json'));
 
-const assert = require('assert');
-const { clone } = require('lodash');
-const items = require('./fixtures/items.json');
-const movies = require('./fixtures/movies.json');
-let itemsjs = require('./../src/index')();
+let itemsjs = itemsJS();
 
-describe('search', function() {
-
+describe('search', function () {
   const configuration = {
     searchableFields: ['name', 'category', 'actors', 'name'],
     aggregations: {
@@ -30,12 +30,11 @@ describe('search', function() {
       category: {
         title: 'Category',
         conjunction: true,
-      }
-    }
+      },
+    },
   };
 
   it('index is empty so cannot search', function test(done) {
-
     try {
       itemsjs.search();
     } catch (err) {
@@ -46,17 +45,14 @@ describe('search', function() {
   });
 
   it('searches no params', function test(done) {
+    const itemsjs = itemsJS(items, configuration);
 
-    const itemsjs = require('./../index')(items, configuration);
-
-    const result = itemsjs.search({
-    });
+    const result = itemsjs.search({});
 
     assert.equal(result.data.items.length, 4);
     assert.deepEqual(result.data.items[0].category, 'drama');
     assert.deepEqual(result.data.items[0].year, 1995);
     assert.deepEqual(result.data.items[0].in_cinema, false);
-
 
     assert.deepEqual(result.data.items[0].in_cinema, false);
     assert.equal(result.data.aggregations.in_cinema.buckets[0].doc_count, 3);
@@ -70,14 +66,13 @@ describe('search', function() {
   });
 
   it('searches with two filters', function test(done) {
-
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       filters: {
         tags: ['a'],
-        category: ['drama']
-      }
+        category: ['drama'],
+      },
     });
 
     assert.equal(result.data.items.length, 2);
@@ -87,11 +82,10 @@ describe('search', function() {
   });
 
   it('searches with filters query', function test(done) {
-
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
-      filters_query: 'tags:c'
+      filters_query: 'tags:c',
     });
 
     assert.equal(result.data.items.length, 3);
@@ -101,14 +95,13 @@ describe('search', function() {
   });
 
   it('searches with filters query and filters', function test(done) {
-
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       filters_query: 'tags:c',
       filters: {
-        tags: ['z']
-      }
+        tags: ['z'],
+      },
     });
 
     assert.equal(result.data.items.length, 1);
@@ -117,13 +110,11 @@ describe('search', function() {
     done();
   });
 
-
   it('searches with filters query not existing value', function test(done) {
-
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
-      filters_query: 'tags:not_existing'
+      filters_query: 'tags:not_existing',
     });
 
     assert.equal(result.data.items.length, 0);
@@ -133,14 +124,13 @@ describe('search', function() {
   });
 
   it('searches with filter and query', function test(done) {
-
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       filters: {
         tags: ['a'],
       },
-      query: 'comedy'
+      query: 'comedy',
     });
 
     assert.equal(result.data.items.length, 2);
@@ -151,14 +141,11 @@ describe('search', function() {
     done();
   });
 
-
   it('makes search with empty filters', function test(done) {
-
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
-      filters: {
-      }
+      filters: {},
     });
 
     assert.equal(result.data.items.length, 4);
@@ -167,13 +154,12 @@ describe('search', function() {
   });
 
   it('makes search with not filters', function test(done) {
-
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       not_filters: {
-        tags: ['c']
-      }
+        tags: ['c'],
+      },
     });
 
     assert.equal(result.data.items.length, 1);
@@ -182,13 +168,12 @@ describe('search', function() {
   });
 
   it('makes search with many not filters', function test(done) {
-
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       not_filters: {
-        tags: ['c', 'e']
-      }
+        tags: ['c', 'e'],
+      },
     });
 
     assert.equal(result.data.items.length, 0);
@@ -197,32 +182,30 @@ describe('search', function() {
   });
 
   it('makes search with non existing filter value with conjunction true should return no results', function test(done) {
+    const itemsjs = itemsJS(items, configuration);
 
-    const itemsjs = require('./../index')(items, configuration);
-    
     const result = itemsjs.search({
       filters: {
-        category: ['drama', 'thriller']
-      }
+        category: ['drama', 'thriller'],
+      },
     });
-    
+
     assert.equal(result.data.items.length, 0);
     assert.equal(result.data.aggregations.tags.buckets[0].doc_count, 0);
-    
+
     done();
   });
-  
+
   it('makes search with non existing filter value with conjunction false should return results', function test(done) {
-    
     const localConfiguration = clone(configuration);
     localConfiguration.aggregations.category.conjunction = false;
 
-    const itemsjs = require('./../index')(items, localConfiguration);
+    const itemsjs = itemsJS(items, localConfiguration);
 
     const result = itemsjs.search({
       filters: {
-        category: ['drama', 'thriller']
-      }
+        category: ['drama', 'thriller'],
+      },
     });
 
     assert.equal(result.data.items.length, 2);
@@ -232,16 +215,15 @@ describe('search', function() {
   });
 
   it('makes search with non existing single filter value with conjunction false should return no results', function test(done) {
-    
     const localConfiguration = clone(configuration);
     localConfiguration.aggregations.category.conjunction = false;
 
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     const result = itemsjs.search({
       filters: {
-        category: ['thriller']
-      }
+        category: ['thriller'],
+      },
     });
 
     assert.equal(result.data.items.length, 0);
@@ -251,39 +233,37 @@ describe('search', function() {
   });
 
   it('throws an error if name does not exist', function test(done) {
-
-    const itemsjs = require('./../index')(items, {
-      native_search_enabled: false
+    const itemsjs = itemsJS(items, {
+      native_search_enabled: false,
     });
 
     try {
       itemsjs.search({
-        query: 'xxx'
+        query: 'xxx',
       });
     } catch (err) {
-      assert.equal(err.message, '"query" and "filter" options are not working once native search is disabled');
+      assert.equal(
+        err.message,
+        '"query" and "filter" options are not working once native search is disabled',
+      );
     }
 
     done();
   });
 });
 
-describe('no configuration', function() {
-
+describe('no configuration', function () {
   const configuration = {
-    aggregations: {
-    }
+    aggregations: {},
   };
 
-  before(function(done) {
-    itemsjs = require('./../index')(items, configuration);
+  before(function (done) {
+    itemsjs = itemsJS(items, configuration);
     done();
   });
 
   it('searches with two filters', function test(done) {
-
-    const result = itemsjs.search({
-    });
+    const result = itemsjs.search({});
 
     assert.equal(result.data.items.length, 4);
 
@@ -291,51 +271,45 @@ describe('no configuration', function() {
   });
 
   it('searches with filter', function test(done) {
-
-    const itemsjs = require('./../index')(items, configuration);
+    const itemsjs = itemsJS(items, configuration);
 
     let result = itemsjs.search({
-      filter: function() {
+      filter: function () {
         return false;
-      }
+      },
     });
 
     assert.equal(result.data.items.length, 0);
 
-    result = itemsjs.search({
-    });
+    result = itemsjs.search({});
 
     assert.equal(result.data.items.length, 4);
     done();
   });
-
 });
 
-describe('custom fulltext integration', function() {
-
+describe('custom fulltext integration', function () {
   const configuration = {
     aggregations: {
       tags: {},
-      year: {}
-    }
+      year: {},
+    },
   };
 
-  before(function(done) {
-    itemsjs = require('./../index')(movies, configuration);
+  before(function (done) {
+    itemsjs = itemsJS(movies, configuration);
     done();
   });
 
   it('makes faceted search after separated quasi fulltext with _ids', function test(done) {
-
     let i = 1;
-    const temp_movies = movies.map(v => {
-
+    const temp_movies = movies.map((v) => {
       v._id = i++;
       return v;
     });
 
     const result = itemsjs.search({
-      _ids: temp_movies.map(v => v._id).slice(0, 1)
+      _ids: temp_movies.map((v) => v._id).slice(0, 1),
     });
 
     assert.equal(result.data.items.length, 1);
@@ -343,19 +317,17 @@ describe('custom fulltext integration', function() {
   });
 
   it('makes faceted search after separated quasi fulltext with ids', function test(done) {
-
     let i = 10;
-    const temp_movies = movies.map(v => {
-
+    const temp_movies = movies.map((v) => {
       v.id = i;
       i += 10;
       return v;
     });
 
-    itemsjs = require('./../index')(temp_movies, configuration);
+    itemsjs = itemsJS(temp_movies, configuration);
 
     let result = itemsjs.search({
-      ids: temp_movies.map(v => v.id).slice(0, 1)
+      ids: temp_movies.map((v) => v.id).slice(0, 1),
     });
 
     assert.equal(result.data.items[0].id, 10);
@@ -363,7 +335,7 @@ describe('custom fulltext integration', function() {
     assert.equal(result.data.items.length, 1);
 
     result = itemsjs.search({
-      ids: [50, 20]
+      ids: [50, 20],
     });
 
     assert.equal(result.data.items[0].id, 50);
@@ -373,10 +345,8 @@ describe('custom fulltext integration', function() {
   });
 
   it('makes faceted search after separated quasi fulltext with custom id field', function test(done) {
-
     let i = 10;
-    const temp_movies = movies.map(v => {
-
+    const temp_movies = movies.map((v) => {
       v.uuid = i;
       i += 10;
       delete v.id;
@@ -385,10 +355,10 @@ describe('custom fulltext integration', function() {
 
     configuration.custom_id_field = 'uuid';
 
-    itemsjs = require('./../index')(temp_movies, configuration);
+    itemsjs = itemsJS(temp_movies, configuration);
 
     let result = itemsjs.search({
-      ids: temp_movies.map(v => v.uuid).slice(0, 1),
+      ids: temp_movies.map((v) => v.uuid).slice(0, 1),
     });
 
     assert.equal(result.data.items[0].uuid, 10);
@@ -396,7 +366,7 @@ describe('custom fulltext integration', function() {
     assert.equal(result.data.items.length, 1);
 
     result = itemsjs.search({
-      ids: [50, 20]
+      ids: [50, 20],
     });
 
     assert.equal(result.data.items[0].uuid, 50);
