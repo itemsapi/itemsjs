@@ -1,4 +1,3 @@
-import { forEach, map, mapKeys } from 'lodash-es';
 import lunr from 'lunr';
 
 /**
@@ -7,18 +6,15 @@ import lunr from 'lunr';
  */
 export class Fulltext {
   constructor(items, config) {
-    config = config || Object.create(null);
-    config.searchableFields = config.searchableFields || [];
-    this.items = items;
+    this.store = new Map();
+
     // creating index
     this.idx = lunr(function () {
       // currently schema hardcoded
       this.field('name', { boost: 10 });
 
-      const self = this;
-      forEach(config.searchableFields, function (field) {
-        self.field(field);
-      });
+      const searchableFields = config?.searchableFields || [];
+      searchableFields.forEach((field) => this.field(field));
       this.ref('_id');
 
       /**
@@ -26,7 +22,7 @@ export class Fulltext {
        * stemmer: https://github.com/olivernn/lunr.js/issues/328
        * stopWordFilter: https://github.com/olivernn/lunr.js/issues/233
        */
-      if (config.isExactSearch) {
+      if (config?.isExactSearch) {
         this.pipeline.remove(lunr.stemmer);
         this.pipeline.remove(lunr.stopWordFilter);
       }
@@ -35,49 +31,38 @@ export class Fulltext {
        * Remove the stopWordFilter from the pipeline
        * stopWordFilter: https://github.com/itemsapi/itemsjs/issues/46
        */
-      if (config.removeStopWordFilter) {
+      if (config?.removeStopWordFilter) {
         this.pipeline.remove(lunr.stopWordFilter);
       }
     });
 
     let i = 1;
-
-    map(items, (item) => {
+    (items || []).map((item) => {
       item._id = i;
       ++i;
 
       this.idx.add(item);
-    });
-
-    this.store = mapKeys(items, (doc) => {
-      return doc._id;
+      this.store.set(item._id, item);
     });
   }
 
   search_full(query, filter) {
-    return this.search(query, filter).map((v) => {
-      return this.store[v];
-    });
+    return this.search(query, filter).map((v) => this.store.get(v));
   }
 
   search(query, filter) {
-    if (!query && !filter) {
-      return this.items ? this.items.map((v) => v._id) : [];
+    if (!(filter instanceof Function)) {
+      if (!query) {
+        return [...this.store.keys()];
+      } else {
+        return this.idx.search(query).map((v) => v.ref);
+      }
     }
 
-    let items;
+    const items = query
+      ? this.idx.search(query).map((v) => this.store.get(v.ref))
+      : [...this.store.values()];
 
-    if (query) {
-      items = map(this.idx.search(query), (val) => {
-        const item = this.store[val.ref];
-        return item;
-      });
-    }
-
-    if (filter instanceof Function) {
-      items = (items || this.items).filter(filter);
-    }
-
-    return items.map((v) => v._id);
+    return items.filter(filter).map((v) => v._id);
   }
 }
