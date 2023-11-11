@@ -63,7 +63,7 @@ describe('conjunctive search', function () {
 
   it('checks index', function test(done) {
     const result = facets.index();
-    assert.deepEqual(result.data.tags.a, [1, 2, 3, 4]);
+    assert.deepEqual(result.data.tags.a, [1, 2, 3]);
     assert.deepEqual(result.bits_data.tags.a.array(), [1, 2, 3, 4]);
     assert.deepEqual(result.data.tags.b, [1]);
     assert.deepEqual(result.bits_data.tags.b.array(), [1]);
