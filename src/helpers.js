@@ -247,6 +247,10 @@ export const index = function (items, fields) {
 
   let i = 1;
 
+  fields.forEach((field) => {
+    facets['data'][field] = Object.create(null);
+  });
+
   items && items.map((item) => {
     if (!item['_id']) {
       item['_id'] = i;
@@ -258,13 +262,8 @@ export const index = function (items, fields) {
 
   items && items.map((item) => {
     fields.forEach((field) => {
-      //if (!item || !item[field]) {
       if (!item) {
         return;
-      }
-
-      if (!facets['data'][field]) {
-        facets['data'][field] = Object.create(null);
       }
 
       if (Array.isArray(item[field])) {

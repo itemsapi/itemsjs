@@ -65,6 +65,25 @@ describe('search', function () {
     done();
   });
 
+  it('searches no items with filters and query', function test(done) {
+    const itemsjs = itemsJS([], configuration);
+
+    const result = itemsjs.search({
+      filters: {
+        tags: ['a'],
+        category: ['drama'],
+      },
+      query: 'comedy',
+    });
+
+    assert.equal(result.data.items.length, 0);
+    assert.equal(result.data.aggregations.in_cinema.buckets.length, 0);
+    assert.equal(result.data.aggregations.category.buckets.length, 0);
+    assert.equal(result.data.aggregations.year.buckets.length, 0);
+
+    done();
+  });
+
   it('searches with two filters', function test(done) {
     const itemsjs = itemsJS(items, configuration);
 
@@ -244,7 +263,7 @@ describe('search', function () {
     } catch (err) {
       assert.equal(
         err.message,
-        '"query" and "filter" options are not working once native search is disabled',
+        '"query" and "filter" options are not working once native search is disabled'
       );
     }
 
