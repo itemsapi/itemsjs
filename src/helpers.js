@@ -1,7 +1,6 @@
 import {
   mapValues,
   clone as _clone,
-  sortBy,
   isArray,
   orderBy,
   minBy,

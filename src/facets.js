@@ -1,4 +1,4 @@
-import { map, mapValues, clone, keys } from 'lodash-es';
+import { map, keys } from 'lodash-es';
 import FastBitSet from 'fastbitset';
 import {
   facets_ids,
