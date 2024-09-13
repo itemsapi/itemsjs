@@ -58,11 +58,11 @@ export const combination_indexes = function(facets, filters) {
 };
 
 export const filters_matrix = function(facets, query_filters) {
-  // Używamy cloneDeepWith z niestandardową funkcją klonowania
+  // We use cloneDeepWith with a custom cloning function
   // const temp_facet = _.cloneDeepWith(facets, customClone);
   const temp_facet = _clone(facets);
 
-  // Inicjalizujemy bits_data_temp, jeśli nie istnieje
+  // Initialize bits_data_temp if it does not exist
   if (!temp_facet.bits_data_temp) {
     temp_facet.bits_data_temp = {};
   }
@@ -78,9 +78,9 @@ export const filters_matrix = function(facets, query_filters) {
 
   let union = null;
 
-  // Upewniamy się, że query_filters jest tablicą
+  // Ensure that query_filters is an array
   if (Array.isArray(query_filters)) {
-    // Przetwarzanie filtrów koniunktywnych
+    // Processing conjunctive filters
     query_filters.forEach(conjunction => {
       let conjunctive_index = null;
 
@@ -143,7 +143,7 @@ export const matrix = function(facets, filters = []) {
   let conjunctive_index;
   const disjunctive_indexes = combination_indexes(facets, filters);
 
-  // Przetwarzanie filtrów koniunktywnych
+  // Processing conjunctive filters
   filters.forEach(filter => {
     if (!Array.isArray(filter[0])) {
       const [filter_key, filter_val] = filter;
@@ -159,7 +159,7 @@ export const matrix = function(facets, filters = []) {
     }
   });
 
-  // Krzyżujemy wszystkie fasety z indeksami koniunktywnymi
+  // Intersect all facets with conjunctive indexes
   if (conjunctive_index) {
     for (const key in temp_facet.bits_data_temp) {
       for (const key2 in temp_facet.bits_data_temp[key]) {
@@ -168,7 +168,7 @@ export const matrix = function(facets, filters = []) {
     }
   }
 
-  // Przetwarzanie filtrów negatywnych
+  // Processing negative filters
   filters.forEach(filter => {
     if (filter.length === 3 && filter[1] === '-') {
       const [filter_key, , filter_val] = filter;
@@ -182,7 +182,7 @@ export const matrix = function(facets, filters = []) {
     }
   });
 
-  // Krzyżujemy wszystkie fasety z indeksami dysjunktywnymi
+  // Intersect all facets with disjunctive indexes
   for (const key in temp_facet.bits_data_temp) {
     for (const key2 in temp_facet.bits_data_temp[key]) {
       for (const disjunctive_key in disjunctive_indexes) {
@@ -205,19 +205,19 @@ export const index = function(items = [], fields = []) {
 
   let nextId = 1;
 
-  // Inicjalizujemy facets.data dla każdego pola
+  // Initialize facets.data for each field
   fields.forEach(field => {
     facets.data[field] = Object.create(null);
   });
 
-  // Przypisujemy _id do elementów bez tego identyfikatora
+  // Assign _id to items without this identifier
   items.forEach(item => {
     if (!item._id) {
       item._id = nextId++;
     }
   });
 
-  // Budujemy facets.data
+  // Build facets.data
   items.forEach(item => {
     fields.forEach(field => {
       const fieldValue = item[field];
@@ -239,7 +239,7 @@ export const index = function(items = [], fields = []) {
     });
   });
 
-  // Budujemy facets.bits_data i facets.bits_data_temp
+  // Building facets.bits_data and facets.bits_data_temp
   Object.keys(facets.data).forEach(field => {
     facets.bits_data[field] = Object.create(null);
     facets.bits_data_temp[field] = Object.create(null);
@@ -249,7 +249,7 @@ export const index = function(items = [], fields = []) {
       const indexes = values[filter];
       const sorted_indexes = indexes.sort((a, b) => a - b);
       facets.bits_data[field][filter] = new FastBitSet(sorted_indexes);
-      // Aktualizujemy facets.data z posortowanymi indeksami
+      // Updating facets.data with sorted indexes
       facets.data[field][filter] = sorted_indexes;
     });
   });
@@ -435,7 +435,7 @@ export const mergeAggregations = function(aggregations, input) {
 export const input_to_facet_filters = function(input, config) {
   const filters = [];
 
-  // Przetwarzanie filtrów pozytywnych
+  // Processing positive filters
   for (const key in input.filters) {
     const values = input.filters[key];
     if (values && values.length) {
@@ -450,7 +450,7 @@ export const input_to_facet_filters = function(input, config) {
     }
   }
 
-  // Przetwarzanie filtrów negatywnych
+// Processing negative filters
   for (const key in input.not_filters) {
     const values = input.not_filters[key];
     if (values && values.length) {
