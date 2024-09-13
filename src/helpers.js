@@ -270,26 +270,34 @@ export const filters_ids = function(facets_data) {
 };
 
 /**
- * calculates ids for facets
- * if there is no facet input then return null to not save resources for OR calculation
- * null means facets haven't matched searched items
+ * Calculates identifiers for facets
+ * If there are no filters, returns null to save resources during OR calculations
+ * null means that the facets did not match any of the searched items
  */
 export const facets_ids = function(facets_data, filters) {
-  let output = new FastBitSet([]);
-  let i = 0;
+  if (!facets_data || typeof facets_data !== 'object') {
+    throw new Error('Invalid facets_data provided.');
+  }
 
-  mapValues(filters, function(filters, field) {
-    filters.forEach((filter) => {
-      ++i;
-      output = output.new_union(
-        facets_data[field][filter] || new FastBitSet([])
-      );
-    });
-  });
-
-  if (i === 0) {
+  if (!filters || typeof filters !== 'object') {
     return null;
   }
+
+  const allFilters = Object.entries(filters).flatMap(
+    ([field, filterArray]) => 
+      Array.isArray(filterArray) 
+        ? filterArray.map(filter => ({ field, filter })) 
+        : []
+  );
+
+  if (allFilters.length === 0) {
+    return null;
+  }
+
+  const output = allFilters.reduce((acc, { field, filter }) => {
+    const bitset = facets_data[field]?.[filter] || new FastBitSet([]);
+    return acc.new_union(bitset);
+  }, new FastBitSet([]));
 
   return output;
 };
