@@ -71,63 +71,49 @@ export class Facets {
     return this._items_map[_id];
   }
 
-  /*
-   *
-   * ids is optional only when there is query
-   */
-  search(input, data) {
+  search(input, data = {}) {
     const config = this.config;
-    data = data || Object.create(null);
-
-    // consider removing clone
-    const temp_facet = clone(this.facets);
+    const temp_facet = {};
 
     temp_facet.not_ids = facets_ids(
-      temp_facet['bits_data'],
+      this.facets.bits_data,
       input.not_filters
     );
 
-    let temp_data;
-
     const filters = input_to_facet_filters(input, config);
-    temp_data = matrix(this.facets, filters);
+    let temp_data = matrix(this.facets, filters);
 
     if (input.filters_query) {
-      const filters = parse_boolean_query(input.filters_query);
-      temp_data = filters_matrix(temp_data, filters);
+      const filtersQuery = parse_boolean_query(input.filters_query);
+      temp_data = filters_matrix(temp_data, filtersQuery);
     }
 
-    temp_facet['bits_data_temp'] = temp_data['bits_data_temp'];
+    temp_facet.bits_data_temp = temp_data.bits_data_temp;
+    const bitsDataTemp = temp_facet.bits_data_temp;
 
-    mapValues(temp_facet['bits_data_temp'], function (values, key) {
-      mapValues(
-        temp_facet['bits_data_temp'][key],
-        function (facet_indexes, key2) {
-          if (data.query_ids) {
-            temp_facet['bits_data_temp'][key][key2] =
-              data.query_ids.new_intersection(
-                temp_facet['bits_data_temp'][key][key2]
-              );
-          }
-
-          if (data.test) {
-            temp_facet['data'][key][key2] =
-              temp_facet['bits_data_temp'][key][key2].array();
-          }
+    if (data.query_ids) {
+      for (const key in bitsDataTemp) {
+        for (const key2 in bitsDataTemp[key]) {
+          bitsDataTemp[key][key2] = data.query_ids.new_intersection(
+            bitsDataTemp[key][key2]
+          );
         }
-      );
-    });
-
-    /**
-     * calculating ids (for a list of items)
-     * facets ids is faster and filter ids because filter ids makes union each to each filters
-     * filter ids needs to be used if there is filters query
-     */
-    if (input.filters_query) {
-      temp_facet.ids = filters_ids(temp_facet['bits_data_temp']);
-    } else {
-      temp_facet.ids = facets_ids(temp_facet['bits_data_temp'], input.filters);
+      }
     }
+
+    if (data.test) {
+      temp_facet.data = {};
+      for (const key in bitsDataTemp) {
+        temp_facet.data[key] = {};
+        for (const key2 in bitsDataTemp[key]) {
+          temp_facet.data[key][key2] = bitsDataTemp[key][key2].array();
+        }
+      }
+    }
+
+    temp_facet.ids = input.filters_query
+      ? filters_ids(bitsDataTemp)
+      : facets_ids(bitsDataTemp, input.filters);
 
     return temp_facet;
   }

@@ -12,7 +12,7 @@ import {
 import FastBitSet from 'fastbitset';
 import booleanParser from 'boolean-parser';
 
-export const clone = function (val) {
+export const clone = function(val) {
   try {
     return structuredClone(val);
   } catch (e) {
@@ -24,32 +24,32 @@ export const clone = function (val) {
   }
 };
 
-export const humanize = function (str) {
+export const humanize = function(str) {
   return str
     .replace(/^[\s_]+|[\s_]+$/g, '')
     .replace(/[_\s]+/g, ' ')
-    .replace(/^[a-z]/, function (m) {
+    .replace(/^[a-z]/, function(m) {
       return m.toUpperCase();
     });
 };
 
-export const combination_indexes = function (facets, filters) {
-  const indexes = Object.create(null);
+export const combination_indexes = function(facets, filters) {
+  const indexes = {};
 
-  mapValues(filters, function (filter) {
-    // filter is still array so disjunctive
+  filters.forEach(filter => {
     if (Array.isArray(filter[0])) {
-      let facet_union = new FastBitSet([]);
-      const filter_keys = [];
+      let facet_union = new FastBitSet();
+      const filter_keys = new Set();
 
-      mapValues(filter, function (disjunctive_filter) {
-        const filter_key = disjunctive_filter[0];
-        const filter_val = disjunctive_filter[1];
+      filter.forEach(disjunctive_filter => {
+        const [filter_key, filter_val] = disjunctive_filter;
+        filter_keys.add(filter_key);
+        const bits =
+          facets.bits_data[filter_key]?.[filter_val] || new FastBitSet();
+        facet_union = facet_union.new_union(bits);
+      });
 
-        filter_keys.push(filter_key);
-        facet_union = facet_union.new_union(
-          facets['bits_data'][filter_key][filter_val] || new FastBitSet([])
-        );
+      filter_keys.forEach(filter_key => {
         indexes[filter_key] = facet_union;
       });
     }
@@ -58,251 +58,200 @@ export const combination_indexes = function (facets, filters) {
   return indexes;
 };
 
-export const filters_matrix = function (facets, query_filters) {
+export const filters_matrix = function(facets, query_filters) {
+  // Używamy cloneDeepWith z niestandardową funkcją klonowania
+  // const temp_facet = _.cloneDeepWith(facets, customClone);
   const temp_facet = _clone(facets);
 
-  if (!temp_facet['is_temp_copied']) {
-    mapValues(temp_facet['bits_data'], function (values, key) {
-      mapValues(temp_facet['bits_data'][key], function (facet_indexes, key2) {
-        temp_facet['bits_data_temp'][key][key2] =
-          temp_facet['bits_data'][key][key2];
-      });
-    });
+  // Inicjalizujemy bits_data_temp, jeśli nie istnieje
+  if (!temp_facet.bits_data_temp) {
+    temp_facet.bits_data_temp = {};
+  }
+
+  if (!temp_facet.is_temp_copied) {
+    for (const key in temp_facet.bits_data) {
+      temp_facet.bits_data_temp[key] = {};
+      for (const key2 in temp_facet.bits_data[key]) {
+        temp_facet.bits_data_temp[key][key2] = temp_facet.bits_data[key][key2];
+      }
+    }
   }
 
   let union = null;
 
-  /**
-   * process only conjunctive filters
-   */
-  mapValues(query_filters, function (conjunction) {
-    let conjunctive_index = null;
+  // Upewniamy się, że query_filters jest tablicą
+  if (Array.isArray(query_filters)) {
+    // Przetwarzanie filtrów koniunktywnych
+    query_filters.forEach(conjunction => {
+      let conjunctive_index = null;
 
-    mapValues(conjunction, function (filter) {
-      const filter_key = filter[0];
-      const filter_val = filter[1];
+      conjunction.forEach(filter => {
+        const [filter_key, filter_val] = filter;
 
-      if (!temp_facet['bits_data_temp'][filter_key]) {
-        throw new Error('Panic. The key does not exist in facets lists.');
-      }
+        if (!temp_facet.bits_data_temp[filter_key]) {
+          throw new Error('Panic. The key does not exist in facets lists.');
+        }
 
-      if (
-        conjunctive_index &&
-        temp_facet['bits_data_temp'][filter_key][filter_val]
-      ) {
-        conjunctive_index =
-          temp_facet['bits_data_temp'][filter_key][filter_val].new_intersection(
-            conjunctive_index
-          );
-      } else if (
-        conjunctive_index &&
-        !temp_facet['bits_data_temp'][filter_key][filter_val]
-      ) {
-        conjunctive_index = new FastBitSet([]);
-      } else {
-        conjunctive_index =
-          temp_facet['bits_data_temp'][filter_key][filter_val];
+        const facetData = temp_facet.bits_data_temp[filter_key][filter_val];
+
+        if (facetData) {
+          if (conjunctive_index) {
+            conjunctive_index = conjunctive_index.new_intersection(facetData);
+          } else {
+            conjunctive_index = facetData;
+          }
+        } else {
+          conjunctive_index = new FastBitSet();
+        }
+      });
+
+      if (conjunctive_index) {
+        if (union) {
+          union = union.new_union(conjunctive_index);
+        } else {
+          union = conjunctive_index;
+        }
       }
     });
-
-    union = (union || new FastBitSet([])).new_union(
-      conjunctive_index || new FastBitSet([])
-    );
-  });
+  }
 
   if (union !== null) {
-    mapValues(temp_facet['bits_data_temp'], function (values, key) {
-      mapValues(
-        temp_facet['bits_data_temp'][key],
-        function (facet_indexes, key2) {
-          temp_facet['bits_data_temp'][key][key2] =
-            temp_facet['bits_data_temp'][key][key2].new_intersection(union);
-        }
-      );
-    });
+    for (const key in temp_facet.bits_data_temp) {
+      for (const key2 in temp_facet.bits_data_temp[key]) {
+        temp_facet.bits_data_temp[key][key2] =
+          temp_facet.bits_data_temp[key][key2].new_intersection(union);
+      }
+    }
   }
 
   return temp_facet;
 };
 
-/*
- * returns facets and ids
- */
-export const matrix = function (facets, filters) {
+export const matrix = function(facets, filters = []) {
   const temp_facet = _clone(facets);
 
-  filters = filters || [];
+  // Kopiujemy bits_data do bits_data_temp
+  temp_facet.bits_data_temp = {};
+  for (const key in temp_facet.bits_data) {
+    temp_facet.bits_data_temp[key] = {};
+    for (const key2 in temp_facet.bits_data[key]) {
+      temp_facet.bits_data_temp[key][key2] = temp_facet.bits_data[key][key2];
+    }
+  }
 
-  mapValues(temp_facet['bits_data'], function (values, key) {
-    mapValues(temp_facet['bits_data'][key], function (facet_indexes, key2) {
-      temp_facet['bits_data_temp'][key][key2] =
-        temp_facet['bits_data'][key][key2];
-    });
-  });
-
-  temp_facet['is_temp_copied'] = true;
+  temp_facet.is_temp_copied = true;
 
   let conjunctive_index;
   const disjunctive_indexes = combination_indexes(facets, filters);
 
-  /**
-   * process only conjunctive filters
-   */
-  mapValues(filters, function (filter) {
+  // Przetwarzanie filtrów koniunktywnych
+  filters.forEach(filter => {
     if (!Array.isArray(filter[0])) {
-      const filter_key = filter[0];
-      const filter_val = filter[1];
+      const [filter_key, filter_val] = filter;
+      const facetData = temp_facet.bits_data_temp[filter_key]?.[filter_val];
 
-      if (
-        conjunctive_index &&
-        temp_facet['bits_data_temp'][filter_key][filter_val]
-      ) {
-        conjunctive_index =
-          temp_facet['bits_data_temp'][filter_key][filter_val].new_intersection(
-            conjunctive_index
-          );
-      } else if (
-        conjunctive_index &&
-        !temp_facet['bits_data_temp'][filter_key][filter_val]
-      ) {
+      if (conjunctive_index && facetData) {
+        conjunctive_index = facetData.new_intersection(conjunctive_index);
+      } else if (conjunctive_index && !facetData) {
         conjunctive_index = new FastBitSet([]);
       } else {
-        conjunctive_index =
-          temp_facet['bits_data_temp'][filter_key][filter_val];
+        conjunctive_index = facetData;
       }
     }
   });
 
-  // cross all facets with conjunctive index
+  // Krzyżujemy wszystkie fasety z indeksami koniunktywnymi
   if (conjunctive_index) {
-    mapValues(temp_facet['bits_data_temp'], function (values, key) {
-      mapValues(
-        temp_facet['bits_data_temp'][key],
-        function (facet_indexes, key2) {
-          temp_facet['bits_data_temp'][key][key2] =
-            temp_facet['bits_data_temp'][key][key2].new_intersection(
-              conjunctive_index
-            );
-        }
-      );
-    });
+    for (const key in temp_facet.bits_data_temp) {
+      for (const key2 in temp_facet.bits_data_temp[key]) {
+        temp_facet.bits_data_temp[key][key2] = temp_facet.bits_data_temp[key][key2].new_intersection(conjunctive_index);
+      }
+    }
   }
 
-  /**
-   * process only negative filters
-   */
-  mapValues(filters, function (filter) {
+  // Przetwarzanie filtrów negatywnych
+  filters.forEach(filter => {
     if (filter.length === 3 && filter[1] === '-') {
-      const filter_key = filter[0];
-      const filter_val = filter[2];
+      const [filter_key, , filter_val] = filter;
+      const negative_bits = temp_facet.bits_data_temp[filter_key][filter_val].clone();
 
-      const negative_bits =
-        temp_facet['bits_data_temp'][filter_key][filter_val].clone();
-
-      mapValues(temp_facet['bits_data_temp'], function (values, key) {
-        mapValues(
-          temp_facet['bits_data_temp'][key],
-          function (facet_indexes, key2) {
-            temp_facet['bits_data_temp'][key][key2] =
-              temp_facet['bits_data_temp'][key][key2].new_difference(
-                negative_bits
-              );
-          }
-        );
-      });
+      for (const key in temp_facet.bits_data_temp) {
+        for (const key2 in temp_facet.bits_data_temp[key]) {
+          temp_facet.bits_data_temp[key][key2] = temp_facet.bits_data_temp[key][key2].new_difference(negative_bits);
+        }
+      }
     }
   });
 
-  // cross all facets with disjunctive index
-  mapValues(temp_facet['bits_data_temp'], function (values, key) {
-    mapValues(
-      temp_facet['bits_data_temp'][key],
-      function (facet_indexes, key2) {
-        mapValues(
-          disjunctive_indexes,
-          function (disjunctive_index, disjunctive_key) {
-            if (disjunctive_key !== key) {
-              temp_facet['bits_data_temp'][key][key2] =
-                temp_facet['bits_data_temp'][key][key2].new_intersection(
-                  disjunctive_index
-                );
-            }
-          }
-        );
+  // Krzyżujemy wszystkie fasety z indeksami dysjunktywnymi
+  for (const key in temp_facet.bits_data_temp) {
+    for (const key2 in temp_facet.bits_data_temp[key]) {
+      for (const disjunctive_key in disjunctive_indexes) {
+        if (disjunctive_key !== key) {
+          temp_facet.bits_data_temp[key][key2] = temp_facet.bits_data_temp[key][key2].new_intersection(disjunctive_indexes[disjunctive_key]);
+        }
       }
-    );
-  });
+    }
+  }
 
   return temp_facet;
 };
 
-export const index = function (items, fields) {
-  fields = fields || [];
-
+export const index = function(items = [], fields = []) {
   const facets = {
     data: Object.create(null),
     bits_data: Object.create(null),
     bits_data_temp: Object.create(null),
   };
 
-  let i = 1;
+  let nextId = 1;
 
-  fields.forEach((field) => {
-    facets['data'][field] = Object.create(null);
+  // Inicjalizujemy facets.data dla każdego pola
+  fields.forEach(field => {
+    facets.data[field] = Object.create(null);
   });
 
-  items && items.map((item) => {
-    if (!item['_id']) {
-      item['_id'] = i;
-      ++i;
+  // Przypisujemy _id do elementów bez tego identyfikatora
+  items.forEach(item => {
+    if (!item._id) {
+      item._id = nextId++;
     }
-
-    return item;
   });
 
-  items && items.map((item) => {
-    fields.forEach((field) => {
-      if (!item) {
-        return;
-      }
+  // Budujemy facets.data
+  items.forEach(item => {
+    fields.forEach(field => {
+      const fieldValue = item[field];
 
-      if (Array.isArray(item[field])) {
-        item[field].forEach((v) => {
-          if (!item[field]) {
-            return;
+      if (Array.isArray(fieldValue)) {
+        fieldValue.forEach(value => {
+          if (!facets.data[field][value]) {
+            facets.data[field][value] = [];
           }
-
-          if (!facets['data'][field][v]) {
-            facets['data'][field][v] = [];
-          }
-
-          facets['data'][field][v].push(parseInt(item._id));
+          facets.data[field][value].push(item._id);
         });
-      } else if (typeof item[field] !== 'undefined') {
-        const v = item[field];
-
-        if (!facets['data'][field][v]) {
-          facets['data'][field][v] = [];
+      } else if (typeof fieldValue !== 'undefined') {
+        const value = fieldValue;
+        if (!facets.data[field][value]) {
+          facets.data[field][value] = [];
         }
-
-        facets['data'][field][v].push(parseInt(item._id));
+        facets.data[field][value].push(item._id);
       }
     });
-
-    return item;
   });
 
-  facets['data'] = mapValues(facets['data'], function (values, field) {
-    if (!facets['bits_data'][field]) {
-      facets['bits_data'][field] = Object.create(null);
-      facets['bits_data_temp'][field] = Object.create(null);
-    }
+  // Budujemy facets.bits_data i facets.bits_data_temp
+  Object.keys(facets.data).forEach(field => {
+    facets.bits_data[field] = Object.create(null);
+    facets.bits_data_temp[field] = Object.create(null);
 
-    //console.log(values);
-    return mapValues(values, function (indexes, filter) {
-      const sorted_indexes = sortBy(indexes);
-      facets['bits_data'][field][filter] = new FastBitSet(sorted_indexes);
-      return sorted_indexes;
+    const values = facets.data[field];
+    Object.keys(values).forEach(filter => {
+      const indexes = values[filter];
+      const sorted_indexes = indexes.sort((a, b) => a - b);
+      facets.bits_data[field][filter] = new FastBitSet(sorted_indexes);
+      // Aktualizujemy facets.data z posortowanymi indeksami
+      facets.data[field][filter] = sorted_indexes;
     });
   });
 
@@ -312,11 +261,11 @@ export const index = function (items, fields) {
 /**
  * calculates ids for filters
  */
-export const filters_ids = function (facets_data) {
+export const filters_ids = function(facets_data) {
   let output = new FastBitSet([]);
 
-  mapValues(facets_data, function (values, key) {
-    mapValues(facets_data[key], function (facet_indexes, key2) {
+  mapValues(facets_data, function(values, key) {
+    mapValues(facets_data[key], function(facet_indexes, key2) {
       output = output.new_union(facets_data[key][key2]);
     });
   });
@@ -329,11 +278,11 @@ export const filters_ids = function (facets_data) {
  * if there is no facet input then return null to not save resources for OR calculation
  * null means facets haven't matched searched items
  */
-export const facets_ids = function (facets_data, filters) {
+export const facets_ids = function(facets_data, filters) {
   let output = new FastBitSet([]);
   let i = 0;
 
-  mapValues(filters, function (filters, field) {
+  mapValues(filters, function(filters, field) {
     filters.forEach((filter) => {
       ++i;
       output = output.new_union(
@@ -349,7 +298,7 @@ export const facets_ids = function (facets_data, filters) {
   return output;
 };
 
-export const getBuckets = function (data, input, aggregations) {
+export const getBuckets = function(data, input, aggregations) {
   let position = 1;
 
   return mapValues(data['bits_data_temp'], (v, k) => {
@@ -460,66 +409,57 @@ export const getBuckets = function (data, input, aggregations) {
   });
 };
 
-export const mergeAggregations = function (aggregations, input) {
-  return mapValues(clone(aggregations), (val, key) => {
-    if (!val.field) {
-      val.field = key;
-    }
+export const mergeAggregations = function(aggregations, input) {
+  const result = {};
 
-    let filters = [];
-    if (input.filters && input.filters[key]) {
-      filters = input.filters[key];
-    }
+  for (const key in aggregations) {
+    const val = { ...aggregations[key] };
 
-    val.filters = filters;
+    val.field = val.field || key;
+    val.filters = (input.filters && input.filters[key]) || [];
+    val.not_filters =
+      (input.exclude_filters && input.exclude_filters[key]) ||
+      (input.not_filters && input.not_filters[key]) ||
+      [];
 
-    let not_filters = [];
-    if (input.not_filters && input.not_filters[key]) {
-      not_filters = input.not_filters[key];
-    }
+    result[key] = val;
+  }
 
-    if (input.exclude_filters && input.exclude_filters[key]) {
-      not_filters = input.exclude_filters[key];
-    }
-
-    val.not_filters = not_filters;
-
-    return val;
-  });
+  return result;
 };
 
-export const input_to_facet_filters = function (input, config) {
+export const input_to_facet_filters = function(input, config) {
   const filters = [];
 
-  mapValues(input.filters, function (values, key) {
+  // Przetwarzanie filtrów pozytywnych
+  for (const key in input.filters) {
+    const values = input.filters[key];
     if (values && values.length) {
-      if (config[key].conjunction !== false) {
-        mapValues(values, function (values2) {
-          filters.push([key, values2]);
+      if (config[key]?.conjunction !== false) {
+        values.forEach(value => {
+          filters.push([key, value]);
         });
       } else {
-        const temp = [];
-        mapValues(values, function (values2) {
-          temp.push([key, values2]);
-        });
-
+        const temp = values.map(value => [key, value]);
         filters.push(temp);
       }
     }
-  });
+  }
 
-  mapValues(input.not_filters, function (values, key) {
+  // Przetwarzanie filtrów negatywnych
+  for (const key in input.not_filters) {
+    const values = input.not_filters[key];
     if (values && values.length) {
-      mapValues(values, function (values2) {
-        filters.push([key, '-', values2]);
+      values.forEach(value => {
+        filters.push([key, '-', value]);
       });
     }
-  });
+  }
 
   return filters;
 };
 
-export const parse_boolean_query = function (query) {
+export const parse_boolean_query = function(query) {
   const result = booleanParser.parseBooleanQuery(query);
 
   return result.map((v1) => {
