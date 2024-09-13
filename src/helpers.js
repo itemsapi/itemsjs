@@ -261,15 +261,12 @@ export const index = function(items = [], fields = []) {
  * calculates ids for filters
  */
 export const filters_ids = function(facets_data) {
-  let output = new FastBitSet([]);
-
-  mapValues(facets_data, function(values, key) {
-    mapValues(facets_data[key], function(facet_indexes, key2) {
-      output = output.new_union(facets_data[key][key2]);
+  return Object.values(facets_data).reduce((output, values) => {
+    Object.values(values).forEach(facet_indexes => {
+      output = output.new_union(facet_indexes);
     });
-  });
-
-  return output;
+    return output;
+  }, new FastBitSet([]));
 };
 
 /**
