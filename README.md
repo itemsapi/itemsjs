@@ -224,7 +224,9 @@ Responsible for defining global configuration. Look for full example here - [con
 
 - **`filters_query`** boolean filtering i.e. (tags:novel OR tags:80s) AND category:Western
 
-- **`is_all_filtered_items`** set to `true` if you want to return the whole filtered dataset. 
+- **`is_all_filtered_items`** set to `true` if you want to return the whole filtered dataset.
+  
+- **`ids`** array of item identifiers to limit the results to. Useful when combining with external full-text search engines (e.g. MiniSearch).
 
 ### `itemsjs.aggregation(options)`
 
