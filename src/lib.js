@@ -12,12 +12,9 @@ export function search(items, input, configuration, fulltext, facets) {
   const page = parseInt(input.page || 1);
   const is_all_filtered_items = input.is_all_filtered_items || false;
 
-  if (
-    configuration.native_search_enabled === false &&
-    (input.query || input.filter)
-  ) {
+  if (configuration.native_search_enabled === false && input.query) {
     throw new Error(
-      '"query" and "filter" options are not working once native search is disabled',
+      'The "query" option is not working once native search is disabled'
     );
   }
 
@@ -34,6 +31,13 @@ export function search(items, input, configuration, fulltext, facets) {
     _ids = input._ids;
   } else if (input.ids) {
     _ids = facets.internal_ids_from_ids_map(input.ids);
+
+    if (input.filter) {
+      _ids = items
+        .filter((v) => _ids.includes(v._id))
+        .filter(input.filter)
+        .map((v) => v._id);
+    }
     //console.log(_ids);
     query_ids = new FastBitSet(_ids);
   } else if (fulltext && (input.query || input.filter)) {
