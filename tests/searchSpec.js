@@ -263,7 +263,7 @@ describe('search', function () {
     } catch (err) {
       assert.equal(
         err.message,
-        '"query" and "filter" options are not working once native search is disabled'
+        'The "query" option is not working once native search is disabled'
       );
     }
 
@@ -360,6 +360,37 @@ describe('custom fulltext integration', function () {
     assert.equal(result.data.items[0].id, 50);
     assert.equal(result.data.items[0]._id, 5);
     assert.equal(result.data.items.length, 2);
+    done();
+  });
+  it('makes faceted search after separated quasi fulltext with ids and filter', function test(done) {
+    let i = 10;
+    const temp_movies = movies.map((v) => {
+      v.id = i;
+      i += 10;
+      return v;
+    });
+
+    itemsjs = itemsJS(temp_movies, configuration);
+
+    let result = itemsjs.search({
+      ids: [50, 20, 10],
+      filter: function (v) {
+        return v.id === 10;
+      },
+    });
+
+    assert.equal(result.data.items[0].id, 10);
+    assert.equal(result.data.items[0]._id, 1);
+    assert.equal(result.data.items.length, 1);
+
+    result = itemsjs.search({
+      ids: [50, 20],
+      filter: function (v) {
+        return v.id === 10;
+      },
+    });
+
+    assert.equal(result.data.items.length, 0);
     done();
   });
 
