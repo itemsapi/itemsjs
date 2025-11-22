@@ -152,7 +152,22 @@ export function sorted_items(items, sort, sortings) {
   }
 
   if (sort.field) {
-    return orderBy(items, sort.field, sort.order || 'asc');
+    const fields = Array.isArray(sort.field) ? sort.field : [sort.field];
+    const orders = Array.isArray(sort.order) ? sort.order : [sort.order || 'asc'];
+
+    // push null/undefined to the end for each field by prefixing with a boolean iteratee
+    const iteratees = [];
+    const iterateeOrders = [];
+
+    fields.forEach((field, idx) => {
+      iteratees.push((item) => (item[field] === null || item[field] === undefined ? 1 : 0));
+      iterateeOrders.push('asc'); // keep non-null before nulls
+
+      iteratees.push(field);
+      iterateeOrders.push(orders[idx] || 'asc');
+    });
+
+    return orderBy(items, iteratees, iterateeOrders);
   }
 
   return items;
