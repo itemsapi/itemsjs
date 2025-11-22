@@ -294,6 +294,9 @@ Benchmark (Node):
 - Run `npm run benchmark:snapshot` to compare fresh build vs snapshot load (defaults to 1k, 10k and 30k items). Override sizes with `SIZES=5000,20000 npm run benchmark:snapshot`.
 - Output includes cold-start speedup ratio (build/load). Note: real-world cost in browser also includes `fetch` + `JSON.parse` time if you download the snapshot.
 
- Browser smoke test (manual/optional):
+Search benchmark (Node):
+- Run `npm run benchmark:search` to measure build/search/facets timings across scenarios (empty, query-only, filters-only, query+filters, boolean filter). Defaults to sizes 1k/10k/30k; override with `SIZES=5000,20000` and repeats with `REPEAT=10`.
+
+Browser smoke test (manual/optional):
 - Build the bundle: `npm run build`.
 - EITHER open `benchmarks/browser-snapshot.html` directly in a browser, OR run `npm run serve:benchmark` and open `http://localhost:4173/` (auto-loads the snapshot page). It builds once, saves a snapshot to `localStorage`, and on refresh loads from it and logs a sample search.

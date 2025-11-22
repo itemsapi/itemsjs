@@ -8,6 +8,7 @@
     "lint": "eslint \"**/*.js\" --ext js",
     "lint:fix": "eslint \"**/*.js\" --ext js --fix",
     "benchmark:snapshot": "node benchmarks/snapshot.js",
+    "benchmark:search": "node benchmarks/search.js",
     "serve:benchmark": "node scripts/serve-benchmark.js",
     "prepublishOnly": "npm run build",
     "build": "microbundle",
