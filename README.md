@@ -290,5 +290,5 @@ APIs:
 
 Snapshots are optional; if you don’t provide them, itemsjs rebuilds indexes as before.
 
-Benchmarks and browser smoke test:
-- See `docs/benchmarks.md` for snapshot/search benchmarks and the optional browser smoke test.
+## Benchmarks
+- See [docs/benchmarks.md](docs/benchmarks.md) for snapshot/search benchmarks and the optional browser smoke test.
