@@ -22,6 +22,13 @@ describe('aggregations', function () {
     },
   ];
 
+  const itemsWithNulls = [
+    { name: 'movie1', rating: null },
+    { name: 'movie2', rating: 5 },
+    { name: 'movie3', rating: null },
+    { name: 'movie4', rating: 3 },
+  ];
+
   it('makes items sorting', function test(done) {
     const sortings = {
       name_asc: {
@@ -72,6 +79,24 @@ describe('aggregations', function () {
       'movie7',
       'movie2',
     ]);
+
+    // nulls should be last regardless of order
+    const nullSortings = {
+      rating_desc: {
+        field: 'rating',
+        order: 'desc',
+      },
+      rating_asc: {
+        field: 'rating',
+        order: 'asc',
+      },
+    };
+
+    result = sorted_items(itemsWithNulls, 'rating_desc', nullSortings);
+    assert.deepEqual(map(result, 'rating'), [5, 3, null, null]);
+
+    result = sorted_items(itemsWithNulls, 'rating_asc', nullSortings);
+    assert.deepEqual(map(result, 'rating'), [3, 5, null, null]);
     done();
   });
 });
