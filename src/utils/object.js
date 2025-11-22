@@ -1,5 +1,3 @@
-import { clone as _clone } from 'lodash-es';
-
 export const clone = function (val) {
   try {
     return structuredClone(val);
