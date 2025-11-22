@@ -64,6 +64,28 @@ function itemsjs(items, configuration) {
       fulltext = new Fulltext(items, configuration);
       facets = new Facets(items, configuration);
     },
+
+    /**
+     * export snapshots for faster cold starts
+     */
+    serializeFulltext: function () {
+      if (!fulltext) {
+        return null;
+      }
+      return fulltext.serialize();
+    },
+
+    serializeFacets: function () {
+      return facets.serialize();
+    },
+
+    serializeAll: function () {
+      return {
+        version: 'itemsjs-snapshot-v1',
+        fulltext: this.serializeFulltext(),
+        facets: this.serializeFacets(),
+      };
+    },
   };
 }
 

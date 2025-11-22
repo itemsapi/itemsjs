@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ItemsJS Snapshot Smoke Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 16px; }
+    pre { background: #f6f8fa; padding: 12px; overflow: auto; }
+  </style>
+</head>
+  <body>
+    <h1>ItemsJS Snapshot Smoke Test</h1>
+    <p style="max-width: 640px;">
+      A green message below means the snapshot was created and stored in localStorage (first load)
+      or successfully loaded from it (subsequent refreshes). If it stays on “Loading…” or you see a
+      red message, check the browser console for errors.
+    </p>
+    <p id="status">Loading…</p>
+    <div id="msg" style="margin: 8px 0; font-weight: bold;"></div>
+    <pre id="output"></pre>
+
+  <script type="module">
+    import itemsjs from '../dist/index.module.js';
+
+    const config = {
+      searchableFields: ['name', 'category', 'actors', 'name'],
+      aggregations: {
+        tags: { title: 'Tags', conjunction: true },
+        actors: { title: 'Actors', conjunction: true },
+        year: { title: 'Year', conjunction: true },
+        in_cinema: { title: 'Is played in Cinema', conjunction: true },
+        category: { title: 'Category', conjunction: true },
+      },
+    };
+
+    const log = (obj) => {
+      document.getElementById('output').textContent += `${obj}\n`;
+    };
+
+    const setStatus = (msg) => {
+      document.getElementById('status').textContent = msg;
+    };
+
+    const setMsg = (msg, ok = true) => {
+      const el = document.getElementById('msg');
+      el.style.color = ok ? 'green' : 'red';
+      el.textContent = msg;
+    };
+
+    async function loadData() {
+      const res = await fetch('../tests/fixtures/items.json');
+      if (!res.ok) throw new Error(`Failed to load data: ${res.status}`);
+      return res.json();
+    }
+
+    async function run() {
+      try {
+        const data = await loadData();
+
+        // Try to load snapshot from localStorage if present
+        const stored = localStorage.getItem('itemsjs-snapshot');
+        const snap = stored ? JSON.parse(stored) : null;
+
+        const engine = itemsjs(data, {
+          ...config,
+          fulltextSnapshot: snap?.fulltext,
+          facetsSnapshot: snap?.facets,
+        });
+
+        if (!snap) {
+          setStatus('Built fresh, creating snapshot…');
+          const newSnap = engine.serializeAll();
+          localStorage.setItem('itemsjs-snapshot', JSON.stringify(newSnap));
+          setMsg('Snapshot created and stored in localStorage.', true);
+        } else {
+          setStatus('Loaded from snapshot');
+          setMsg('Loaded from snapshot in localStorage.', true);
+        }
+
+        const result = engine.search({
+          query: 'comedy',
+          filters: { tags: ['a'] },
+        });
+
+        log(JSON.stringify({
+          status: document.getElementById('status').textContent,
+          message: document.getElementById('msg').textContent,
+          total: result.pagination.total,
+          items: result.data.items.map((v) => v.name),
+          aggregations: result.data.aggregations.tags.buckets.slice(0, 3),
+        }, null, 2));
+      } catch (e) {
+        setStatus('Error');
+        setMsg(e.message || 'Error', false);
+        log(e);
+        console.error(e);
+      }
+    }
+
+    run();
+  </script>
+</body>
+</html>

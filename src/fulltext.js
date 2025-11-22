@@ -8,6 +8,15 @@ export class Fulltext {
   constructor(items, config) {
     this.store = new Map();
 
+    // Load from snapshot when provided
+    if (config?.fulltextSnapshot) {
+      // Ensure the snapshot is plain JSON (no SortedSet instances)
+      const plainIndex = JSON.parse(JSON.stringify(config.fulltextSnapshot.index));
+      this.idx = lunr.Index.load(plainIndex);
+      this.store = new Map(config.fulltextSnapshot.store);
+      return;
+    }
+
     // creating index
     this.idx = lunr(function () {
       // currently schema hardcoded
@@ -38,12 +47,23 @@ export class Fulltext {
 
     let i = 1;
     (items || []).map((item) => {
-      item._id = i;
+      // preserve preexisting internal id if present
+      if (item._id === undefined || item._id === null) {
+        item._id = i;
+      }
       ++i;
 
       this.idx.add(item);
       this.store.set(item._id, item);
     });
+  }
+
+  serialize() {
+    // Produce JSON-safe snapshot to allow storing without lunr classes inside
+    return {
+      index: JSON.parse(JSON.stringify(this.idx)),
+      store: [...this.store.entries()],
+    };
   }
 
   search_full(query, filter) {

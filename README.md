@@ -206,6 +206,8 @@ Responsible for defining global configuration. Look for full example here - [con
 
 - **`removeStopWordFilter`** set to `true` if you want to remove the stopWordFilter. See https://github.com/itemsapi/itemsjs/issues/46.
 
+- **`fulltextSnapshot`** / **`facetsSnapshot`** optional prebuilt snapshots (from `serializeAll` or `serializeFulltext`/`serializeFacets`) to skip rebuilding indexes on cold start.
+
 ### `itemsjs.search(options)`
 
 #### `options`
@@ -259,3 +261,39 @@ It's used in case you need to reindex the whole data
 #### `data`
 
 An array of objects.
+
+## Snapshots (optional)
+
+Fast cold starts without reindexing. Snapshots are plain JSON, so you can store them wherever you like (localStorage, IndexedDB, file, CDN).
+
+**Generating a snapshot**
+```js
+const engine = itemsjs(data, config);
+const snapshot = engine.serializeAll(); // { version, fulltext, facets }
+// persist snapshot (e.g., localStorage / IndexedDB / file)
+```
+
+**Using a snapshot**
+```js
+const snapshot = loadSnapshot(); // e.g., JSON.parse(...)
+const engine = itemsjs(data, {
+  ...config,
+  fulltextSnapshot: snapshot.fulltext,
+  facetsSnapshot: snapshot.facets,
+});
+```
+
+APIs:
+- `itemsjs.serializeFulltext()` → `{ index, store }`
+- `itemsjs.serializeFacets()` → `{ bitsData, ids, idsMap }`
+- `itemsjs.serializeAll()` → `{ version: 'itemsjs-snapshot-v1', fulltext, facets }`
+
+Snapshots are optional; if you don’t provide them, itemsjs rebuilds indexes as before.
+
+Benchmark (Node):
+- Run `npm run benchmark:snapshot` to compare fresh build vs snapshot load (defaults to 1k, 10k and 30k items). Override sizes with `SIZES=5000,20000 npm run benchmark:snapshot`.
+- Output includes cold-start speedup ratio (build/load). Note: real-world cost in browser also includes `fetch` + `JSON.parse` time if you download the snapshot.
+
+ Browser smoke test (manual/optional):
+- Build the bundle: `npm run build`.
+- EITHER open `benchmarks/browser-snapshot.html` directly in a browser, OR run `npm run serve:benchmark` and open `http://localhost:4173/` (auto-loads the snapshot page). It builds once, saves a snapshot to `localStorage`, and on refresh loads from it and logs a sample search.
