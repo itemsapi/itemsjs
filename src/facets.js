@@ -19,16 +19,34 @@ export class Facets {
     configuration.aggregations = configuration.aggregations || Object.create(null);
     this._items = items;
     this.config = configuration.aggregations;
-    this.facets = index(items, keys(configuration.aggregations));
+    const custom_id_field = configuration.custom_id_field || 'id';
+    this.facets = configuration.facetsSnapshot
+      ? this._loadFromSnapshot(configuration.facetsSnapshot)
+      : index(items, keys(configuration.aggregations));
 
     this._items_map = Object.create(null);
     this._ids = [];
 
     let i = 1;
     map(items, (item) => {
-      this._ids.push(i);
-      this._items_map[i] = item;
-      item._id = i;
+      // When loading from snapshot, try to restore original internal ids
+      if (configuration.facetsSnapshot?.idsMap && item[custom_id_field]) {
+        const mappedId = configuration.facetsSnapshot.idsMap[item[custom_id_field]];
+        if (mappedId !== undefined) {
+          item._id = mappedId;
+        }
+      } else if (
+        configuration.facetsSnapshot?.ids &&
+        configuration.facetsSnapshot.ids.length >= i
+      ) {
+        item._id = configuration.facetsSnapshot.ids[i - 1];
+      } else if (item._id === undefined || item._id === null) {
+        // Try to reuse _id if already present
+        item._id = i;
+      }
+
+      this._ids.push(item._id);
+      this._items_map[item._id] = item;
       ++i;
     });
 
@@ -36,7 +54,6 @@ export class Facets {
 
     if (items) {
       items.forEach((v) => {
-        const custom_id_field = configuration.custom_id_field || 'id';
         if (v[custom_id_field] && v._id) {
           this.ids_map[v[custom_id_field]] = v._id;
         }
@@ -65,6 +82,25 @@ export class Facets {
 
   index() {
     return this.facets;
+  }
+
+  serialize() {
+    const bitsData = Object.create(null);
+
+    if (this.facets?.bits_data) {
+      for (const field in this.facets.bits_data) {
+        bitsData[field] = Object.create(null);
+        for (const val in this.facets.bits_data[field]) {
+          bitsData[field][val] = this.facets.bits_data[field][val].array();
+        }
+      }
+    }
+
+    return {
+      bitsData,
+      ids: this._ids,
+      idsMap: this.ids_map,
+    };
   }
 
   get_item(_id) {
@@ -116,5 +152,26 @@ export class Facets {
       : facets_ids(bitsDataTemp, input.filters);
 
     return temp_facet;
+  }
+
+  _loadFromSnapshot(snapshot) {
+    const facets = {
+      data: Object.create(null),
+      bits_data: Object.create(null),
+      bits_data_temp: Object.create(null),
+    };
+
+    if (snapshot.bitsData) {
+      for (const field in snapshot.bitsData) {
+        facets.bits_data[field] = Object.create(null);
+        for (const val in snapshot.bitsData[field]) {
+          facets.bits_data[field][val] = new FastBitSet(
+            snapshot.bitsData[field][val],
+          );
+        }
+      }
+    }
+
+    return facets;
   }
 }
