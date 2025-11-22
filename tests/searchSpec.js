@@ -200,6 +200,36 @@ describe('search', function () {
     done();
   });
 
+  it('marks boolean facets as selected', function test(done) {
+    const dataset = [
+      { boolean: true, string: 'true' },
+      { boolean: false, string: 'false' },
+    ];
+
+    const itemsjs = itemsJS(dataset, {
+      aggregations: {
+        boolean: {},
+        string: {},
+      },
+    });
+
+    const result = itemsjs.search({
+      filters: {
+        boolean: [true],
+        string: ['true'],
+      },
+    });
+
+    const booleanBuckets = result.data.aggregations.boolean.buckets;
+    const stringBuckets = result.data.aggregations.string.buckets;
+
+    assert.equal(booleanBuckets[0].key, 'true');
+    assert.equal(booleanBuckets[0].selected, true);
+    assert.equal(stringBuckets[0].selected, true);
+
+    done();
+  });
+
   it('makes search with non existing filter value with conjunction true should return no results', function test(done) {
     const itemsjs = itemsJS(items, configuration);
 

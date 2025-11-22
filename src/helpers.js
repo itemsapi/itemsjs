@@ -333,20 +333,17 @@ export const getBuckets = function(data, input, aggregations) {
         }
 
         const doc_count = v2[1].array().length;
+        const isSelected = filters.some((f) => String(f) === String(v2[0]));
 
         //hide zero_doc_count facet only if it is not selected
-        if (
-          hide_zero_doc_count &&
-          doc_count === 0 &&
-          filters.indexOf(v2[0]) === -1
-        ) {
+        if (hide_zero_doc_count && doc_count === 0 && !isSelected) {
           return;
         }
 
         return {
           key: v2[0],
           doc_count: doc_count,
-          selected: filters.indexOf(v2[0]) !== -1,
+          selected: isSelected,
         };
       })
       .filter(Boolean);
