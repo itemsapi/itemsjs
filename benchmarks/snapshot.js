@@ -40,7 +40,7 @@ function runBenchmark(count) {
   const snapshotJson = JSON.stringify(snapshot);
   const t3 = performance.now();
 
-  const engineFromSnapshot = itemsjs(data, {
+  itemsjs(data, {
     ...config,
     fulltextSnapshot: snapshot.fulltext,
     facetsSnapshot: snapshot.facets,

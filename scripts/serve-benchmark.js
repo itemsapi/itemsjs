@@ -51,23 +51,8 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(port, () => {
-  const indexPath = path.join(
-    root,
-    'benchmarks',
-    'browser-snapshot.html'
-  );
-  const fileUrl = pathToFileURL(indexPath).href;
+  const indexPath = path.join(root, 'benchmarks', 'browser-snapshot.html');
   console.log(`Static server running on http://localhost:${port}`);
   console.log(`Open http://localhost:${port}/benchmarks/browser-snapshot.html`);
   console.log(`(or file://${indexPath})`);
 });
-
-function pathToFileURL(p) {
-  const url = new URL('file://');
-  url.pathname = path
-    .resolve(p)
-    .split(path.sep)
-    .map(encodeURIComponent)
-    .join('/');
-  return url;
-}
