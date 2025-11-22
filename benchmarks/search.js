@@ -7,6 +7,8 @@ const sizes = process.env.SIZES
   : defaultSizes;
 
 const repeats = parseInt(process.env.REPEAT || '5', 10);
+const extraFacetsCount = parseInt(process.env.EXTRA_FACETS || '0', 10);
+const extraFacetValues = ['a', 'b', 'c'];
 
 const tagsPool = Array.from({ length: 40 }, (_, i) => `tag${i}`);
 const actorsPool = Array.from({ length: 30 }, (_, i) => `actor${i}`);
@@ -28,8 +30,18 @@ function makeItems(count) {
       actors: [actor],
       category,
       popular,
+      ...makeExtraFacets(i),
     };
   });
+}
+
+function makeExtraFacets(index) {
+  const result = {};
+  for (let j = 0; j < extraFacetsCount; j++) {
+    const val = extraFacetValues[(index + j) % extraFacetValues.length];
+    result[`facet_${j}`] = val;
+  }
+  return result;
 }
 
 function average(arr) {
@@ -64,6 +76,15 @@ function runScenario(engine, input) {
 
 function logResult(size, buildMs, results) {
   console.log(`items: ${size}`);
+  console.log(
+    `  facets: tags(${tagsPool.length}), actors(${actorsPool.length}), category(${categories.length}), popular(boolean)`,
+  );
+  if (extraFacetsCount > 0) {
+    console.log(`  extra facets: ${extraFacetsCount} (3 values each)`);
+  }
+  console.log(
+    '  fields: name (boosted), tags, actors; each item has 3 tags, 1 actor, 1 category, boolean popular',
+  );
   console.log(`  build (ms): ${buildMs.toFixed(1)}`);
   Object.entries(results).forEach(([name, data]) => {
     console.log(
@@ -97,6 +118,12 @@ function main() {
         popular: { title: 'Popular' },
       },
     };
+
+    if (extraFacetsCount > 0) {
+      for (let i = 0; i < extraFacetsCount; i++) {
+        config.aggregations[`facet_${i}`] = { title: `Facet ${i}` };
+      }
+    }
 
     const buildStart = performance.now();
     const engine = itemsjs(data, config);
