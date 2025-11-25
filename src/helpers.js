@@ -12,4 +12,6 @@ export {
   mergeAggregations,
   input_to_facet_filters,
   parse_boolean_query,
+  buildFiltersQueryFromFacets,
+  normalizeRuntimeFacetConfig,
 } from './utils/config.js';

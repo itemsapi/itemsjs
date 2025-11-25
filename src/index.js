@@ -1,5 +1,9 @@
 import { search, similar, aggregation } from './lib.js';
-import { mergeAggregations } from './helpers.js';
+import {
+  mergeAggregations,
+  buildFiltersQueryFromFacets,
+  normalizeRuntimeFacetConfig,
+} from './helpers.js';
 import { Fulltext } from './fulltext.js';
 import { Facets } from './facets.js';
 
@@ -28,12 +32,64 @@ function itemsjs(items, configuration) {
     search: function (input) {
       input = input || Object.create(null);
 
+      // allow runtime facet options via input.facets (alias for aggregations/filters)
+      let effectiveConfiguration = configuration;
+      if (input.facets) {
+        const { aggregations, filters } = normalizeRuntimeFacetConfig(
+          input.facets,
+          configuration,
+        );
+
+        effectiveConfiguration = {
+          ...configuration,
+          aggregations,
+        };
+
+        // merge filters so buckets can mark selected values
+        if (filters) {
+          input.filters = {
+            ...(input.filters || {}),
+            ...filters,
+          };
+        }
+
+        if (!input.filters_query) {
+          const filters_query = buildFiltersQueryFromFacets(
+            input.facets,
+            effectiveConfiguration,
+          );
+          if (filters_query) {
+            input.filters_query = filters_query;
+          }
+        }
+
+        // Facets instance keeps reference to config; update for this run
+        facets.config = effectiveConfiguration.aggregations;
+      } else {
+        facets.config = configuration.aggregations;
+      }
+
       /**
        * merge configuration aggregation with user input
        */
-      input.aggregations = mergeAggregations(configuration.aggregations, input);
+      input.aggregations = mergeAggregations(
+        effectiveConfiguration.aggregations,
+        input,
+      );
 
-      return search(items, input, configuration, fulltext, facets);
+      const result = search(
+        items,
+        input,
+        effectiveConfiguration,
+        fulltext,
+        facets,
+      );
+
+      if (result?.data?.aggregations && !result.data.facets) {
+        result.data.facets = result.data.aggregations;
+      }
+
+      return result;
     },
 
     /**
@@ -52,7 +108,31 @@ function itemsjs(items, configuration) {
      * page
      */
     aggregation: function (input) {
-      return aggregation(items, input, configuration, fulltext, facets);
+      let aggregationConfiguration = configuration;
+
+      if (input?.facets) {
+        const { aggregations } = normalizeRuntimeFacetConfig(
+          input.facets,
+          configuration,
+        );
+
+        aggregationConfiguration = {
+          ...configuration,
+          aggregations,
+        };
+
+        facets.config = aggregationConfiguration.aggregations;
+      } else {
+        facets.config = configuration.aggregations;
+      }
+
+      return aggregation(
+        items,
+        input,
+        aggregationConfiguration,
+        fulltext,
+        facets,
+      );
     },
 
     /**

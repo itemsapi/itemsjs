@@ -230,6 +230,34 @@ Responsible for defining global configuration. Look for full example here - [con
   
 - **`ids`** array of item identifiers to limit the results to. Useful when combining with external full-text search engines (e.g. MiniSearch).
 
+#### Optional runtime facets (DX helper)
+
+Instead of static `filters` you can pass `facets` with selections and runtime options (per-facet AND/OR, bucket size/sort):
+
+```js
+const result = itemsjs.search({
+  query: 'drama',
+  facets: {
+    tags: {
+      selected: ['1980s', 'historical'],
+      options: {
+        conjunction: 'OR',      // AND/OR for this facet only
+        size: 30,               // how many buckets to return
+        sortBy: 'count',        // 'count' | 'key'
+        sortDir: 'desc',        // 'asc' | 'desc'
+        hideZero: true,         // hide buckets with doc_count = 0
+        chosenOnTop: true,      // selected buckets first
+      },
+    },
+  },
+});
+// response contains data.aggregations and an alias data.facets
+```
+
+`facets` is an alias/helper: under the hood it builds `filters_query` per facet (AND/OR) and applies bucket options. If you also pass legacy params, priority is: `filters_query` > `facets` > `filters`.
+
+Ideal for React/Vue/Next UIs that need runtime toggles (AND/OR, “show more”, bucket sorting) without recreating the engine.
+
 ### `itemsjs.aggregation(options)`
 
 It returns full list of filters for specific aggregation
