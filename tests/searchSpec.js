@@ -351,6 +351,38 @@ describe('search', function () {
     done();
   });
 
+  it('accepts boolean conjunction in runtime facets (false => OR, true => AND)', function test(done) {
+    const itemsjs = itemsJS(items, configuration);
+
+    // false => OR
+    const orResult = itemsjs.search({
+      facets: {
+        tags: {
+          selected: ['c', 'e'],
+          options: {
+            conjunction: false,
+          },
+        },
+      },
+    });
+    assert.equal(orResult.pagination.total, 4);
+
+    // true => AND should return 0 for disjoint values
+    const andResult = itemsjs.search({
+      facets: {
+        tags: {
+          selected: ['c', 'e'],
+          options: {
+            conjunction: true,
+          },
+        },
+      },
+    });
+    assert.equal(andResult.pagination.total, 0);
+
+    done();
+  });
+
   it('makes search with non existing filter value with conjunction true should return no results', function test(done) {
     const itemsjs = itemsJS(items, configuration);
 

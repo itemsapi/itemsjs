@@ -68,6 +68,16 @@ export const parse_boolean_query = function (query) {
   });
 };
 
+const normalizeConjunction = (value) => {
+  if (typeof value === 'boolean') {
+    return value ? 'AND' : 'OR';
+  }
+  if (typeof value === 'string') {
+    return value.toUpperCase() === 'OR' ? 'OR' : 'AND';
+  }
+  return 'AND';
+};
+
 /**
  * Builds a boolean query string from runtime facet selections.
  * Respects per-facet conjunction (AND/OR). Unknown facets are ignored.
@@ -90,8 +100,9 @@ export const buildFiltersQueryFromFacets = function (facets, configuration) {
       return;
     }
 
-    const conjunction =
-      facets[facetName]?.options?.conjunction === 'OR' ? 'OR' : 'AND';
+    const conjunction = normalizeConjunction(
+      facets[facetName]?.options?.conjunction,
+    );
 
     const parts = selected.map((val) => {
       const stringVal = String(val);
@@ -144,8 +155,9 @@ export const normalizeRuntimeFacetConfig = function (facets, configuration) {
     if (options) {
       const mapped = {};
 
-      if (options.conjunction) {
-        mapped.conjunction = options.conjunction !== 'OR';
+      if (options.conjunction !== undefined) {
+        const conj = normalizeConjunction(options.conjunction);
+        mapped.conjunction = conj === 'AND';
       }
 
       if (typeof options.size === 'number') {
