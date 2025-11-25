@@ -200,6 +200,20 @@ describe('search', function () {
     done();
   });
 
+  it('ignores not filters for values not present in index', function test(done) {
+    const itemsjs = itemsJS(items, configuration);
+
+    const result = itemsjs.search({
+      not_filters: {
+        tags: ['not-existing'],
+      },
+    });
+
+    assert.equal(result.data.items.length, 4);
+
+    done();
+  });
+
   it('marks boolean facets as selected', function test(done) {
     const dataset = [
       { boolean: true, string: 'true' },
@@ -226,6 +240,72 @@ describe('search', function () {
     assert.equal(booleanBuckets[0].key, 'true');
     assert.equal(booleanBuckets[0].selected, true);
     assert.equal(stringBuckets[0].selected, true);
+
+    done();
+  });
+
+  it('aggregation does not mutate configured facet size', function test(done) {
+    const smallDataset = [
+      { id: 1, tags: ['a'] },
+      { id: 2, tags: ['b'] },
+      { id: 3, tags: ['c'] },
+    ];
+
+    const itemsjs = itemsJS(smallDataset, {
+      aggregations: {
+        tags: { size: 1 },
+      },
+    });
+
+    const initial = itemsjs.search({});
+    assert.equal(initial.data.aggregations.tags.buckets.length, 1);
+
+    const aggResult = itemsjs.aggregation({ name: 'tags', per_page: 10 });
+    assert.equal(aggResult.data.buckets.length, 3);
+
+    const after = itemsjs.search({});
+    assert.equal(after.data.aggregations.tags.buckets.length, 1);
+
+    done();
+  });
+
+  it('normalizes pagination values to safe defaults', function test(done) {
+    const dataset = Array.from({ length: 15 }, (_, idx) => ({
+      id: idx + 1,
+      tags: ['t' + (idx % 3)],
+    }));
+
+    const itemsjs = itemsJS(dataset, {
+      aggregations: {
+        tags: {},
+      },
+    });
+
+    const result = itemsjs.search({
+      per_page: Infinity,
+      page: -5,
+    });
+
+    assert.equal(result.pagination.page, 1);
+    assert.equal(result.pagination.per_page, 12);
+    assert.equal(result.data.items.length, 12);
+
+    const resultString = itemsjs.search({
+      per_page: 'abc',
+      page: 'not-a-number',
+    });
+
+    assert.equal(resultString.pagination.page, 1);
+    assert.equal(resultString.pagination.per_page, 12);
+    assert.equal(resultString.data.items.length, 12);
+
+    const zeroPerPage = itemsjs.search({
+      per_page: 0,
+      page: 3,
+    });
+    assert.equal(zeroPerPage.pagination.per_page, 0);
+    assert.equal(zeroPerPage.pagination.page, 1);
+    assert.equal(zeroPerPage.data.items.length, 0);
 
     done();
   });

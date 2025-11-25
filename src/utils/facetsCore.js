@@ -135,7 +135,9 @@ export const matrix = function (facets, filters = []) {
   filters.forEach((filter) => {
     if (filter.length === 3 && filter[1] === '-') {
       const [filter_key, , filter_val] = filter;
-      const negative_bits = temp_facet.bits_data_temp[filter_key][filter_val].clone();
+      const negative_bits =
+        temp_facet.bits_data_temp[filter_key]?.[filter_val]?.clone() ||
+        new FastBitSet();
 
       for (const key in temp_facet.bits_data_temp) {
         for (const key2 in temp_facet.bits_data_temp[key]) {
