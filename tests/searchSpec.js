@@ -310,6 +310,47 @@ describe('search', function () {
     done();
   });
 
+  it('supports runtime facets overrides (OR + size, alias facets in response)', function test(done) {
+    const itemsjs = itemsJS(items, configuration);
+
+    const result = itemsjs.search({
+      facets: {
+        tags: {
+          selected: ['c', 'e'],
+          options: {
+            conjunction: 'OR',
+            size: 2,
+            sortBy: 'key',
+            sortDir: 'asc',
+            hideZero: true,
+            chosenOnTop: true,
+          },
+        },
+      },
+    });
+
+    // default conjunction (AND) would return 0 for ['c','e'], OR should return matches
+    assert.equal(result.pagination.total, 4);
+
+    // alias facets present
+    assert.ok(result.data.facets);
+    assert.equal(
+      result.data.facets,
+      result.data.aggregations
+    );
+
+    const buckets = result.data.aggregations.tags.buckets;
+    // size override applied
+    assert.equal(buckets.length, 2);
+    // selected value should be marked
+    assert.equal(
+      buckets.some((b) => b.key === 'c' && b.selected === true),
+      true,
+    );
+
+    done();
+  });
+
   it('makes search with non existing filter value with conjunction true should return no results', function test(done) {
     const itemsjs = itemsJS(items, configuration);
 
