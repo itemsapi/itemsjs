@@ -241,7 +241,7 @@ const result = itemsjs.search({
     tags: {
       selected: ['1980s', 'historical'],
       options: {
-        conjunction: 'OR',      // AND/OR for this facet only
+        conjunction: 'OR',      // AND/OR for this facet only (also accepts boolean true/false)
         size: 30,               // how many buckets to return
         sortBy: 'count',        // 'count' | 'key'
         sortDir: 'desc',        // 'asc' | 'desc'
