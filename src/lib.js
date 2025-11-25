@@ -89,13 +89,40 @@ export function search(items, input, configuration, fulltext, facets) {
     );
   }
 
-  // new filters to items
-  // -------------------------------------
-  let filtered_indexes = filtered_indexes_bitmap.array();
+  // Early exit: per_page = 0 and no need to materialize items (facet-only query)
+  if (
+    per_page === 0 &&
+    !is_all_filtered_items &&
+    !input.sort &&
+    !_ids
+  ) {
+    const filtered_indexes = filtered_indexes_bitmap.array();
 
-  let filtered_items = filtered_indexes.map((_id) => {
-    return facets.get_item(_id);
-  });
+    const total_time = new Date().getTime() - total_time_start;
+
+    return {
+      pagination: {
+        per_page: per_page,
+        page: page,
+        total: filtered_indexes.length,
+      },
+      timings: {
+        total: total_time,
+        facets: facets_time,
+        search: search_time,
+        sorting: 0,
+      },
+      data: {
+        items: [],
+        allFilteredItems: null,
+        aggregations: getBuckets(
+          facet_result,
+          input,
+          configuration.aggregations,
+        ),
+      },
+    };
+  }
 
   /**
    * sorting items
@@ -103,28 +130,29 @@ export function search(items, input, configuration, fulltext, facets) {
   let paginationApplied = false;
   const sorting_start_time = new Date().getTime();
   let sorting_time = 0;
+
+  // collect ids once; reuse in branches below
+  let filtered_indexes = filtered_indexes_bitmap.array();
+  let filtered_items;
+
   if (input.sort) {
+    filtered_items = filtered_indexes.map((_id) => facets.get_item(_id));
     filtered_items = sorted_items(
       filtered_items,
       input.sort,
       configuration.sortings,
     );
+  } else if (_ids) {
+    // when user passes explicit ids/_ids we only materialize items for the current page
+    filtered_indexes = _ids.filter((v) => filtered_indexes_bitmap.has(v));
+    const filtered_items_indexes = filtered_indexes.slice(
+      (page - 1) * per_page,
+      page * per_page,
+    );
+    filtered_items = filtered_items_indexes.map((_id) => facets.get_item(_id));
+    paginationApplied = true;
   } else {
-    if (_ids) {
-      filtered_indexes = _ids.filter((v) => {
-        return filtered_indexes_bitmap.has(v);
-      });
-
-      const filtered_items_indexes = filtered_indexes.slice(
-        (page - 1) * per_page,
-        page * per_page,
-      );
-      filtered_items = filtered_items_indexes.map((_id) => {
-        return facets.get_item(_id);
-      });
-
-      paginationApplied = true;
-    }
+    filtered_items = filtered_indexes.map((_id) => facets.get_item(_id));
   }
   // pagination
   if (!paginationApplied) {
