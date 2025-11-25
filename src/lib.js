@@ -8,8 +8,28 @@ import { getBuckets, clone } from './helpers.js';
 export function search(items, input, configuration, fulltext, facets) {
   input = input || Object.create(null);
 
-  const per_page = parseInt(input.per_page || 12);
-  const page = parseInt(input.page || 1);
+  const normalizeNumber = (value) => {
+    if (typeof value === 'number') {
+      return value;
+    }
+    const parsed = parseInt(value, 10);
+    return parsed;
+  };
+
+  let per_page = normalizeNumber(input.per_page);
+  if (!Number.isFinite(per_page) || per_page < 0) {
+    per_page = 12;
+  }
+
+  let page = normalizeNumber(input.page);
+  if (!Number.isFinite(page) || page < 1) {
+    page = 1;
+  }
+
+  // Allow per_page to be zero to support queries that only need aggregations
+  if (per_page === 0) {
+    page = 1;
+  }
   const is_all_filtered_items = input.is_all_filtered_items || false;
 
   if (configuration.native_search_enabled === false && input.query) {
@@ -178,6 +198,7 @@ export function sorted_items(items, sort, sortings) {
  * useful for autocomplete or list all aggregation options
  */
 export function similar(items, id, options) {
+  options = options || Object.create(null);
   const per_page = options.per_page || 10;
   const minimum = options.minimum || 0;
   const page = options.page || 1;
@@ -189,6 +210,19 @@ export function similar(items, id, options) {
       item = items[i];
       break;
     }
+  }
+
+  if (!item) {
+    return {
+      pagination: {
+        per_page: per_page,
+        page: page,
+        total: 0,
+      },
+      data: {
+        items: [],
+      },
+    };
   }
 
   if (!options.field) {
@@ -203,9 +237,10 @@ export function similar(items, id, options) {
       const intersection = _intersection(item[field], items[i][field]);
 
       if (intersection.length >= minimum) {
-        sorted_items.push(items[i]);
-        sorted_items[sorted_items.length - 1].intersection_length =
-          intersection.length;
+        sorted_items.push({
+          ...items[i],
+          intersection_length: intersection.length,
+        });
       }
     }
   }
@@ -250,9 +285,18 @@ export function aggregation(items, input, configuration, fulltext, facets) {
     throw new Error('field name is required');
   }
 
-  configuration.aggregations[input.name].size = 10000;
+  const aggregationConfig = {
+    ...configuration,
+    aggregations: {
+      ...configuration.aggregations,
+      [input.name]: {
+        ...configuration.aggregations[input.name],
+        size: 10000,
+      },
+    },
+  };
 
-  const result = search(items, search_input, configuration, fulltext, facets);
+  const result = search(items, search_input, aggregationConfig, fulltext, facets);
   const buckets = result.data.aggregations[input.name].buckets;
 
   return {

@@ -335,6 +335,24 @@ describe('itemjs general tests', function () {
     done();
   });
 
+  it('returns empty list when similar base item is missing', function test(done) {
+    const itemsWithIds = items.map((item, idx) => ({
+      ...item,
+      id: idx + 1,
+    }));
+    const itemsjs = itemsJS(itemsWithIds, {
+      aggregations: {
+        tags: {},
+      },
+    });
+
+    const result = itemsjs.similar(999, { field: 'tags', per_page: 5 });
+
+    assert.equal(result.pagination.total, 0);
+    assert.deepEqual(result.data.items, []);
+    done();
+  });
+
   it('search by tags', function test(done) {
     const items = [
       {
