@@ -48,6 +48,21 @@ export const input_to_facet_filters = function (input, config) {
   return filters;
 };
 
+// 'tags:a' => ['tags', 'a'], 'city:"New York"' => ['city', 'New York']
+const parse_term = function (term) {
+  const i = term.indexOf(':');
+  if (i === -1) {
+    return [term];
+  }
+
+  let value = term.slice(i + 1);
+  if (value.length > 1 && value.startsWith('"') && value.endsWith('"')) {
+    value = value.slice(1, -1).replace(/\\"/g, '"');
+  }
+
+  return [term.slice(0, i), value];
+};
+
 export const parse_boolean_query = function (query) {
   const result = booleanParser.parseBooleanQuery(query);
 
@@ -59,11 +74,11 @@ export const parse_boolean_query = function (query) {
             return v3;
           });
         } else {
-          return v2.split(':');
+          return parse_term(v2);
         }
       });
     } else {
-      return v1.split(':');
+      return parse_term(v1);
     }
   });
 };

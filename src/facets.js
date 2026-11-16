@@ -75,9 +75,9 @@ export class Facets {
   }
 
   internal_ids_from_ids_map(ids) {
-    return ids.map((v) => {
-      return this.ids_map[v];
-    });
+    return ids
+      .map((v) => this.ids_map[v])
+      .filter((v) => v !== undefined);
   }
 
   index() {

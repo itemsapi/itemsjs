@@ -103,22 +103,23 @@ export const matrix = function (facets, filters = []) {
 
   temp_facet.is_temp_copied = true;
 
-  let conjunctive_index;
+  let conjunctive_index = null;
   const disjunctive_indexes = combination_indexes(facets, filters);
 
   filters.forEach((filter) => {
-    if (!Array.isArray(filter[0])) {
-      const [filter_key, filter_val] = filter;
-      const facetData = temp_facet.bits_data_temp[filter_key]?.[filter_val];
-
-      if (conjunctive_index && facetData) {
-        conjunctive_index = facetData.new_intersection(conjunctive_index);
-      } else if (conjunctive_index && !facetData) {
-        conjunctive_index = new FastBitSet([]);
-      } else {
-        conjunctive_index = facetData;
-      }
+    // only [key, value]; OR groups and [key, '-', value] are handled below
+    if (Array.isArray(filter[0]) || filter.length !== 2) {
+      return;
     }
+
+    const [filter_key, filter_val] = filter;
+    // a value missing from the index matches nothing
+    const facetData =
+      temp_facet.bits_data_temp[filter_key]?.[filter_val] || new FastBitSet();
+
+    conjunctive_index = conjunctive_index
+      ? conjunctive_index.new_intersection(facetData)
+      : facetData;
   });
 
   if (conjunctive_index) {
