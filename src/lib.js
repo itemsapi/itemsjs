@@ -74,7 +74,8 @@ export function search(items, input, configuration, fulltext, facets) {
   facets_time = new Date().getTime() - facets_time;
 
   if (query_ids) {
-    filtered_indexes_bitmap = query_ids;
+    // ids missing from the index would come back as undefined items
+    filtered_indexes_bitmap = filtered_indexes_bitmap.new_intersection(query_ids);
   }
 
   if (facet_result.ids) {

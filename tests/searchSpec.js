@@ -608,3 +608,59 @@ describe('custom fulltext integration', function () {
     done();
   });
 });
+
+describe('filter values missing from the index', function () {
+  const products = [
+    { id: 1, name: 'Shirt', tags: ['cotton'], color: 'red', city: 'New York' },
+    { id: 2, name: 'Hat', tags: ['wool'], color: 'blue', city: 'Paris' },
+    { id: 3, name: 'Scarf', tags: ['cotton', 'wool'], color: 'red', city: 'Paris' },
+  ];
+
+  const itemsjs = itemsJS(products, {
+    aggregations: {
+      tags: { conjunction: true },
+      color: { conjunction: true },
+      city: { conjunction: false },
+    },
+  });
+
+  const names = (result) => result.data.items.map((item) => item.name);
+
+  it('returns nothing for a missing AND value, whatever its position (#155)', function () {
+    for (const tags of [['silk'], ['silk', 'cotton'], ['cotton', 'silk']]) {
+      const result = itemsjs.search({ filters: { tags } });
+
+      assert.deepEqual(names(result), [], JSON.stringify(tags));
+      assert.deepEqual(
+        result.data.aggregations.tags.buckets.map((b) => b.doc_count),
+        [0, 0],
+        JSON.stringify(tags)
+      );
+    }
+
+    const result = itemsjs.search({ filters: { tags: ['silk'], color: ['red'] } });
+    assert.deepEqual(names(result), []);
+  });
+
+  it('combines filters with not_filters', function () {
+    const result = itemsjs.search({
+      filters: { tags: ['cotton'] },
+      not_filters: { tags: ['wool'] },
+    });
+
+    assert.deepEqual(names(result), ['Shirt']);
+  });
+
+  it('skips ids that are not in the index', function () {
+    assert.deepEqual(names(itemsjs.search({ ids: [1, 999] })), ['Shirt']);
+    assert.deepEqual(names(itemsjs.search({ _ids: [999] })), []);
+  });
+
+  it('matches runtime facet values with spaces', function () {
+    const result = itemsjs.search({
+      facets: { city: { selected: ['New York'] } },
+    });
+
+    assert.deepEqual(names(result), ['Shirt']);
+  });
+});
